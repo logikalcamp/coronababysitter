@@ -1,0 +1,25 @@
+{
+  "name": "coronababysitter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"nodemon server.js\" \"cd client && npm start\"",
+    "starti": "concurrently \"nodemon server.js\" \"cd client && npm run starti\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^6.5.4",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "googleapis": "^48.0.0",
+    "mongoose": "^5.9.3",
+    "nodemon": "^2.0.2",
+    "path": "^0.12.7",
+    "socket.io": "^2.3.0"
+  }
+}
