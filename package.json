@@ -6,7 +6,8 @@
   "scripts": {
     "start": "concurrently \"nodemon server.js\" \"cd client && npm start\"",
     "starti": "concurrently \"nodemon server.js\" \"cd client && npm run starti\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "starts": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
