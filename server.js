@@ -9,7 +9,8 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 const mongoose = require('mongoose');
 const rp = require('request-promise');
-const $ = require('cheerio');
+const request = require('request')
+const cheerio = require('cheerio');
 
 
 let bodyParser=require('body-parser');
@@ -26,18 +27,61 @@ io.on("connection", (socket) => {
 
 });
 
+
+
+// request({
+//   method: 'GET',
+//   url: "https://he-il.facebook.com/omri.peretz.186"
+// }, (err, res, body) => {
+
+//   if (err) return console.error(err);
+
+//   let $ = cheerio.load(body);
+
+//   let title = $('title');
+//   let main = $('.mainContainer')
+
+//   console.log(title.text(),"2----1",main.children().length);
+// });
+
+// request('https://www.facebook.com/aviram.roisman', function (error, response, html) {
+//   if (!error && response.statusCode == 200) {
+//     var $ = cheerio.load(html);
+//     console.log(html)
+//     $('span').each(function(i, element){
+//       var a = $(this).prev();
+//       console.log(a.text());
+//     });
+//   }
+//   else{
+//     console.log("shite")
+//   }
+// })
+
+
+//$('#fbTimelineHeadline .profilePicThumb img').attr('src')
+
 router.post('/getimage',(req,res)=>{
-  console.log(req.body.url)
-  rp(req.body.url)
-  .then(function(html){
-    //success!
-    console.log(html)
-    console.log( $('.photoContainer',html).text())
-    // let divi = $('.photoContainer',html).text()
-    // console.log(divi)
-  })
-  .catch(function(err){
-    //handle error
+  request(req.body.url,
+  {
+    headers: {
+      'user-agent': 'curl/7.47.0',
+      'accept-language': 'en-US,en',
+      'accept': '*/*'
+    }
+  }, function (error, response, body) {
+    if (error) {
+      throw (error);
+    }
+    if (response.statusCode === 200) {
+      var $ = cheerio.load(body);
+      let back = $('#fbTimelineHeadline .profilePicThumb img').attr('src')
+      console.log($('#fbTimelineHeadline .profilePicThumb img').attr('src'))
+      res.send(back)
+      // console.log(JSON.stringify(scraper(body), null, 2));
+    } else {
+      console.log('HTTP Error: ' + response.statusCode);
+    }
   });
 })
 
