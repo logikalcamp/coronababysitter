@@ -1,0 +1,45 @@
+const {MongoClient} = require('mongodb');
+const uri = "mongodb://server:coronababy2020@ds159546.mlab.com:59546/corona-babies";
+
+var exports = {}
+
+exports.getClient = async () => {
+    newClient = new MongoClient(uri);
+
+    await newClient.connect();
+
+    return newClient;
+}
+
+exports.closeClient = (client) => {
+    client.close();
+}
+
+// Find only one document in a collection specified
+exports.findOne = (collection,filter, client) => {
+    return new Promise((resolve, reject) => {
+        client.db().collection(collection).findOne(filter, (err,result) => {
+            if(err) reject(err);
+
+            resolve(result);
+        });
+    })
+}
+
+exports.findMany = (collection,filter, client) => {
+    return new Promise((resolve,reject) => {
+        client.db().collection(collection).find(filter).toArray((err,result) => {
+            if(err) reject(err);
+
+            resolve(result);
+        });
+    });
+}
+
+exports.insertOne = (collection, object, client) => {
+    client.db().collection(collection).insertOne(object, (err,obj) => {
+
+    });
+}
+
+module.exports = exports;

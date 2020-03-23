@@ -1,10 +1,10 @@
 'use strict';
 
 var utils = require('../utils/writer.js');
-var Volunteer = require('../service/VolunteerService');
+var {VolunteerService} = require('../service/VolunteerService');
 
 module.exports.createVolunteer = function createVolunteer (req, res, next, body, volId) {
-  Volunteer.createVolunteer(body, volId)
+  req.VolunteerService.createVolunteer(body, volId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -14,7 +14,7 @@ module.exports.createVolunteer = function createVolunteer (req, res, next, body,
 };
 
 module.exports.getAllVolunteers = function getAllVolunteers (req, res, next) {
-  Volunteer.getAllVolunteers()
+  req.VolunteerService.getAllVolunteers()
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -24,7 +24,7 @@ module.exports.getAllVolunteers = function getAllVolunteers (req, res, next) {
 };
 
 module.exports.getVolunteerById = function getVolunteerById (req, res, next, volId) {
-  Volunteer.getVolunteerById(volId)
+  req.VolunteerService.getVolunteerById(volId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -34,7 +34,7 @@ module.exports.getVolunteerById = function getVolunteerById (req, res, next, vol
 };
 
 module.exports.registerVolunteer = function registerVolunteer (req, res, next, body) {
-  Volunteer.registerVolunteer(body)
+  req.VolunteerService.registerVolunteer(body)
     .then(function (response) {
       utils.writeJson(res, response);
     })
