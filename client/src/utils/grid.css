@@ -1,0 +1,21 @@
+.ag-theme-balham {
+  font-size: 16px;
+}
+
+.ag-theme-balham .ag-header-row {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.ag-theme-balham .ag-root-wrapper {
+  border-radius: 8px;
+}
+
+.ag-theme-balham .ag-header-cell::after, .ag-theme-balham .ag-header-group-cell::after {
+  background-color: transparent;
+}
+
+.ag-theme-balham .ag-header {
+  background-color: #fff;
+  border: none;
+}
