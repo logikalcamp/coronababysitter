@@ -7,16 +7,18 @@ export const Header = (props) => {
     const [redirect,setRedirect] = useState(false)
     return(
         <HeaderCon>
-            <HeaderSubCon >
-                <img src={window.location.origin + "/newL.png"} alt="nel" />
-                <label>בייבי קורונה</label>
-            </HeaderSubCon>
-            <HeaderSubCon >
-                {auth && <label>שם משתמש |</label>}
-                <button onClick={()=>{
-                    setRedirect(true)
-                }}>{auth ? "התנתקות":"התחברות"}</button>
-            </HeaderSubCon>
+            <SubCon>
+                <HeaderSubCon >
+                    <img src={window.location.origin + "/images/newL.png"} alt="nel" />
+                    <label>בייבי קורונה</label>
+                </HeaderSubCon>
+                <HeaderSubCon >
+                    {auth && <label>שם משתמש |</label>}
+                    <button onClick={()=>{
+                        setRedirect(true)
+                    }}>{auth ? "התנתקות":"התחברות"}</button>
+                </HeaderSubCon>
+            </SubCon>
             {redirect && <Redirect to={auth ? "/logout":"/login"}/>}
         </HeaderCon>
     )
@@ -24,9 +26,6 @@ export const Header = (props) => {
 
 const HeaderCon = styled.div`
     background:#8412A1;
-    display:flex;
-    justify-content:space-between;
-    padding:1rem;
 `
 const HeaderSubCon = styled.div`
     display:flex;
@@ -49,4 +48,12 @@ const HeaderSubCon = styled.div`
         outline:none;
         cursor:pointer;
     }
+`
+
+const SubCon = styled.div`
+    max-width:1366px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    padding:1rem;
 `

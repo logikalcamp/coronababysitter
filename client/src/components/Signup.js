@@ -1,5 +1,7 @@
 import React,{useState} from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
+import {BASE_URL} from '../constants'
 
 const Stepper = ({step,amount}) => {
     let steps = []
@@ -14,104 +16,92 @@ const Stepper = ({step,amount}) => {
 }
 
 
+const Text = ({text,value}) => {
+    return(
+        <InCon>
+            <label>{text}</label>
+            <input value={value} type="text"/>
+        </InCon>
+    )
+}
+
+const SelectInput = ({text,value})=>{
+    return(
+        <InCon>
+            <label>{text}</label>
+            <input value={value} type="text"/>
+        </InCon>
+    )
+}
+
+const Checkbox = ({text,value}) => {
+    return(
+        <InCon>
+            <label>{text}</label>
+            <input value={value} type="checkbox"/>
+        </InCon>
+    )
+}
+
+const Tags = ({text,value}) => {
+    return (
+        <InCon>
+            <label>{text}</label>
+            <input value={value} type="text"/>
+        </InCon>
+    )
+}
+
 export const Signup = (props) => {
     const [type,setType] = useState(props.match.params.type)
     const [step,setStep] = useState(1)
     console.log(props)
     return(
             <SignupCon>
-                <h2>להצטרפות</h2>
+                <h2 onClick={()=>{
+                    axios.post(BASE_URL+'/api/getimage',{url:"https://www.facebook.com/aviram.roisman"})
+                    .then(res=>console.log(res))
+                }}>להצטרפות</h2>
                 <h1>{type == "medical" ? "אני צוות רפואי":"אני מתנדב.ת"}</h1>
-                <Stepper amount={3} step={step}/>
+                <Stepper amount={2} step={step}/>
                 <SignupForm>
                 {
                     step == 1 && 
                     <section>
-                        <div>
-                            <label>step 1</label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
+                        <Text text={"שם פרטי"} value={""} />
+                        <Text text={"שם משפחה"} value={""} />
+                        <Text text={"ת.ז"} value={""} />
+                        <Text text={"גיל"} value={""} />
+                        <Text text={"מייל"} value={""} />
+                        <Text text={"מספר טלפון"} value={""} />
+                        <Checkbox text={"מגדר"} value={""} />
+
                     </section>
                 }
                 {
                     step == 2 && 
                     <section>
-                        <div>
-                            <label>step 2</label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
+                        <Text text={"מסלול לימודים"} value={""} />
+                        <Text text={"מוסד לימודים"} value={""} />
+                        <Text text={"חשבון פייסבוק"} value={""} />
+                        <Text text={"הערות נוספות"} value={""} />
+                        <Tags text={"תחומי עניין"} value={[]}/>
                     </section>
                 }
-                {
-                    step == 3 && 
-                    <section>
-                        <div>
-                            <label>step 3</label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
-                        <div>
-                            <label></label>
-                            <input type="text"/>
-                        </div>
-                    </section>
-                }              
+                
                 </SignupForm>
                 <Buttons step={step}>
                     {step != 1 && <button onClick={()=>setStep(step-1)}>הקודם</button>}
-                    {step != 3 && <button onClick={()=>setStep(step+1)}>הבא</button>}
-                    {step == 3 && <button onClick={()=>alert("סיימת בהצלחה")}>סיים</button>}
+                    {step != 2 && <button onClick={()=>setStep(step+1)}>הבא</button>}
+                    {step == 2 && <button onClick={()=>alert("סיימת בהצלחה")}>סיים</button>}
                 </Buttons>
             </SignupCon>    
         )
 } 
 
 const SignupCon = styled.div`
-    max-width:1330px;
-    margin:auto 1rem;
+    max-width:1366px;
+    margin:1rem auto ;
     h2{
         margin-bottom:0;
     }
@@ -148,4 +138,13 @@ const Buttons = styled.div`
     margin:auto;
     display:flex;
     justify-content:${props=>props.step ==1 ? "flex-end":"space-between"}
+`
+const InCon = styled.div`
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    margin-bottom:1rem;
+    input{
+        width:80%;
+    }
 `
