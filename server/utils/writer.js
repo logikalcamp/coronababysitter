@@ -11,10 +11,10 @@ var writeJson = exports.writeJson = function(request, response, arg1, arg2) {
   var code;
   var payload;
 
-  request.Mongoclient.db().close()
+  request.MongoClient.close()
 
   if(arg1 && arg1 instanceof ResponsePayload) {
-    writeJson(response, arg1.payload, arg1.code);
+    writeJson(req,response, arg1.payload, arg1.code);
     return;
   }
 
