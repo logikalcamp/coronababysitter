@@ -342,7 +342,7 @@ components:
       - tz
       type: object
       properties:
-        id:
+        _id:
           type: string
           description: MongoID
         name:
@@ -403,7 +403,7 @@ components:
       - name
       type: object
       properties:
-        id:
+        _id:
           type: string
           description: MongoID
         name:
@@ -457,7 +457,7 @@ components:
     Session:
       type: object
       properties:
-        id:
+        _id:
           type: string
           description: MongoID
         doctor:
@@ -558,7 +558,7 @@ components:
     Hamal:
       type: object
       properties:
-        id:
+        _id:
           type: string
           description: MongoID
         name:
@@ -649,7 +649,7 @@ components:
     Admin:
       type: object
       properties:
-        id:
+        _id:
           type: string
           description: MongoID
         username:

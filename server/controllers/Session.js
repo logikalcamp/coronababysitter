@@ -4,7 +4,7 @@ var utils = require('../utils/writer.js');
 var Session = require('../service/SessionService');
 
 module.exports.createSession = function createSession (req, res, next, body) {
-  Session.createSession(body)
+  req.SessionService.createSession(body)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -14,7 +14,7 @@ module.exports.createSession = function createSession (req, res, next, body) {
 };
 
 module.exports.getAllSessionsByUser = function getAllSessionsByUser (req, res, next, body, userId) {
-  Session.getAllSessionsByUser(body, userId)
+  req.SessionService.getAllSessionsByUser(body, userId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -24,7 +24,7 @@ module.exports.getAllSessionsByUser = function getAllSessionsByUser (req, res, n
 };
 
 module.exports.updateSession = function updateSession (req, res, next, body, sessionId) {
-  Session.updateSession(body, sessionId)
+  req.SessionService.updateSession(body, sessionId)
     .then(function (response) {
       utils.writeJson(res, response);
     })
