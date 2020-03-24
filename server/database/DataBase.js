@@ -64,4 +64,17 @@ exports.insertOne = (collection, object, client) => {
     });
 }
 
+exports.findOneAndUpdate = (collection, filter, newValues, client) => {
+    return new Promise((resolve, reject) => {
+        client.db().collection(collection).findOneAndUpdate(filter, { "$set": newValues }, (err,obj) => {
+            if (err) reject(err);
+            else if (obj.value == null) {
+                reject(collection + " not found")
+            }
+
+            resolve(obj)
+        });
+    })
+}
+
 module.exports = exports;

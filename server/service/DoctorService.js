@@ -15,9 +15,9 @@ class DoctorService {
    * docId String 
    * no response value expected for this operation
    **/
-  createDoctor(body,docId) {
-    return new Promise(function(resolve, reject) {
-      resolve();
+  createDoctor(body, docId) {
+    return new Promise((resolve, reject) => {
+      MongoDB.findOneAndUpdate(this.COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(docId) }, body, this.MongoClient).then(resolve, reject);
     });
   }
 
