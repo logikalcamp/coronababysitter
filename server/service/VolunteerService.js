@@ -1,6 +1,6 @@
 'use strict';
 
-const DB = require("../database/DataBase")
+const MongoDB = require("../database/DataBase")
 
 class VolunteerService {
   COLLECTION_NAME = "Volunteers"
@@ -39,7 +39,7 @@ class VolunteerService {
    * returns List
    **/
   getAllVolunteers() {
-    return DB.findMany(this.COLLECTION_NAME,{}, this.MongoClient);
+    return MongoDB.findMany(this.COLLECTION_NAME,{}, this.MongoClient);
   }
 
   /**
@@ -49,7 +49,7 @@ class VolunteerService {
    * returns Volunteer
    **/
   getVolunteerById(volId) {
-    return DB.findByMongoId(this.COLLECTION_NAME,volId);
+    return MongoDB.findByMongoId(this.COLLECTION_NAME,volId);
 
   //   return new Promise(function(resolve, reject) {
   //     var examples = {};
@@ -85,8 +85,15 @@ class VolunteerService {
    * no response value expected for this operation
    **/
   registerVolunteer(body) {
-    return new Promise(function(resolve, reject) {
-      resolve();
+    return new Promise((resolve, reject) => {
+      // Check if ID was already inserted
+      MongoDB.findOne(this.COLLECTION_NAME, {tz : body.tz}, this.MongoClient).then((result) => {
+        if(result) 
+          reject("Volunteer already exists");
+        else {
+          MongoDB.insertOne(this.COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
+        }
+      });
     });
   }
 }

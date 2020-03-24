@@ -22,7 +22,7 @@ var app = expressAppConfig.getApp();
 app.use("*", async (req,res,next) => {
     if(req.baseUrl.startsWith("/api")) {
             req.MongoClient = await dataBase.getClient();
-            req.VolunteerService = new VolunteerService(req.Mongoclient);
+            req.VolunteerService = new VolunteerService(req.MongoClient);
     }
 
     next()

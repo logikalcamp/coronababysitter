@@ -46,8 +46,12 @@ exports.findMany = (collection,filter, client) => {
 }
 
 exports.insertOne = (collection, object, client) => {
-    client.db().collection(collection).insertOne(object, (err,obj) => {
-
+    return new Promise((resolve,reject) => {
+        client.db().collection(collection).insertOne(object, (err,obj) => {
+            if (err) reject(err);
+    
+            resolve(obj);
+        });
     });
 }
 
