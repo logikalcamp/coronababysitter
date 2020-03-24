@@ -53,8 +53,10 @@ export const HomePage = (props) => {
                     <Paper className={classes.paperVolunteer}>
                     <Grid item xs>
                         <Typography>
+                        <Img>
                         <img src={window.location.origin + "/images/calender.png"} />
                         {myNextVolunteer}
+                        </Img>
                         <hr></hr>
                         {volunteer}
                         </Typography>
@@ -88,6 +90,20 @@ const HomeCon = styled.div`
         height:2rem;
         margin-right:1rem;
         padding-top:1rem;
+    }
+    label{
+        font-weight:bold;
+        font-size:25px;
+    }
+`
+
+const Img = styled.div`
+    img{
+        width:1rem;
+        height:1rem;
+        margin-left:0.5rem;
+        margin-right:0rem;
+        padding-top:0rem;
     }
     label{
         font-weight:bold;
