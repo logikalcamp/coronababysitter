@@ -1,123 +1,67 @@
 'use strict';
 
+const MongoDB = require("../database/DataBase")
 
-/**
- * Update the doctor's information after he got approved
- *
- * body Doctor  (optional)
- * docId String 
- * no response value expected for this operation
- **/
-exports.createDoctor = function(body,docId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+class DoctorService {
+  COLLECTION_NAME = "Doctors"
+  constructor(MongoClient) {
+    this.MongoClient = MongoClient;
+  };
+
+  /**
+   * Update the doctor's information after he got approved
+   *
+   * body Doctor  (optional)
+   * docId String 
+   * no response value expected for this operation
+   **/
+  createDoctor(body, docId) {
+    return new Promise((resolve, reject) => {
+      MongoDB.findOneAndUpdate(this.COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(docId) }, body, this.MongoClient).then(resolve, reject);
+    });
+  }
+
+
+  /**
+   * Get all doctors
+   *
+   * returns List
+   **/
+  getAllDoctors() {
+    return MongoDB.findMany(this.COLLECTION_NAME, {}, this.MongoClient);
+  }
+
+
+  /**
+   * Get a single doctor by Id
+   *
+   * docId Integer 
+   * returns Doctor
+   **/
+  getDoctorById(docId) {
+    return MongoDB.findByMongoId(this.COLLECTION_NAME, docId, this.MongoClient);
+  }
+
+
+  /**
+   * Register a new doctor
+   *
+   * body Doctor  (optional)
+   * no response value expected for this operation
+   **/
+  registerDoctor(body) {
+    return new Promise((resolve, reject) => {
+
+      // Check if ID was already inserted
+      MongoDB.findOne(this.COLLECTION_NAME, {tz : body.tz}, this.MongoClient).then((result) => {
+        if(result) 
+          reject("Doctor already exists");
+        else {
+          MongoDB.insertOne(this.COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
+        }
+      });
+    });
+  }
 }
 
-
-/**
- * Get all doctors
- *
- * returns List
- **/
-exports.getAllDoctors = function() {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "profession" : "profession",
-  "address" : "address",
-  "notes" : "notes",
-  "phone" : "phone",
-  "city" : "city",
-  "hobbies" : "hobbies",
-  "children" : [ {
-    "isFemale" : true,
-    "age" : 0
-  }, {
-    "isFemale" : true,
-    "age" : 0
-  } ],
-  "tz" : "tz",
-  "name" : "name",
-  "institute" : "institute",
-  "id" : "id",
-  "email" : ""
-}, {
-  "profession" : "profession",
-  "address" : "address",
-  "notes" : "notes",
-  "phone" : "phone",
-  "city" : "city",
-  "hobbies" : "hobbies",
-  "children" : [ {
-    "isFemale" : true,
-    "age" : 0
-  }, {
-    "isFemale" : true,
-    "age" : 0
-  } ],
-  "tz" : "tz",
-  "name" : "name",
-  "institute" : "institute",
-  "id" : "id",
-  "email" : ""
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
-
-
-/**
- * Get a single doctor by Id
- *
- * docId Integer 
- * returns Doctor
- **/
-exports.getDoctorById = function(docId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "profession" : "profession",
-  "address" : "address",
-  "notes" : "notes",
-  "phone" : "phone",
-  "city" : "city",
-  "hobbies" : "hobbies",
-  "children" : [ {
-    "isFemale" : true,
-    "age" : 0
-  }, {
-    "isFemale" : true,
-    "age" : 0
-  } ],
-  "tz" : "tz",
-  "name" : "name",
-  "institute" : "institute",
-  "id" : "id",
-  "email" : ""
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
-
-
-/**
- * Register a new doctor
- *
- * body Doctor  (optional)
- * no response value expected for this operation
- **/
-exports.registerDoctor = function(body) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
-}
-
+module.exports.DoctorService = DoctorService
