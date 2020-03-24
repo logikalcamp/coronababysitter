@@ -44,11 +44,26 @@ const Checkbox = ({text,value}) => {
     )
 }
 
-const Tags = ({text,value}) => {
+const Tags = ({text,state,functio,ke}) => {
     return (
         <InCon>
             <label>{text}</label>
-            <input value={value} type="text"/>
+            <div style={{border:"1px solid #828282",flexDirection:"row",borderRadius:"5px",display:"flex"}}>
+                {state[ke].map((x)=>{
+                    return <div style={{padding:".2rem",background:"#e2e2e2",margin:"0 3px",borderRadius:"5px"}}>{x}</div>
+                })}
+                <input style={{border:"none",width:"100%",outline:"none"}} onKeyDown={(e)=>{
+                    console.log(e.key)
+                    if(e.key=="Enter"){
+                        e.preventDefault()
+                        console.log(e.target.value)
+                        let d= {...state}
+                        d[ke] = d[ke].concat([e.target.value])
+                        functio(d)
+                        e.target.value=""
+                    }
+                }} type="text"/>
+            </div>
         </InCon>
     )
 }
@@ -83,7 +98,8 @@ export const Signup = (props) => {
         institue:'',
         proffesion:'',
         facebook:'',
-        comment:''
+        comment:'',
+        hobbies:[]
     })
 
     useEffect(() => {
@@ -142,7 +158,7 @@ export const Signup = (props) => {
                             </div>
                         }
                         <Text text={"הערות נוספות"} state={details} functio={setState} ke={'comments'}/>
-                        <Tags text={"תחומי עניין"} state={details} />
+                        <Tags text={"תחומי עניין"} state={details} functio={setState} ke={"hobbies"}/>
                     </section>
                 }
                 
