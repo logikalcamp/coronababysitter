@@ -1,6 +1,7 @@
 'use strict';
 
 var {VolunteerService} = require("./service/VolunteerService");
+var {SessionService} = require("./service/SessionService");
 
 var path = require('path');
 var http = require('http');
@@ -23,6 +24,7 @@ app.use("*", async (req,res,next) => {
     if(req.baseUrl.startsWith("/api")) {
             req.MongoClient = await dataBase.getClient();
             req.VolunteerService = new VolunteerService(req.MongoClient);
+            req.SessionService = new SessionService(req.MongoClient);
     }
 
     next()
