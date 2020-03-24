@@ -7,9 +7,11 @@ exports.respondWithCode = function(code, payload) {
   return new ResponsePayload(code, payload);
 }
 
-var writeJson = exports.writeJson = function(response, arg1, arg2) {
+var writeJson = exports.writeJson = function(request, response, arg1, arg2) {
   var code;
   var payload;
+
+  request.Mongoclient.db().close()
 
   if(arg1 && arg1 instanceof ResponsePayload) {
     writeJson(response, arg1.payload, arg1.code);
@@ -39,5 +41,6 @@ var writeJson = exports.writeJson = function(response, arg1, arg2) {
     payload = JSON.stringify(payload, null, 2);
   }
   response.writeHead(code, {'Content-Type': 'application/json'});
+  
   response.end(payload);
 }

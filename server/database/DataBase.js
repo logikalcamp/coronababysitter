@@ -15,6 +15,15 @@ exports.closeClient = (client) => {
     client.close();
 }
 
+exports.getMongoObjectId = (id) => {
+    if(!ObjectId.isValid(id)) {
+        return null
+    }
+    else {
+        return ObjectId(id);
+    }
+}
+
 // Find only one document in a collection specified
 exports.findOne = (collection,filter, client) => {
     return new Promise((resolve, reject) => {

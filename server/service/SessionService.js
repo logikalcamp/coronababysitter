@@ -1,5 +1,7 @@
 'use strict';
 
+var {Roles} = require("../utils/enums");
+const MongoDB = require("../database/DataBase")
 
 class SessionService {
   COLLECTION_NAME = "Sessions"
@@ -13,9 +15,17 @@ class SessionService {
    * body Session  (optional)
    * no response value expected for this operation
    **/
-  createSession(body) {
-    return new Promise(function(resolve, reject) {
-      resolve();
+  async createSession(body) {
+    return new Promise((resolve, reject) => {
+      // Check if a session with the same start time already exists for this doctor
+      MongoDB.findOne(this.COLLECTION_NAME, {"doctor._id" : MongoDB.getMongoObjectId(body.doctor._id),
+                                             startTime: body.startTime}, this.MongoClient).then((result) => {
+        if(result) 
+          reject("Session already exists");
+        else {
+          MongoDB.insertOne(this.COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
+        }
+      });
     });
   }
 
@@ -28,149 +38,18 @@ class SessionService {
    * returns List
    **/
   getAllSessionsByUser(body,userId) {
-    return new Promise(function(resolve, reject) {
-      var examples = {};
-      examples['application/json'] = [ {
-    "doctor" : {
-      "profession" : "profession",
-      "address" : "address",
-      "notes" : "notes",
-      "phone" : "phone",
-      "city" : "city",
-      "hobbies" : "hobbies",
-      "children" : [ {
-        "isFemale" : true,
-        "age" : 0
-      }, {
-        "isFemale" : true,
-        "age" : 0
-      } ],
-      "tz" : "tz",
-      "name" : "name",
-      "institute" : "institute",
-      "id" : "id",
-      "email" : ""
-    },
-    "timeRequested" : "2000-01-23T04:56:07.000+00:00",
-    "timeApproved" : "2000-01-23T04:56:07.000+00:00",
-    "recurring" : "once",
-    "startTime" : "2000-01-23T04:56:07.000+00:00",
-    "id" : "id",
-    "requests" : [ {
-      "birthday" : "2000-01-23T04:56:07.000+00:00",
-      "profession" : "profession",
-      "address" : "address",
-      "notes" : "notes",
-      "city" : "city",
-      "tz" : "tz",
-      "facebook" : "http://example.com/aeiou",
-      "photo" : "photo",
-      "phone" : "phone",
-      "hobbies" : "hobbies",
-      "name" : "name",
-      "institute" : "institute",
-      "id" : "id",
-      "email" : ""
-    }, {
-      "birthday" : "2000-01-23T04:56:07.000+00:00",
-      "profession" : "profession",
-      "address" : "address",
-      "notes" : "notes",
-      "city" : "city",
-      "tz" : "tz",
-      "facebook" : "http://example.com/aeiou",
-      "photo" : "photo",
-      "phone" : "phone",
-      "hobbies" : "hobbies",
-      "name" : "name",
-      "institute" : "institute",
-      "id" : "id",
-      "email" : ""
-    } ],
-    "endTime" : "2000-01-23T04:56:07.000+00:00",
-    "tasks" : [ {
-      "taskName" : "taskName",
-      "taskSelected" : true
-    }, {
-      "taskName" : "taskName",
-      "taskSelected" : true
-    } ],
-    "didHappen" : true
-  }, {
-    "doctor" : {
-      "profession" : "profession",
-      "address" : "address",
-      "notes" : "notes",
-      "phone" : "phone",
-      "city" : "city",
-      "hobbies" : "hobbies",
-      "children" : [ {
-        "isFemale" : true,
-        "age" : 0
-      }, {
-        "isFemale" : true,
-        "age" : 0
-      } ],
-      "tz" : "tz",
-      "name" : "name",
-      "institute" : "institute",
-      "id" : "id",
-      "email" : ""
-    },
-    "timeRequested" : "2000-01-23T04:56:07.000+00:00",
-    "timeApproved" : "2000-01-23T04:56:07.000+00:00",
-    "recurring" : "once",
-    "startTime" : "2000-01-23T04:56:07.000+00:00",
-    "id" : "id",
-    "requests" : [ {
-      "birthday" : "2000-01-23T04:56:07.000+00:00",
-      "profession" : "profession",
-      "address" : "address",
-      "notes" : "notes",
-      "city" : "city",
-      "tz" : "tz",
-      "facebook" : "http://example.com/aeiou",
-      "photo" : "photo",
-      "phone" : "phone",
-      "hobbies" : "hobbies",
-      "name" : "name",
-      "institute" : "institute",
-      "id" : "id",
-      "email" : ""
-    }, {
-      "birthday" : "2000-01-23T04:56:07.000+00:00",
-      "profession" : "profession",
-      "address" : "address",
-      "notes" : "notes",
-      "city" : "city",
-      "tz" : "tz",
-      "facebook" : "http://example.com/aeiou",
-      "photo" : "photo",
-      "phone" : "phone",
-      "hobbies" : "hobbies",
-      "name" : "name",
-      "institute" : "institute",
-      "id" : "id",
-      "email" : ""
-    } ],
-    "endTime" : "2000-01-23T04:56:07.000+00:00",
-    "tasks" : [ {
-      "taskName" : "taskName",
-      "taskSelected" : true
-    }, {
-      "taskName" : "taskName",
-      "taskSelected" : true
-    } ],
-    "didHappen" : true
-  } ];
-      if (Object.keys(examples).length > 0) {
-        resolve(examples[Object.keys(examples)[0]]);
-      } else {
-        resolve();
-      }
-    });
-  }
+    var filter = null;
 
+    if(body.role == Roles.volunteer) {
+      filter = {"doctor._id" : MongoDB.getMongoObjectId(userId)}
+    }
+    else if (body.role == Roles.doctor) {
+      filter = {$or: [{"filledBy._id" : MongoDB.getMongoObjectId(userId)}, 
+                      {"requests": {"$elemMatch" : {_id : MongoDB.getMongoObjectId(userId)}}}]};
+    }
+
+    return MongoDB.findMany(this.COLLECTION_NAME, filter, this.MongoClient);
+  }
 
   /**
    * Update a session
