@@ -18,11 +18,19 @@ const Stepper = ({step,amount}) => {
 
 
 
-const SelectInput = ({text,state,functio,ke})=>{
+const SelectInput = ({text,state,opt,functio,ke})=>{
     return(
         <InCon>
             <label>{text}</label>
-            <input value={state[ke]} type="text"/>
+            <select value={state[ke]} onChange={(e)=>{
+                        let m = {...state}
+                        m[ke] = e.target.value 
+                        functio(m)
+            }}>
+                {opt.map((x,i)=>{
+                    return(<option key={i} value={x}>{x}</option>)
+                })}
+            </select>
         </InCon>
     )
 }
@@ -61,22 +69,21 @@ const Text = ({text,state,functio,ke}) => {
 export const Signup = (props) => {
     const [type,setType] = useState(props.match.params.type)
     const [step,setStep] = useState(1)
+    const [step1,setStep1] = useState(false)
     const [img,setImg] = useState('')
     const [facebook,setFacebook] = useState('')
     const [details,setState] = useState({
-        name:'',
+        privateName:'',
         lastName:'',
         tz:'',
         birthday:'',
         email:'',
         phone:'',
-        gender:'',
+        gender:'יש לבחור',
         institue:'',
         proffesion:'',
         facebook:'',
         comment:''
-
-
     })
 
     useEffect(() => {
@@ -88,7 +95,16 @@ export const Signup = (props) => {
         }
     }, [facebook])
 
-
+    useEffect(() => {
+        console.log(details)
+        if(details.privateName=='' || details.lastName==''||details.tz==''||details.birthday==''||details.email==''||details.phone==''||details.gender=='יש לבחור'){
+            setStep1(false)
+        }else{
+            setStep1(true)
+            console.log("boom")
+        }
+        
+    }, [details])
 
 
     return(
@@ -106,8 +122,8 @@ export const Signup = (props) => {
                         <Text text={"גיל"} state={details} functio={setState} ke={"birthday"}/>
                         <Text text={"מייל"} state={details} functio={setState} ke={"email"}/>
                         <Text text={"מספר טלפון"} state={details} functio={setState} ke={"phone"}/>
-                        <SelectInput text={"מגדר"} state={details} functio={setState} ke={"gender"}/>
-
+                        <SelectInput text={"מין"} opt={["יש לבחור","זכר","נקבה"]} state={details} functio={setState} ke={"gender"}/>
+                        {step != 2 && <Butt disabled={!step1} s={!step1} onClick={()=>setStep(step+1)}>הבא</Butt>}
                     </section>
                 }
                 {
@@ -133,7 +149,7 @@ export const Signup = (props) => {
                 </SignupForm>
                 <Buttons step={step}>
                     {step != 1 && <button onClick={()=>setStep(step-1)}>הקודם</button>}
-                    {step != 2 && <button onClick={()=>setStep(step+1)}>הבא</button>}
+                    
                     {step == 2 && <button onClick={()=>alert("סיימת בהצלחה")}>סיים</button>}
                 </Buttons>
             </SignupCon>    
@@ -159,7 +175,7 @@ const Step = styled.div`
     height:1rem;
     border-radius:50px;
     margin:10px;
-    background:${props => props.active ? "#8412A1":"#828282"};
+    background:${props => props.active ? "#00C2CB":"#828282"};
 `
 
 const StepperCon = styled.div`
@@ -168,7 +184,7 @@ const StepperCon = styled.div`
 `
 
 const SignupForm = styled.div`
-    width:40%;
+    width:30%;
     margin:auto;
     display:flex;
     flex-direction:column;
@@ -176,33 +192,48 @@ const SignupForm = styled.div`
         display:flex;
         flex-direction:column;
     }
+
+`
+
+const Butt = styled.button`
+    background:#00C2CB;
+    border:none;
+    padding:.5rem 1rem ;
+    border-radius:5px;
+    color:white;
+    font-weight:bold;
+    float:left;
+    cursor:${props=> props.s ? "unset":"pointer" };
+    opacity:${props=> props.s ? "0.5":"1" };
 `
 const Buttons = styled.div`
-    width:40%;
+    width:30%;
     margin:auto;
     display:flex;
     justify-content:${props=>props.step ==1 ? "flex-end":"space-between"};
     button{
-        background:#8412A1;
+        background:#00C2CB;
         border:none;
         padding:.5rem 1rem ;
         border-radius:5px;
         color:white;
         font-weight:bold;
-        cursor:pointer;
+
     }
 `
 const InCon = styled.div`
-    width:80%;
     margin:auto;
     display:flex;
     flex-direction:column;
     margin-bottom:1rem;
-    input{
-        width:100%;
+    input,select{
         padding:0.5rem;
         border-radius:5px;
         border:1px solid #828282;
-        outline-color:#8412A1 ;
+        outline-color:#00C2CB ;
+        option{
+            padding:.5rem 0;
+        }
     }
+
 `
