@@ -2,8 +2,10 @@
 
 const MongoDB = require("../database/DataBase")
 
+var COLLECTION_NAME = "Doctors";
+
 class DoctorService {
-  COLLECTION_NAME = "Doctors"
+  
   constructor(MongoClient) {
     this.MongoClient = MongoClient;
   };
@@ -17,7 +19,7 @@ class DoctorService {
    **/
   createDoctor(body, docId) {
     return new Promise((resolve, reject) => {
-      MongoDB.findOneAndUpdate(this.COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(docId) }, body, this.MongoClient).then(resolve, reject);
+      MongoDB.findOneAndUpdate(COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(docId) }, body, this.MongoClient).then(resolve, reject);
     });
   }
 
@@ -28,7 +30,7 @@ class DoctorService {
    * returns List
    **/
   getAllDoctors() {
-    return MongoDB.findMany(this.COLLECTION_NAME, {}, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient);
   }
 
 
@@ -39,7 +41,7 @@ class DoctorService {
    * returns Doctor
    **/
   getDoctorById(docId) {
-    return MongoDB.findByMongoId(this.COLLECTION_NAME, docId, this.MongoClient);
+    return MongoDB.findByMongoId(COLLECTION_NAME, docId, this.MongoClient);
   }
 
 
@@ -53,11 +55,11 @@ class DoctorService {
     return new Promise((resolve, reject) => {
 
       // Check if ID was already inserted
-      MongoDB.findOne(this.COLLECTION_NAME, {tz : body.tz}, this.MongoClient).then((result) => {
+      MongoDB.findOne(COLLECTION_NAME, {tz : body.tz}, this.MongoClient).then((result) => {
         if(result) 
           reject("Doctor already exists");
         else {
-          MongoDB.insertOne(this.COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
+          MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
       });
     });
