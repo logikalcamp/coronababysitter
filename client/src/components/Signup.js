@@ -99,7 +99,9 @@ export const Signup = (props) => {
         proffesion:'',
         facebook:'',
         comment:'',
-        hobbies:[]
+        hobbies:[],
+        job:"",
+        role:''
     })
 
     useEffect(() => {
@@ -127,7 +129,7 @@ export const Signup = (props) => {
             <SignupCon>
                 <h2>להצטרפות</h2>
                 <h1>{type == "medical" ? "אני צוות רפואי":"אני מתנדב.ת"}</h1>
-                <Stepper amount={2} step={step}/>
+                {type!="medical" && <Stepper amount={2} step={step}/>}
                 <SignupForm>
                 {
                     step == 1 && 
@@ -135,15 +137,26 @@ export const Signup = (props) => {
                         <Text text={"שם פרטי"}  state={details} functio={setState} ke={'privateName'}/>
                         <Text text={"שם משפחה"}  state={details} functio={setState} ke={'lastName'}/>
                         <Text text={"ת.ז"} state={details} functio={setState} ke={"tz"} />
-                        <Text text={"גיל"} state={details} functio={setState} ke={"birthday"}/>
+                        
                         <Text text={"מייל"} state={details} functio={setState} ke={"email"}/>
                         <Text text={"מספר טלפון"} state={details} functio={setState} ke={"phone"}/>
-                        <SelectInput text={"מין"} opt={["יש לבחור","זכר","נקבה"]} state={details} functio={setState} ke={"gender"}/>
-                        {step != 2 && <Butt disabled={!step1} s={!step1} onClick={()=>setStep(step+1)}>הבא</Butt>}
+                        {type=="medical" ? 
+                        <React.Fragment>
+                            <Text text={"תפקיד"} state={details} functio={setState} ke={"role"}/>
+                            <Text text={"מקום עבודה"} state={details} functio={setState} ke={"job"}/>
+                        </React.Fragment>
+                        :
+                        <React.Fragment>
+                            <Text text={"תאריך לידה"} state={details} functio={setState} ke={"birthday"}/>
+                            <SelectInput text={"מין"} opt={["יש לבחור","זכר","נקבה"]} state={details} functio={setState} ke={"gender"}/>
+                        </React.Fragment>
+                        }
+                        {step != 2 && type!="medical" &&<Butt disabled={!step1} s={!step1} onClick={()=>setStep(step+1)}>הבא</Butt>}
+                        {type=="medical" && <Butt onClick={()=>alert("סיימת בהצלחה")}>סיים</Butt>}
                     </section>
                 }
                 {
-                    step == 2 && 
+                    step == 2 && type != "medical" &&
                     <section>
                         <Text text={"מסלול לימודים"} state={details} functio={setState} ke={'profession'} />
                         <Text text={"מוסד לימודים"}  state={details} functio={setState} ke={'institue'}/>
@@ -174,15 +187,22 @@ export const Signup = (props) => {
 
 const SignupCon = styled.div`
     max-width:1366px;
-    margin:1rem auto ;
+    padding:1rem;
+    /* margin:auto ; */
     section{
-        height:31rem;
+        /* height:31rem; */
     }
     h2{
-        margin-bottom:0;
+        margin:0;
     }
     h1{
         margin:0;
+    }
+    button{
+        font-size:18px;
+    }
+    button:hover{
+        background:#23898e;
     }
 `
 
@@ -207,6 +227,9 @@ const SignupForm = styled.div`
     div{
         display:flex;
         flex-direction:column;
+    }
+    @media (max-width:450px) {
+        width:80%;
     }
 
 `
@@ -235,6 +258,9 @@ const Buttons = styled.div`
         color:white;
         font-weight:bold;
 
+    }
+    @media (max-width:450px) {
+        width:80%;
     }
 `
 const InCon = styled.div`

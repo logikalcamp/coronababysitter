@@ -71,6 +71,7 @@ router.post('/getimage',(req,res)=>{
     }
   }, function (error, response, body) {
     if (error) {
+      console.log(error)
       throw (error);
     }
     if (response.statusCode === 200) {
