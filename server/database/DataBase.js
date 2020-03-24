@@ -25,7 +25,7 @@ exports.getMongoObjectId = (id) => {
 }
 
 // Find only one document in a collection specified
-exports.findOne = (collection,filter, client) => {
+exports.findOne = (collection, filter, client) => {
     return new Promise((resolve, reject) => {
         client.db().collection(collection).findOne(filter, (err,result) => {
             if(err) reject(err);
@@ -44,7 +44,7 @@ exports.findByMongoId = (collection, id, client) => {
     }
 }
 
-exports.findMany = (collection,filter, client) => {
+exports.findMany = (collection, filter, client) => {
     return new Promise((resolve,reject) => {
         client.db().collection(collection).find(filter).toArray((err,result) => {
             if(err) reject(err);
