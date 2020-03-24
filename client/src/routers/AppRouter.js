@@ -5,14 +5,18 @@ import {Header} from '../components/Header'
 import {Footer} from '../components/Footer'
 import {Landing} from '../components/Landing'
 import {Signup} from '../components/Signup'
+import {HomePage} from '../components/HomePage'
 const AppRouter = () =>(
     <Router>
       <Header/>
       <Switch>          
         <Route exact path="/" component={Landing}/>
         <Route exact path="/signup/:type" component={Signup}/>
-        {/* <PrivateRoute exact path="/meeting/:id" component={Meeting} />
-        <PrivateRoute exact path="/summary/:id" component={Summary} /> */}
+        <Route exact path="/homepage" component={HomePage}/>
+        {/* 
+        <PrivateRoute exact path="/meeting/:id" component={Meeting} />
+        <PrivateRoute exact path="/summary/:id" component={Summary} />
+        */}
       </Switch>
       <Footer/>
     </Router>
