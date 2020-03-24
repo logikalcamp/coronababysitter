@@ -1,4 +1,4 @@
-const {MongoClient} = require('mongodb');
+const {MongoClient, ObjectId} = require('mongodb');
 const uri = "mongodb://server:coronababy2020@ds159546.mlab.com:59546/corona-babies";
 
 var exports = {}
@@ -24,6 +24,15 @@ exports.findOne = (collection,filter, client) => {
             resolve(result);
         });
     })
+}
+
+
+exports.findByMongoId = (collection, id, client) => {
+    if(!ObjectId.isValid(id)) 
+        return Promise.reject(new TypeError(`Invalid ID ${id}`))
+    else {
+        return exports.findOne(collection,{_id: ObjectId(id)}, client);
+    }
 }
 
 exports.findMany = (collection,filter, client) => {

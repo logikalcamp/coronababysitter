@@ -3,6 +3,7 @@
 const DB = require("../database/DataBase")
 
 class VolunteerService {
+  COLLECTION_NAME = "Volunteers"
   constructor(MongoClient) {
     this.MongoClient = MongoClient;
   }
@@ -38,7 +39,7 @@ class VolunteerService {
    * returns List
    **/
   getAllVolunteers() {
-    return DB.findMany("Volunteers",{}, this.MongoClient);
+    return DB.findMany(this.COLLECTION_NAME,{}, this.MongoClient);
   }
 
   /**
@@ -48,30 +49,32 @@ class VolunteerService {
    * returns Volunteer
    **/
   getVolunteerById(volId) {
-    return new Promise(function(resolve, reject) {
-      var examples = {};
-      examples['application/json'] = {
-    "birthday" : "2000-01-23T04:56:07.000+00:00",
-    "profession" : "profession",
-    "address" : "address",
-    "notes" : "notes",
-    "city" : "city",
-    "tz" : "tz",
-    "facebook" : "http://example.com/aeiou",
-    "photo" : "photo",
-    "phone" : "phone",
-    "hobbies" : "hobbies",
-    "name" : "name",
-    "institute" : "institute",
-    "id" : "id",
-    "email" : ""
-  };
-      if (Object.keys(examples).length > 0) {
-        resolve(examples[Object.keys(examples)[0]]);
-      } else {
-        resolve();
-      }
-    });
+    return DB.findByMongoId(this.COLLECTION_NAME,volId);
+
+  //   return new Promise(function(resolve, reject) {
+  //     var examples = {};
+  //     examples['application/json'] = {
+  //   "birthday" : "2000-01-23T04:56:07.000+00:00",
+  //   "profession" : "profession",
+  //   "address" : "address",
+  //   "notes" : "notes",
+  //   "city" : "city",
+  //   "tz" : "tz",
+  //   "facebook" : "http://example.com/aeiou",
+  //   "photo" : "photo",
+  //   "phone" : "phone",
+  //   "hobbies" : "hobbies",
+  //   "name" : "name",
+  //   "institute" : "institute",
+  //   "id" : "id",
+  //   "email" : ""
+  // };
+  //     if (Object.keys(examples).length > 0) {
+  //       resolve(examples[Object.keys(examples)[0]]);
+  //     } else {
+  //       resolve();
+  //     }
+  //   });
   }
 
 
