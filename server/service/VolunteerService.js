@@ -20,18 +20,6 @@ class VolunteerService {
       resolve();
     });
   }
-  /**
-   * Update the volunteer's information after he got approved
-   *
-   * body Volunteer  (optional)
-   * volId Integer 
-   * no response value expected for this operation
-   **/
-  createVolunteer(body,volId) {
-    return new Promise(function(resolve, reject) {
-      resolve();
-    });
-  }
 
   /**
    * Get all volunteers
