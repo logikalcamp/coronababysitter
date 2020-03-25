@@ -3,8 +3,10 @@
 var {Roles} = require("../utils/enums");
 const MongoDB = require("../database/DataBase")
 
+var COLLECTION_NAME = "Sessions"
+
 class SessionService {
-  COLLECTION_NAME = "Sessions"
+  
   constructor(MongoClient) {
     this.MongoClient = MongoClient;
   }
@@ -18,12 +20,12 @@ class SessionService {
   async createSession(body) {
     return new Promise((resolve, reject) => {
       // Check if a session with the same start time already exists for this doctor
-      MongoDB.findOne(this.COLLECTION_NAME, {"doctor._id" : MongoDB.getMongoObjectId(body.doctor._id),
+      MongoDB.findOne(COLLECTION_NAME, {"doctor._id" : MongoDB.getMongoObjectId(body.doctor._id),
                                              startTime: body.startTime}, this.MongoClient).then((result) => {
         if(result) 
           reject("Session already exists");
         else {
-          MongoDB.insertOne(this.COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
+          MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
       });
     });
@@ -48,7 +50,7 @@ class SessionService {
                       {"requests": {"$elemMatch" : {_id : MongoDB.getMongoObjectId(userId)}}}]};
     }
 
-    return MongoDB.findMany(this.COLLECTION_NAME, filter, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME, filter, this.MongoClient);
   }
 
   /**

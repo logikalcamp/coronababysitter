@@ -2,8 +2,10 @@
 
 const MongoDB = require("../database/DataBase")
 
+var COLLECTION_NAME = "Volunteers";
+
 class VolunteerService {
-  COLLECTION_NAME = "Volunteers"
+  //COLLECTION_NAME = "Volunteers"
   constructor(MongoClient) {
     this.MongoClient = MongoClient;
   }
@@ -27,7 +29,7 @@ class VolunteerService {
    * returns List
    **/
   getAllVolunteers() {
-    return MongoDB.findMany(this.COLLECTION_NAME,{}, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME,{}, this.MongoClient);
   }
 
   /**
@@ -37,7 +39,7 @@ class VolunteerService {
    * returns Volunteer
    **/
   getVolunteerById(volId) {
-    return MongoDB.findByMongoId(this.COLLECTION_NAME,volId);
+    return MongoDB.findByMongoId(COLLECTION_NAME,volId);
   }
 
 
@@ -50,11 +52,11 @@ class VolunteerService {
   registerVolunteer(body) {
     return new Promise((resolve, reject) => {
       // Check if ID was already inserted
-      MongoDB.findOne(this.COLLECTION_NAME, {tz : body.tz}, this.MongoClient).then((result) => {
+      MongoDB.findOne(COLLECTION_NAME, {tz : body.tz}, this.MongoClient).then((result) => {
         if(result) 
           reject("Volunteer already exists");
         else {
-          MongoDB.insertOne(this.COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
+          MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
       });
     });
