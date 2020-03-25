@@ -1,197 +1,61 @@
 'use strict';
+const MongoDB = require("../database/DataBase")
+var COLLECTION_NAME = "HamalUsers"
 
+class HamalService {  constructor(MongoClient) {
+    this.MongoClient = MongoClient;
+  }
 
-/**
- * Approve or reject a user (doctor / volunteer)
- *
- * body Body_1  (optional)
- * userId String 
- * no response value expected for this operation
- **/
-exports.approveUser = function(body,userId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
-}
+  /**
+   * Approve or reject a user (doctor / volunteer)
+   * userId String 
+   * no response value expected for this operation
+   **/
+  approveUser(body,userId){
+      return new Promise((resolve, reject) => {
 
-
-/**
- * Create new hamal user
- *
- * body Hamal  (optional)
- * no response value expected for this operation
- **/
-exports.createHamalUser = function(body) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
-}
-
-
-/**
- * Get all hamal users
- *
- * returns List
- **/
-exports.getAllHamalUsers = function() {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "password" : "password",
-  "volunteersApproved" : [ {
-    "birthday" : "2000-01-23T04:56:07.000+00:00",
-    "profession" : "profession",
-    "address" : "address",
-    "notes" : "notes",
-    "city" : "city",
-    "tz" : "tz",
-    "facebook" : "http://example.com/aeiou",
-    "photo" : "photo",
-    "phone" : "phone",
-    "hobbies" : "hobbies",
-    "name" : "name",
-    "institute" : "institute",
-    "id" : "id",
-    "email" : ""
-  }, {
-    "birthday" : "2000-01-23T04:56:07.000+00:00",
-    "profession" : "profession",
-    "address" : "address",
-    "notes" : "notes",
-    "city" : "city",
-    "tz" : "tz",
-    "facebook" : "http://example.com/aeiou",
-    "photo" : "photo",
-    "phone" : "phone",
-    "hobbies" : "hobbies",
-    "name" : "name",
-    "institute" : "institute",
-    "id" : "id",
-    "email" : ""
-  } ],
-  "tz" : "tz",
-  "name" : "name",
-  "id" : "id",
-  "doctorsApproved" : [ {
-    "profession" : "profession",
-    "address" : "address",
-    "notes" : "notes",
-    "phone" : "phone",
-    "city" : "city",
-    "hobbies" : "hobbies",
-    "children" : [ {
-      "isFemale" : true,
-      "age" : 0
-    }, {
-      "isFemale" : true,
-      "age" : 0
-    } ],
-    "tz" : "tz",
-    "name" : "name",
-    "institute" : "institute",
-    "id" : "id",
-    "email" : ""
-  }, {
-    "profession" : "profession",
-    "address" : "address",
-    "notes" : "notes",
-    "phone" : "phone",
-    "city" : "city",
-    "hobbies" : "hobbies",
-    "children" : [ {
-      "isFemale" : true,
-      "age" : 0
-    }, {
-      "isFemale" : true,
-      "age" : 0
-    } ],
-    "tz" : "tz",
-    "name" : "name",
-    "institute" : "institute",
-    "id" : "id",
-    "email" : ""
-  } ]
-}, {
-  "password" : "password",
-  "volunteersApproved" : [ {
-    "birthday" : "2000-01-23T04:56:07.000+00:00",
-    "profession" : "profession",
-    "address" : "address",
-    "notes" : "notes",
-    "city" : "city",
-    "tz" : "tz",
-    "facebook" : "http://example.com/aeiou",
-    "photo" : "photo",
-    "phone" : "phone",
-    "hobbies" : "hobbies",
-    "name" : "name",
-    "institute" : "institute",
-    "id" : "id",
-    "email" : ""
-  }, {
-    "birthday" : "2000-01-23T04:56:07.000+00:00",
-    "profession" : "profession",
-    "address" : "address",
-    "notes" : "notes",
-    "city" : "city",
-    "tz" : "tz",
-    "facebook" : "http://example.com/aeiou",
-    "photo" : "photo",
-    "phone" : "phone",
-    "hobbies" : "hobbies",
-    "name" : "name",
-    "institute" : "institute",
-    "id" : "id",
-    "email" : ""
-  } ],
-  "tz" : "tz",
-  "name" : "name",
-  "id" : "id",
-  "doctorsApproved" : [ {
-    "profession" : "profession",
-    "address" : "address",
-    "notes" : "notes",
-    "phone" : "phone",
-    "city" : "city",
-    "hobbies" : "hobbies",
-    "children" : [ {
-      "isFemale" : true,
-      "age" : 0
-    }, {
-      "isFemale" : true,
-      "age" : 0
-    } ],
-    "tz" : "tz",
-    "name" : "name",
-    "institute" : "institute",
-    "id" : "id",
-    "email" : ""
-  }, {
-    "profession" : "profession",
-    "address" : "address",
-    "notes" : "notes",
-    "phone" : "phone",
-    "city" : "city",
-    "hobbies" : "hobbies",
-    "children" : [ {
-      "isFemale" : true,
-      "age" : 0
-    }, {
-      "isFemale" : true,
-      "age" : 0
-    } ],
-    "tz" : "tz",
-    "name" : "name",
-    "institute" : "institute",
-    "id" : "id",
-    "email" : ""
-  } ]
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+        var isDoctor = true;
+        // Checks whether its a doctor or a volunteer
+        if(body.role == "volunteer") isDoctor = false;
+        if(isDoctor)
+        //possible validation (not tested)  MongoDB.findOne("Doctors", {"doctor._id" : MongoDB.getMongoObjectId(body.userId)}, this.MongoClient).then((result) => {
+        //    if(!result) reject("error : couldn't find doctor to update");
+          MongoDB.findOneAndUpdate("Doctors", { '_id': MongoDB.getMongoObjectId(userId)},{isApproved : true},this.MongoClient).then(resolve, reject);
+          
+        else
+          MongoDB.findOneAndUpdate("Volunteers", { '_id': MongoDB.getMongoObjectId(userId)},{isApproved : true},this.MongoClient).then(resolve, reject);
+        });
+        
     }
-  });
+  
+ 
+  /**
+   * Create new hamal user.
+   * Hamal users must have unique names.
+   * no response value expected for this operation
+   **/
+  createHamalUser(body) {
+    return new Promise((resolve, reject) => {
+      // Check if we have a hamal user with this name
+      MongoDB.findOne(COLLECTION_NAME, {name : body.name}, this.MongoClient).then((result) => {
+        if(result) 
+          reject("a user with that name already exists");
+        else 
+          MongoDB.insertOne(COLLECTION_NAME, body, this.MongoClient).then(resolve, reject);
+
+      });
+    });
+  }
+ 
+  /**
+   * Get all hamal users
+   *
+   * returns List
+   **/
+  getAllHamalUsers(body) {
+     return MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient);
+    
+  }
 }
 
+module.exports.HamalService = HamalService;

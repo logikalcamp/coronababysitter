@@ -61,6 +61,7 @@ class DoctorService {
         else {
           MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
+        
       });
     });
   }

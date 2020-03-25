@@ -3,7 +3,7 @@
 var {VolunteerService} = require("./service/VolunteerService");
 var {SessionService} = require("./service/SessionService");
 var {DoctorService} = require("./service/DoctorService");
-
+var {HamalService} = require("./service/HamalService");
 var path = require('path');
 var http = require('http');
 
@@ -26,7 +26,8 @@ app.use("*", async (req,res,next) => {
             req.MongoClient = await dataBase.getClient();
             req.VolunteerService = new VolunteerService(req.MongoClient);
             req.SessionService = new SessionService(req.MongoClient);
-            req.DoctorService = new DoctorService(req.MongoClient)
+            req.DoctorService = new DoctorService(req.MongoClient);
+            req.HamalService = new HamalService(req.MongoClient)
     }
 
     next()
