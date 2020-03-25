@@ -126,6 +126,7 @@ export const Signup = (props) => {
 
 
     return(
+        <div style={{height:"100%"}}>
             <SignupCon>
                 <h2>להצטרפות</h2>
                 <h1>{type == "medical" ? "אני צוות רפואי":"אני מתנדב.ת"}</h1>
@@ -182,13 +183,14 @@ export const Signup = (props) => {
                     {step == 2 && <button onClick={()=>alert("סיימת בהצלחה")}>סיים</button>}
                 </Buttons>
             </SignupCon>    
+            </div>
         )
 } 
 
 const SignupCon = styled.div`
     max-width:1366px;
     padding:1rem;
-    /* margin:auto ; */
+    margin:auto;
     section{
         /* height:31rem; */
     }
