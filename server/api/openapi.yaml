@@ -139,7 +139,7 @@ paths:
         style: simple
         explode: false
         schema:
-          type: string
+          type: integer
       responses:
         "200":
           description: Doctor found
@@ -377,9 +377,7 @@ components:
           type: string
           description: Link to the user's photo, hosted on a photo server/cloud
         hobbies:
-          type: array
-          items:
-            type: string
+          type: string
         notes:
           type: string
       example:
@@ -392,7 +390,7 @@ components:
         facebook: http://example.com/aeiou
         photo: photo
         phone: phone
-        hobbies: [hobbie1, hobbie2]
+        hobbies: hobbies
         name: name
         institute: institute
         id: id
@@ -430,9 +428,7 @@ components:
         address:
           type: string
         hobbies:
-          type: array
-          items:
-            type: string
+          type: string
         notes:
           type: string
         children:
@@ -445,7 +441,7 @@ components:
         notes: notes
         phone: phone
         city: city
-        hobbies: [hobbie1, hobbie2]
+        hobbies: hobbies
         children:
         - isFemale: true
           age: 0
@@ -505,7 +501,7 @@ components:
           notes: notes
           phone: phone
           city: city
-          hobbies: [hobbie1, hobbie2]
+          hobbies: hobbies
           children:
           - isFemale: true
             age: 0
