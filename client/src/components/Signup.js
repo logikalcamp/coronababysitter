@@ -168,7 +168,7 @@ export const Signup = (props) => {
     const [details,setState] =  useState({})
     const [errors,setError] = useState({})
     const [agree,setAgreement] = useState(false)
-    const [done,setDone] = useState(true)
+    const [done,setDone] = useState(false)
 
     useEffect(() => {
       console.log(errors)
@@ -414,21 +414,23 @@ export const Signup = (props) => {
                     disabled={!_.isEmpty(errors)}
                     s={!_.isEmpty(errors)}
                     onClick={()=>{
-                        let data= {
-                        "birthday": new Date(),
-                        "profession": details.profession,
-                        "address": details.address,
-                        "notes": details.notes+"asdas",
-                        "city": "city",
-                        "tz": details.tz,
-                        "facebook": details.facebook,
-                        "photo": "photo",
-                        "phone": details.phone,
-                        "hobbies": "hobbies",
-                        "name": details.firstName,
-                        "institute": details.institute,
-                        "email": details.email
-                        }
+                        // let data= {
+                        // "birthday": new Date(),
+                        // "profession": details.profession,
+                        // "address": details.address,
+                        // "notes": details.notes+"asdas",
+                        // "city": "city",
+                        // "tz": details.tz,
+                        // "facebook": details.facebook,
+                        // "photo": "photo",
+                        // "phone": details.phone,
+                        // "hobbies": "hobbies",
+                        // "name": details.firstName,
+                        // "institute": details.institute,
+                        // "email": details.email
+                        // }
+                        let data = {...details}
+                        data.birthday = new Date (moment(details.birthday,"DD/MM/YYYY").format())
                         console.log(data)
                          axios.put(BASE_URL+'/api/volunteer/register',data)
                          .then(res=>{
