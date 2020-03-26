@@ -24,10 +24,11 @@ var app = expressAppConfig.getApp();
 app.use("*", async (req,res,next) => {
     if(req.baseUrl.startsWith("/api")) {
             req.MongoClient = await dataBase.getConnection();
-            req.VolunteerService = new VolunteerService(req.MongoClient);
-            req.SessionService = new SessionService(req.MongoClient);
-            req.DoctorService = new DoctorService(req.MongoClient);
-            req.HamalService = new HamalService(req.MongoClient)
+            req.MongoDB = req.MongoClient.db();
+            req.VolunteerService = new VolunteerService(req.MongoDB);
+            req.SessionService = new SessionService(req.MongoDB);
+            req.DoctorService = new DoctorService(req.MongoDB);
+            req.HamalService = new HamalService(req.MongoDB)
     }
 
     next()

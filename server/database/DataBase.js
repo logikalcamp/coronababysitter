@@ -19,26 +19,15 @@ exports.initDataBase = async () => {
 
 exports.getConnection = async () => {
     return new Promise((resolve, reject) => {
-        if(!MongoDB) {
-            new MongoClient.connect(uri, {
-                poolSize : 10
-            }).then((client,err) => {
-                if(err) {
-                    reject(err)
-                }
-
-                MongoDB = client.db();
-                resolve(MongoDB);
-            });
-        }
-        else {
-            resolve(MongoDB);
-        }
-        
-    })
-    
-
-    return newClient;
+        new MongoClient.connect(uri, {
+            poolSize : 10
+        }).then((client,err) => {
+            if(err) {
+                reject(err)
+            }
+            resolve(client);
+        });
+    });
 }
 
 exports.closeClient = (client) => {
