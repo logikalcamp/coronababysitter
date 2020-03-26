@@ -139,7 +139,7 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
+          type: string
       responses:
         "200":
           description: Doctor found
@@ -267,6 +267,62 @@ paths:
           description: User not found
         "405":
           description: Invalid input
+      x-swagger-router-controller: Session
+
+  /session/getUpcomingSessions/{userId}:
+    get:
+      tags:
+      - sessions
+      summary: Get all approved upcoming sessions for volunteer
+      operationId: getAllUpcomingApprovedSessionsByVolunteer
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: All approved future seessions for volunteer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
+      x-swagger-router-controller: Session
+
+  /session/getNotYetApprovedSessions/{userId}:
+    get:
+      tags:
+      - sessions
+      summary: Get all not yet approved upcoming sessions for volunteer
+      operationId: getAllUpcomingNotYetApprovedSessionsByVolunteer
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: All not yet approved future seessions for volunteer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
       x-swagger-router-controller: Session
   /hamal:
     post:
