@@ -88,7 +88,7 @@ export const Signup = (props) => {
     const [img,setImg] = useState('')
     const [facebook,setFacebook] = useState('')
     const [details,setState] = useState({
-        privateName:'',
+        name:'',
         lastName:'',
         tz:'',
         birthday:'',
@@ -115,7 +115,7 @@ export const Signup = (props) => {
 
     useEffect(() => {
         console.log(details)
-        if(details.privateName=='' || details.lastName==''||details.tz==''||details.birthday==''||details.email==''||details.phone==''||details.gender=='יש לבחור'){
+        if(details.name=='' || details.lastName==''||details.tz==''||details.birthday==''||details.email==''||details.phone==''||details.gender=='יש לבחור'){
             setStep1(false)
         }else{
             setStep1(true)
@@ -126,7 +126,7 @@ export const Signup = (props) => {
 
 
     return(
-        <div style={{height:"100%"}}>
+        <div >
             <SignupCon>
                 <h2>להצטרפות</h2>
                 <h1>{type == "medical" ? "אני צוות רפואי":"אני מתנדב.ת"}</h1>
@@ -135,7 +135,7 @@ export const Signup = (props) => {
                 {
                     step == 1 && 
                     <section>
-                        <Text text={"שם פרטי"}  state={details} functio={setState} ke={'privateName'}/>
+                        <Text text={"שם פרטי"}  state={details} functio={setState} ke={'name'}/>
                         <Text text={"שם משפחה"}  state={details} functio={setState} ke={'lastName'}/>
                         <Text text={"ת.ז"} state={details} functio={setState} ke={"tz"} />
                         
@@ -153,7 +153,9 @@ export const Signup = (props) => {
                         </React.Fragment>
                         }
                         {step != 2 && type!="medical" &&<Butt disabled={!step1} s={!step1} onClick={()=>setStep(step+1)}>הבא</Butt>}
-                        {type=="medical" && <Butt onClick={()=>alert("סיימת בהצלחה")}>סיים</Butt>}
+                        {type=="medical" && <Butt onClick={()=>{
+                           
+                        }}>סיים</Butt>}
                     </section>
                 }
                 {
@@ -180,7 +182,12 @@ export const Signup = (props) => {
                 <Buttons step={step}>
                     {step != 1 && <button onClick={()=>setStep(step-1)}>הקודם</button>}
                     
-                    {step == 2 && <button onClick={()=>alert("סיימת בהצלחה")}>סיים</button>}
+                    {step == 2 && <button onClick={()=>{
+                         axios.put(BASE_URL+'/api/volunteer/register',details)
+                         .then(res=>{
+                             console.log(res)
+                         })
+                    }}>סיים</button>}
                 </Buttons>
             </SignupCon>    
             </div>
