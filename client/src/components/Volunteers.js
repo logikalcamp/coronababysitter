@@ -188,9 +188,12 @@ export const VolunteersPage = (props) => {
         address: 'גבעתיים, השיזף 8', picture:''
     }]
 
-    fetch('/api/volunteers/all').then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
+    fetch('/api/volunteers/all').then(response => 
+        response.json())
+        .then(data => 
+            console.log(data))
+        .catch(error => 
+            console.error(error));
 
     var voluteerMap = list.map(item => <div className={classes.tableRow}>
         <div className={classes.imageCell}>
