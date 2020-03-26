@@ -25,6 +25,7 @@
     "googleapis": "^39.2.0",
     "js-yaml": "^3.3.0",
     "mongodb": "^3.5.5",
+    "nodemailer": "^6.4.6",
     "nodemon": "^2.0.2",
     "oas3-tools": "^2.0.2",
     "path": "^0.12.7",
