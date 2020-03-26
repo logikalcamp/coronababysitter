@@ -139,7 +139,7 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
+          type: string
       responses:
         "200":
           description: Doctor found
@@ -268,6 +268,62 @@ paths:
         "405":
           description: Invalid input
       x-swagger-router-controller: Session
+
+  /session/getUpcomingSessions/{userId}:
+    get:
+      tags:
+      - sessions
+      summary: Get all approved upcoming sessions for volunteer
+      operationId: getAllUpcomingApprovedSessionsByVolunteer
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: All approved future seessions for volunteer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
+      x-swagger-router-controller: Session
+
+  /session/getNotYetApprovedSessions/{userId}:
+    get:
+      tags:
+      - sessions
+      summary: Get all not yet approved upcoming sessions for volunteer
+      operationId: getAllUpcomingNotYetApprovedSessionsByVolunteer
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: All not yet approved future seessions for volunteer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
+      x-swagger-router-controller: Session
   /hamal:
     post:
       tags:
@@ -341,12 +397,13 @@ components:
       - tz
       type: object
       properties:
-        _id:
+        id:
           type: string
           description: MongoID
-        name:
+        firstName:
           type: string
-          description: Firstname Lastname
+        lastName:
+          type: string
         tz:
           type: string
           description: Teudat Zehut
@@ -374,8 +431,12 @@ components:
         photo:
           type: string
           description: Link to the user's photo, hosted on a photo server/cloud
+        isFemale:
+          type: boolean
         hobbies:
-          type: string
+          type: array
+          items:
+            type: string
         notes:
           type: string
       example:
@@ -404,9 +465,10 @@ components:
         _id:
           type: string
           description: MongoID
-        name:
+        firstName:
           type: string
-          description: Firstname Lastname
+        lastName:
+          type: string
         tz:
           type: string
           description: Teudat Zehut
@@ -426,7 +488,9 @@ components:
         address:
           type: string
         hobbies:
-          type: string
+          type: array
+          items:
+            type: string
         notes:
           type: string
         children:
@@ -559,7 +623,9 @@ components:
         _id:
           type: string
           description: MongoID
-        name:
+        firstName:
+          type: string
+        lastName:
           type: string
         tz:
           type: string
