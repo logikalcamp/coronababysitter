@@ -28,8 +28,8 @@ class EmailService {
     getSystemEmail() {
         // TODO: Save in DB / encrypted ?
         systemEmail = {
-            user: 'sitterseekerapp@gmail.com',
-            pass: 'coronababy2020'
+            user: 'AppSitterSeeker@gmai.com',
+            pass: 'sitterseeker2020'
         }
     }
 
