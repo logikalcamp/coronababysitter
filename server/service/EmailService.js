@@ -1,8 +1,14 @@
 'use strict';
 
+const mailer = require('nodemailer')
+
 class EmailService {
+
+    constructor() {
+
+    }
+
     sendEmail(recipientEmail, email) {
-        var mailer = require('nodemailer')
         var transporter = mailer.createTransport({
             service: 'gmail',
             auth: this.getSystemEmail()
@@ -27,7 +33,8 @@ class EmailService {
 
     getSystemEmail() {
         // TODO: Save in DB / encrypted ?
-        systemEmail = {
+        return {
+            type: 'OAuth2',
             user: 'sitterseekerapp@gmail.com',
             pass: 'coronababy2020'
         }

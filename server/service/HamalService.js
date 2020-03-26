@@ -1,10 +1,11 @@
 'use strict';
 const MongoDB = require("../database/DataBase")
-const EmailService = require("./EmailService")
+const {EmailService} = require("./EmailService")
 
 var COLLECTION_NAME = "HamalUsers"
 
-class HamalService {  constructor(MongoClient) {
+class HamalService {  
+  constructor(MongoClient) {
     this.MongoClient = MongoClient;
   }
 
