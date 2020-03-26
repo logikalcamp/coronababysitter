@@ -7,11 +7,13 @@ import {Landing} from '../components/Landing'
 import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
 import { VolunteersPage } from '../components/Volunteers';
+import Policy from '../components/Policy'
 const AppRouter = () =>(
     <Router>
       <Header/>
       <Switch>          
         <Route exact path="/" component={Landing}/>
+        <Route exact path="/policy" component={Policy}/>
         <Route exact path="/signup/:type" component={Signup}/>
         <Route exact path="/homepage" component={HomePage}/>
         <Route exact path="/hamal" component={VolunteersPage}/>
