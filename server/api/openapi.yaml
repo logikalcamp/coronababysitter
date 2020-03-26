@@ -309,7 +309,7 @@ paths:
       tags:
       - hamal
       summary: Approve or reject a user (doctor / volunteer)
-      operationId: approveUser
+      operationId: approveOrRejectUser
       parameters:
       - name: userId
         in: path
@@ -337,7 +337,6 @@ components:
       required:
       - birthday
       - email
-      - facebook
       - name
       - tz
       type: object
@@ -368,7 +367,6 @@ components:
         facebook:
           type: string
           description: Link to the volunteer's Facebook profile
-          format: uri
         city:
           type: string
         address:
@@ -675,6 +673,8 @@ components:
       properties:
         isApproved:
           type: boolean
+        hamalUserId:
+          type: string
         role:
           type: string
           enum:
