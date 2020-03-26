@@ -2,8 +2,8 @@
 
 var utils = require('../utils/writer.js');
 
-module.exports.approveUser = function approveUser (req, res, next, body, userId) {
- req.HamalService.approveUser(body, userId)
+module.exports.approveOrRejectUser = function approveOrRejectUser (req, res, next, body, userId) {
+ req.HamalService.approveOrRejectUser(body, userId)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
