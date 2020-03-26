@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"nodemon ./server/index.js\" \"cd client && npm start\"",
-    "starti": "concurrently \"nodemon ./server/index.js\" \"cd client && npm run starti\"",
+    "starti": "concurrently \"cd server && nodemon ./server/index.js\" \"cd client && npm run starti\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "starts": "nodemon /server/index.js"
   },
