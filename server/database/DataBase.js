@@ -3,10 +3,28 @@ const uri = "mongodb://server:coronababy2020@ds159546.mlab.com:59546/corona-babi
 
 var exports = {}
 
-exports.getClient = async () => {
-    newClient = new MongoClient(uri);
+var MongoDB;
 
-    await newClient.connect();
+exports.getClient = async () => {
+    return new Promise((resolve, reject) => {
+        if(!MongoDB) {
+            new MongoClient.connect(uri, {
+                poolSize : 15
+            }).then((db,err) => {
+                if(err) {
+                    reject(err)
+                }
+                
+                MongoDB = db;
+                resolve(MongoDB);
+            });
+        }
+        else {
+            resolve(MongoDB);
+        }
+        
+    })
+    
 
     return newClient;
 }

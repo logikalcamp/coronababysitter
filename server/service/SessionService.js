@@ -54,6 +54,24 @@ class SessionService {
   }
 
   /**
+   * Get all upcoming sessions of a specified volunteer
+   * userId String 
+   * returns List
+   **/
+  getAllUpcomingApprovedSessionsByVolunteer(userId) {
+    return MongoDB.findMany(COLLECTION_NAME, {"filledBy._id" : MongoDB.getMongoObjectId(userId)}, this.MongoClient);
+  }
+
+  getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
+    var filter = {$and: [{"filledBy" : null}, 
+    {"requests": {$elemMatch : {"_id" : MongoDB.getMongoObjectId(userId)}}}]};
+
+    return MongoDB.findMany(COLLECTION_NAME, filter, this.MongoClient);
+  
+    //return MongoDB.findMany(COLLECTION_NAME, {"requests": {"$elemMatch" : {_id : MongoDB.getMongoObjectId(userId)}}}, this.MongoClient).then();
+  }
+
+  /**
    * Update a session
    *
    * body Session  (optional)
