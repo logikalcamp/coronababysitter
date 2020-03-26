@@ -4,8 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
-import { Grid } from '@material-ui/core';
-import {RemoveScrollBar} from 'react-remove-scroll-bar';
+import {BASE_URL} from '../constants'
 
 const styles = makeStyles(theme => ({
     root: {
@@ -188,6 +187,10 @@ export const VolunteersPage = (props) => {
         institute: 'אוניברסיטת תל אביב',
         address: 'גבעתיים, השיזף 8', picture:''
     }]
+
+    fetch('/api/volunteers/all').then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
 
     var voluteerMap = list.map(item => <div className={classes.tableRow}>
         <div className={classes.imageCell}>
