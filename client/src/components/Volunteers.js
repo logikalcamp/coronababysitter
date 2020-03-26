@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
 import {BASE_URL} from '../constants'
+import Axios from 'axios';
 
 const styles = makeStyles(theme => ({
     root: {
@@ -93,6 +94,30 @@ const styles = makeStyles(theme => ({
 
 export const VolunteersPage = (props) => {
     const classes = styles();
+
+    const [volunteersMap, setVolunteersMap] = useState('');
+    const [volunteers, setVolunteers] = useState('');
+
+    useEffect(() => {
+        Axios.get('/api/volunteer/all').then(result => {
+            if(volunteers) return;
+            var vols = result.data.map(item => <div className={classes.tableRow}>
+                <div className={classes.imageCell}>
+                    <img className={classes.userImage} src={item.picture}></img>
+                    <div className={classes.userFullName}>
+                        {item.firstName + ' ' + item.lastName}
+                    </div>
+                </div>
+                <div className={classes.rowCell}>{item.address}</div>
+                <div className={classes.rowCell}>{item.email}</div>
+                <div className={classes.rowCell}>{item.phone}</div>
+                <div className={classes.rowCell}>{item.institute}</div>
+                <div className={classes.rowCell}></div>
+            </div>);
+
+            setVolunteersMap(vols)
+        })
+    }, [volunteers]);
 
     var list = [{
         firstName: 'נטע',
@@ -188,27 +213,6 @@ export const VolunteersPage = (props) => {
         address: 'גבעתיים, השיזף 8', picture:''
     }]
 
-    fetch('/api/volunteers/all').then(response => 
-        response.json())
-        .then(data => 
-            console.log(data))
-        .catch(error => 
-            console.error(error));
-
-    var voluteerMap = list.map(item => <div className={classes.tableRow}>
-        <div className={classes.imageCell}>
-            <img className={classes.userImage} src={item.picture}></img>
-            <div className={classes.userFullName}>
-                {item.firstName + ' ' + item.lastName}
-            </div>
-        </div>
-        <div className={classes.rowCell}>{item.address}</div>
-        <div className={classes.rowCell}>{item.email}</div>
-        <div className={classes.rowCell}>{item.phone}</div>
-        <div className={classes.rowCell}>{item.institute}</div>
-        <div className={classes.rowCell}></div>
-    </div>)
-
     return (
         <div className={classes.root}>
             <div className={classes.titleFilter}>
@@ -238,7 +242,7 @@ export const VolunteersPage = (props) => {
                 </div>
                 <div className={classes.tableBody}>
                     <div className={classes.tableContent}>
-                        {voluteerMap}
+                        {volunteersMap}
                     </div>
                 </div>
             </div>
