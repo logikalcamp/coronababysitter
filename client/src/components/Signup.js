@@ -24,7 +24,7 @@ const errorRules = {
     tz: "tz",
     facebook: "must",
     phone: "phone",
-    firstName: "must",
+    name: "must",
     lastName:"must",
     institute: "must",
     email: "email"
@@ -42,7 +42,7 @@ const SelectInput = ({text,state,opt,functio,ke})=>{
                         functio(m)
             }}>
                 {opt.map((x,i)=>{
-                    return(<option key={i} value={x}>{x}</option>)
+                    return(<option key={i} value={false}>{x}</option>)
                 })}
             </select>
         </InCon>
@@ -181,7 +181,7 @@ export const Signup = (props) => {
     useEffect(()=>{
         if(type=="medical"){
             setState({
-                firstName:"",
+                name:"",
                 lastName:"",
                 tz:"",
                 institute:"",
@@ -190,7 +190,7 @@ export const Signup = (props) => {
                 phone:""   
             })
             setError({
-                firstName:true,
+                name:true,
                 lastName:true,
                 tz:true,
                 institute:true,
@@ -212,7 +212,8 @@ export const Signup = (props) => {
                 photo: "",
                 phone: "",
                 hobbies: [''],
-                firstName: "",
+                isFemale:false,
+                name: "",
                 institute: "",
                 email: "",
                 lastName:""
@@ -224,7 +225,7 @@ export const Signup = (props) => {
                 tz: true,
                 facebook: true,
                 phone: true,
-                firstName: true,
+                name: true,
                 lastName:true,
                 institute: true,
                 email: true,
@@ -325,7 +326,7 @@ export const Signup = (props) => {
     }, [details.facebook])
 
     useEffect(() => {
-        if(details.firstName=='' || details.lastName==''||details.tz==''||details.birthday==''||details.email==''||details.phone==''||details.gender=='יש לבחור'){
+        if(details.name=='' || details.lastName==''||details.tz==''||details.birthday==''||details.email==''||details.phone==''||details.gender=='יש לבחור'){
             setStep1(false)
         }else{
             setStep1(true)
@@ -343,21 +344,21 @@ export const Signup = (props) => {
                 {
                     step == 1 && 
                     <section>
-                        <Text blur={onBlur} text={"שם פרטי"}  state={details} functio={setState} ke={'firstName'}/>
+                        <Text blur={onBlur} text={"שם פרטי"}  state={details} functio={setState} ke={'name'}/>
                         <Text blur={onBlur} text={"שם משפחה"}  state={details} functio={setState} ke={'lastName'}/>
                         <Text blur={onBlur} text={"ת.ז"} state={details} functio={setState} ke={"tz"} />
                         <Text blur={onBlur} text={"מייל"} state={details} functio={setState} ke={"email"}/>
                         <Text blur={onBlur} text={"מספר פלאפון"} state={details} functio={setState} ke={"phone"}/>
                         {type=="medical" ? 
                         <React.Fragment>
-                            <Text blur={onBlur} text={"תפקיד"} state={details} functio={setState} ke={"role"}/>
-                            <Text blur={onBlur} text={"מקום עבודה"} state={details} functio={setState} ke={"job"}/>
+                            <Text blur={onBlur} text={"תפקיד"} state={details} functio={setState} ke={"profession"}/>
+                            <Text blur={onBlur} text={"מקום עבודה"} state={details} functio={setState} ke={"institute"}/>
                             <Agreement err={errors} setErr={setError} text={"תנאי שימוש"} obj={agree} setObj={setAgreement} ke={"agreement"}/>
                         </React.Fragment>
                         :
                         <React.Fragment>
                             <Dates blur={onBlur} text={"תאריך לידה"} state={details} functio={setState} ke={"birthday"}/>
-                            <SelectInput text={"מין"} opt={["יש לבחור","זכר","נקבה"]} state={details} functio={setState} ke={"gender"}/>
+                            <SelectInput text={"מין"} opt={["יש לבחור","זכר","נקבה"]} state={details} functio={setState} ke={"isFemale"}/>
                         </React.Fragment>
                         }
                         {step != 2 && type!="medical" &&<Butt   onClick={()=>setStep(step+1)}>הבא</Butt>}
@@ -365,7 +366,7 @@ export const Signup = (props) => {
                         disabled={!_.isEmpty(errors)}
                         s={!_.isEmpty(errors)}
                         onClick={()=>{
-
+                            console.log(details)
                             let data = {
                                 "name": details.name,
                                 "tz": details.tz,
@@ -425,7 +426,7 @@ export const Signup = (props) => {
                         // "photo": "photo",
                         // "phone": details.phone,
                         // "hobbies": "hobbies",
-                        // "name": details.firstName,
+                        // "name": details.name,
                         // "institute": details.institute,
                         // "email": details.email
                         // }
@@ -442,7 +443,9 @@ export const Signup = (props) => {
                     }}>סיים</Butt>}
                 </Buttons>
             </SignupCon>    
-            <Back open={done} onClick={()=>setDone(false)}/>
+            <Back open={done} onClick={()=>{setDone(false)
+            window.location.href = '/'}
+            }/>
             <Modal open={done}>
                 <h2>תודה על הרשמתך!</h2>
                 <p>הפנייה נקלטה , החמל בודק את בקשתך ותקבל מייל עדכון בקרוב</p>

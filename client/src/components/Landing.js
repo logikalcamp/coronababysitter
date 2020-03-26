@@ -13,7 +13,6 @@ export const Landing = (props) => {
                 שירותי בייביסיטר התנדבותיים לצוותים הרפואיים במדינה
                 </p>
                 <h2>להצטרפות</h2>
-                <p>יש למלא פרטים ואז לאחר אימות יישלח לינק למערכת</p>
                 <div>
                     <button onClick={()=>props.history.push('/signup/volunteer')}>אני רוצה להתנדב</button>
                     <button onClick={()=>props.history.push('/signup/medical')}>אני צוות רפואי</button>
@@ -26,9 +25,9 @@ const LandingCon = styled.div`
     display:flex;
     flex-direction:column;
     max-width:1366px;
-    width:80%;
-    align-items:center;
-    margin:auto;
+    width:60%;
+    ${'' /* align-items:center; */}
+    margin:2rem auto auto auto;
     h1,h2,p{
         text-align:center;
     }
