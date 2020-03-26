@@ -341,12 +341,13 @@ components:
       - tz
       type: object
       properties:
-        _id:
+        id:
           type: string
           description: MongoID
-        name:
+        firstName:
           type: string
-          description: Firstname Lastname
+        lastName:
+          type: string
         tz:
           type: string
           description: Teudat Zehut
@@ -374,8 +375,12 @@ components:
         photo:
           type: string
           description: Link to the user's photo, hosted on a photo server/cloud
+        isFemale:
+          type: boolean
         hobbies:
-          type: string
+          type: array
+          items:
+            type: string
         notes:
           type: string
       example:
@@ -404,9 +409,10 @@ components:
         _id:
           type: string
           description: MongoID
-        name:
+        firstName:
           type: string
-          description: Firstname Lastname
+        lastName:
+          type: string
         tz:
           type: string
           description: Teudat Zehut
@@ -426,7 +432,9 @@ components:
         address:
           type: string
         hobbies:
-          type: string
+          type: array
+          items:
+            type: string
         notes:
           type: string
         children:
@@ -559,7 +567,9 @@ components:
         _id:
           type: string
           description: MongoID
-        name:
+        firstName:
+          type: string
+        lastName:
           type: string
         tz:
           type: string
