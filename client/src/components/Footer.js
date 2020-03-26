@@ -26,13 +26,13 @@ export const Footer = () => {
 }
 
 const FooterCon = styled.div`
-    bottom:0;
-    display:flex;
-    justify-content:space-around;
-    left:0;
+    /* bottom:0;
     position:absolute;
+    left:0;
+    right:0; */
+    /* display:flex;
+    justify-content:space-around; */
     padding:1rem;
-    right:0;
     border-top:1px solid #828282;
     img{
         width:28px;

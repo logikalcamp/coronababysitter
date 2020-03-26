@@ -25,7 +25,7 @@ export const Header = (props) => {
 }
 
 const HeaderCon = styled.div`
-    background:#8412A1;
+    background:#00C2CB;
 `
 const HeaderSubCon = styled.div`
     display:flex;

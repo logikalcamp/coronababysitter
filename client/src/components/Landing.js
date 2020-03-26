@@ -43,7 +43,7 @@ const LandingCon = styled.div`
         margin:3rem auto;
     }
     button{
-        background:#8412A1;
+        background:#00C2CB;
         border:none;
         padding:1rem ;
         border-radius:5px;
@@ -52,6 +52,6 @@ const LandingCon = styled.div`
         cursor:pointer;
     }
     button:hover{
-        background:#a745bf;
+        background:#23898e;
     }
 `

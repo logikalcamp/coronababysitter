@@ -1,0 +1,702 @@
+openapi: 3.0.0
+info:
+  title: Baby Corona
+  description: |
+    Baby Corona API |
+    [Baby Corona website](https://babysitter-il.appspot.com/)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: imomerm@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0-oas3
+servers:
+- url: https://virtserver.swaggerhub.com/api
+- url: http://virtserver.swaggerhub.com/api
+tags:
+- name: volunteer
+  description: Everything about your volunteers
+- name: doctor
+  description: Everything about your doctors
+- name: hamal
+  description: All hamal users
+- name: admin
+  description: User in charge of everyone and everything, can add Hamal members
+paths:
+  /volunteer/all:
+    get:
+      tags:
+      - volunteer
+      summary: Get all volunteers
+      operationId: getAllVolunteers
+      responses:
+        "200":
+          description: All volunteers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Volunteer'
+                x-content-type: application/json
+        "404":
+          description: No volunteers found
+      x-swagger-router-controller: Volunteer
+  /volunteer/{volId}:
+    get:
+      tags:
+      - volunteer
+      summary: Get a single volunteer by Id
+      operationId: getVolunteerById
+      parameters:
+      - name: volId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Volunteer found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volunteer'
+        "404":
+          description: Volunteer not found
+      x-swagger-router-controller: Volunteer
+  /volunteer/register:
+    put:
+      tags:
+      - volunteer
+      summary: Register a new volunteer
+      operationId: registerVolunteer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Volunteer'
+      responses:
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Volunteer
+  /volunteer/create/{volId}:
+    put:
+      tags:
+      - volunteer
+      summary: Update the volunteer's information after he got approved
+      operationId: createVolunteer
+      parameters:
+      - name: volId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Volunteer'
+      responses:
+        "200":
+          description: All good brother
+        "404":
+          description: Volunteer not found
+      x-swagger-router-controller: Volunteer
+  /doctor/all:
+    get:
+      tags:
+      - doctor
+      summary: Get all doctors
+      operationId: getAllDoctors
+      responses:
+        "200":
+          description: All doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+                x-content-type: application/json
+        "404":
+          description: No doctors found
+      x-swagger-router-controller: Doctor
+  /doctor/{docId}:
+    get:
+      tags:
+      - doctor
+      summary: Get a single doctor by Id
+      operationId: getDoctorById
+      parameters:
+      - name: docId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Doctor found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+        "404":
+          description: Doctor not found
+      x-swagger-router-controller: Doctor
+  /doctor/register:
+    put:
+      tags:
+      - doctor
+      summary: Register a new doctor
+      operationId: registerDoctor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+      responses:
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Doctor
+  /doctor/create/{docId}:
+    put:
+      tags:
+      - doctor
+      summary: Update the doctor's information after he got approved
+      operationId: createDoctor
+      parameters:
+      - name: docId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+      responses:
+        "200":
+          description: All good brother
+        "204":
+          description: Volunteer not found
+      x-swagger-router-controller: Doctor
+  /session:
+    post:
+      tags:
+      - session
+      summary: Create a new session (from volunteer request usually)
+      operationId: createSession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session'
+      responses:
+        "200":
+          description: Session created
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Session
+  /session/{sessionId}:
+    put:
+      tags:
+      - session
+      summary: Update a session
+      operationId: updateSession
+      parameters:
+      - name: sessionId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session'
+      responses:
+        "200":
+          description: Session created
+        "404":
+          description: Session not found
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Session
+  /session/history/{userId}:
+    post:
+      tags:
+      - session
+      summary: Get all sessions of a specified user (and role)
+      operationId: getAllSessionsByUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+      responses:
+        "200":
+          description: All sessions of the user selected
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: User not found
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Session
+  /hamal:
+    post:
+      tags:
+      - hamal
+      summary: Create new hamal user
+      operationId: createHamalUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hamal'
+      responses:
+        "200":
+          description: Hamal user created
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Hamal
+  /hamal/all:
+    get:
+      tags:
+      - hamal
+      summary: Get all hamal users
+      operationId: getAllHamalUsers
+      responses:
+        "200":
+          description: All hamal users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hamal'
+                x-content-type: application/json
+        "404":
+          description: No hamal users found
+      x-swagger-router-controller: Hamal
+  /hamal/approve-reject/{userId}:
+    post:
+      tags:
+      - hamal
+      summary: Approve or reject a user (doctor / volunteer)
+      operationId: approveUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_1'
+      responses:
+        "200":
+          description: User has been approved/rejected & mail has been sent
+        "404":
+          description: User not found
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Hamal
+components:
+  schemas:
+    Volunteer:
+      required:
+      - birthday
+      - email
+      - facebook
+      - name
+      - tz
+      type: object
+      properties:
+        _id:
+          type: string
+          description: MongoID
+        name:
+          type: string
+          description: Firstname Lastname
+        tz:
+          type: string
+          description: Teudat Zehut
+        birthday:
+          type: string
+          format: date-time
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        institute:
+          type: string
+          description: Where does the volunteer study?
+        profession:
+          type: string
+          description: What does the volunteer study / work (if not student)
+        facebook:
+          type: string
+          description: Link to the volunteer's Facebook profile
+          format: uri
+        city:
+          type: string
+        address:
+          type: string
+        photo:
+          type: string
+          description: Link to the user's photo, hosted on a photo server/cloud
+        hobbies:
+          type: string
+        notes:
+          type: string
+      example:
+        birthday: 2000-01-23T04:56:07.000+00:00
+        profession: profession
+        address: address
+        notes: notes
+        city: city
+        tz: tz
+        facebook: http://example.com/aeiou
+        photo: photo
+        phone: phone
+        hobbies: hobbies
+        name: name
+        institute: institute
+        id: id
+        email: ""
+      xml:
+        name: Volunteer
+    Doctor:
+      required:
+      - email
+      - name
+      type: object
+      properties:
+        _id:
+          type: string
+          description: MongoID
+        name:
+          type: string
+          description: Firstname Lastname
+        tz:
+          type: string
+          description: Teudat Zehut
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        institute:
+          type: string
+          description: Doctor's workplace
+        profession:
+          type: string
+          description: Doctor's job / role
+        city:
+          type: string
+        address:
+          type: string
+        hobbies:
+          type: string
+        notes:
+          type: string
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Doctor_children'
+      example:
+        profession: profession
+        address: address
+        notes: notes
+        phone: phone
+        city: city
+        hobbies: hobbies
+        children:
+        - isFemale: true
+          age: 0
+        - isFemale: true
+          age: 0
+        tz: tz
+        name: name
+        institute: institute
+        id: id
+        email: ""
+      xml:
+        name: Doctor
+    Session:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: MongoID
+        doctor:
+          $ref: '#/components/schemas/Doctor'
+        timeRequested:
+          type: string
+          format: date-time
+        timeApproved:
+          type: string
+          format: date-time
+        requests:
+          type: array
+          description: List of all volunteers who requested this session
+          items:
+            $ref: '#/components/schemas/Volunteer'
+        filledBy:
+          $ref: '#/components/schemas/Volunteer'
+        didHappen:
+          type: boolean
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session_tasks'
+        recurring:
+          type: string
+          enum:
+          - once
+          - daily
+          - weekly
+          - monthly
+      example:
+        doctor:
+          profession: profession
+          address: address
+          notes: notes
+          phone: phone
+          city: city
+          hobbies: hobbies
+          children:
+          - isFemale: true
+            age: 0
+          - isFemale: true
+            age: 0
+          tz: tz
+          name: name
+          institute: institute
+          id: id
+          email: ""
+        timeRequested: 2000-01-23T04:56:07.000+00:00
+        timeApproved: 2000-01-23T04:56:07.000+00:00
+        recurring: once
+        startTime: 2000-01-23T04:56:07.000+00:00
+        id: id
+        requests:
+        - birthday: 2000-01-23T04:56:07.000+00:00
+          profession: profession
+          address: address
+          notes: notes
+          city: city
+          tz: tz
+          facebook: http://example.com/aeiou
+          photo: photo
+          phone: phone
+          hobbies: hobbies
+          name: name
+          institute: institute
+          id: id
+          email: ""
+        - birthday: 2000-01-23T04:56:07.000+00:00
+          profession: profession
+          address: address
+          notes: notes
+          city: city
+          tz: tz
+          facebook: http://example.com/aeiou
+          photo: photo
+          phone: phone
+          hobbies: hobbies
+          name: name
+          institute: institute
+          id: id
+          email: ""
+        endTime: 2000-01-23T04:56:07.000+00:00
+        tasks:
+        - taskName: taskName
+          taskSelected: true
+        - taskName: taskName
+          taskSelected: true
+        didHappen: true
+      xml:
+        name: Session
+    Hamal:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: MongoID
+        name:
+          type: string
+        tz:
+          type: string
+          description: Teudat zehut
+        password:
+          type: string
+        doctorsApproved:
+          type: array
+          items:
+            $ref: '#/components/schemas/Doctor'
+        volunteersApproved:
+          type: array
+          items:
+            $ref: '#/components/schemas/Volunteer'
+      description: User in hamal
+      example:
+        password: password
+        volunteersApproved:
+        - birthday: 2000-01-23T04:56:07.000+00:00
+          profession: profession
+          address: address
+          notes: notes
+          city: city
+          tz: tz
+          facebook: http://example.com/aeiou
+          photo: photo
+          phone: phone
+          hobbies: hobbies
+          name: name
+          institute: institute
+          id: id
+          email: ""
+        - birthday: 2000-01-23T04:56:07.000+00:00
+          profession: profession
+          address: address
+          notes: notes
+          city: city
+          tz: tz
+          facebook: http://example.com/aeiou
+          photo: photo
+          phone: phone
+          hobbies: hobbies
+          name: name
+          institute: institute
+          id: id
+          email: ""
+        tz: tz
+        name: name
+        id: id
+        doctorsApproved:
+        - profession: profession
+          address: address
+          notes: notes
+          phone: phone
+          city: city
+          hobbies: hobbies
+          children:
+          - isFemale: true
+            age: 0
+          - isFemale: true
+            age: 0
+          tz: tz
+          name: name
+          institute: institute
+          id: id
+          email: ""
+        - profession: profession
+          address: address
+          notes: notes
+          phone: phone
+          city: city
+          hobbies: hobbies
+          children:
+          - isFemale: true
+            age: 0
+          - isFemale: true
+            age: 0
+          tz: tz
+          name: name
+          institute: institute
+          id: id
+          email: ""
+      xml:
+        name: Hamal
+    Admin:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: MongoID
+        username:
+          type: string
+        password:
+          type: string
+        hamalApproved:
+          type: array
+          items:
+            $ref: '#/components/schemas/Hamal'
+      xml:
+        name: Admin
+    body:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - volunteer
+          - doctor
+    body_1:
+      type: object
+      properties:
+        isApproved:
+          type: boolean
+        role:
+          type: string
+          enum:
+          - volunteer
+          - doctor
+    Doctor_children:
+      type: object
+      properties:
+        age:
+          type: integer
+        isFemale:
+          type: boolean
+      example:
+        isFemale: true
+        age: 0
+    Session_tasks:
+      type: object
+      properties:
+        taskName:
+          type: string
+        taskSelected:
+          type: boolean
+      example:
+        taskName: taskName
+        taskSelected: true
