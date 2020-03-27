@@ -1,6 +1,7 @@
 'use strict';
 
 const MongoDB = require("../database/DataBase")
+const {EmailService} = require("./EmailService")
 
 var COLLECTION_NAME = "Doctors";
 
@@ -59,7 +60,21 @@ class DoctorService {
         else {
           MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
-        
+      });
+    });
+  }
+
+  loginEmailDoctor(body) {
+    return new Promise((resolve, reject) => {
+      MongoDB.findOne(COLLECTION_NAME, { tz: body.docTz }, this.MongoClient).then((result) => {
+        if (result == null) reject("Doctor not found.");
+        else {
+          var emailService = new EmailService();
+          emailService.sendEmail(result.email, {'title': body.emailTitle, 'body': body.emailBody });
+          resolve("Login email sent.")
+        }
+      }).catch((error) => {
+        reject(error)
       });
     });
   }

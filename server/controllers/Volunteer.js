@@ -42,3 +42,13 @@ module.exports.registerVolunteer = function registerVolunteer (req, res, next, b
       utils.writeJson(req,res, response);
     });
 };
+
+module.exports.loginEmailVolunteer = function loginEmailVolunteer (req, res, next, body) {
+  req.VolunteerService.loginEmailVolunteer(body)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(req,res, response);
+    });
+};

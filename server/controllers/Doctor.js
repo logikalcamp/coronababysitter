@@ -42,3 +42,13 @@ module.exports.registerDoctor = function registerDoctor (req, res, next, body) {
       utils.writeJson(req,res, response);
     });
 };
+
+module.exports.loginEmailDoctor = function loginEmailDoctor (req, res, next, body) {
+  req.DoctorService.loginEmailDoctor(body)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(req,res, response);
+    });
+};

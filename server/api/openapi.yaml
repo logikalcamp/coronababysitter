@@ -107,6 +107,35 @@ paths:
         "404":
           description: Volunteer not found
       x-swagger-router-controller: Volunteer
+  /volunteer/loginemail:
+    post:
+      tags:
+      - volunteer
+      summary: Send a login's email to the volunteer with a generated code inside
+      operationId: loginEmailVolunteer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                volTz:
+                  type: string
+                emailTitle:
+                  type: string
+                emailBody:
+                  type: string
+                  description: HTML of the message to send, code generated included
+            example:
+              volTz: 206325748
+              emailTitle: קוד התחברות
+              emailBody: <h2>התחבר כעת!</h2><p>הכנס את הקוד 3481 במסך התחברות על מנת להכנס למערכת</p>
+      responses:
+        "200":
+          description: Email sent
+        "204":
+          description: Volunteer not found
+      x-swagger-router-controller: Volunteer
   /doctor/all:
     get:
       tags:
@@ -189,6 +218,35 @@ paths:
           description: All good brother
         "204":
           description: Volunteer not found
+      x-swagger-router-controller: Doctor
+  /doctor/loginemail:
+    post:
+      tags:
+      - doctor
+      summary: Send a login's email to the doctor with a generated code inside
+      operationId: loginEmailDoctor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                docTz:
+                  type: string
+                emailTitle:
+                  type: string
+                emailBody:
+                  type: string
+                  description: HTML of the message to send, code generated included
+            example:
+              docTz: 130014001
+              emailTitle: קוד התחברות
+              emailBody: <h2>התחבר כעת!</h2><p>הכנס את הקוד 3481 במסך התחברות על מנת להכנס למערכת</p>
+      responses:
+        "200":
+          description: Email sent
+        "204":
+          description: Doctor not found
       x-swagger-router-controller: Doctor
   /session:
     post:
