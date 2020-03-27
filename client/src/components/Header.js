@@ -15,9 +15,6 @@ export const Header = (props) => {
                     <label>בייבי קורונה</label>
                 </HeaderSubCon>
                 <HeaderSubCon >
-                    <label>{hasModal ? "fi": "kt"}</label>
-                </HeaderSubCon>
-                <HeaderSubCon >
                     {auth && <label>שם משתמש |</label>}
                     <button onClick={()=>{
                         setRedirect(true)
