@@ -3,12 +3,11 @@
 const mailer = require('nodemailer')
 
 class EmailService {
-
     constructor() {
-
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
     }
 
-    sendEmail(recipientEmail, email) {
+    async sendEmail(recipientEmail, email) {
         var transporter = mailer.createTransport({
             service: 'gmail',
             auth: this.getSystemEmail()
@@ -21,21 +20,14 @@ class EmailService {
             html: email.body
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-                return 0
-            }
-
-            return 1
-        });
+        transporter.sendMail(mailOptions);
     }
 
     getSystemEmail() {
         // TODO: Save in DB / encrypted ?
         return {
-            type: 'OAuth2',
-            user: 'AppSitterSeeker@gmai.com',
+            // type: 'OAuth2',
+            user: 'AppSitterSeeker@gmail.com',
             pass: 'sitterseeker2020'
         }
     }
