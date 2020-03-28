@@ -14,7 +14,7 @@ export const Footer = () => {
                     <a href="/mail"><img src={window.location.origin + "/images/mail.png"} alt="mail"/></a>
                     <a href="https://www.facebook.com/RuthVrobel/"><img src={window.location.origin + "/images/facebook.png"} alt="facebook"/></a>
                     <a id="phonem" href="tel:+972526384738"><img src={window.location.origin + "/images/phone.png"} alt="instagram"/></a>
-                    <a id="phonedesktop" href="callto:+972526384738"><img src={window.location.origin + "/images/phone.png"} alt="instagram"/></a>
+                    <a id="phonedesktop" href="tel:+972526384738"><img src={window.location.origin + "/images/phone.png"} alt="instagram"/></a>
                     <a href="https://www.youtube.com/channel/UCkjW1hsjTfcOpcrj2sQeXFQ/featured"><img src={window.location.origin + "/images/youtube.png"} alt="instagram"/></a>
                 </div>
                 <div>
