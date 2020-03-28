@@ -9,14 +9,21 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+<<<<<<< HEAD
     "@turf/turf": "^5.1.6",
+=======
+    "ag-grid-community": "^23.0.0",
+    "ag-grid-react": "^23.0.0",
+>>>>>>> 159a8229c2049d540458a63e9e0dcb5092174e7c
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
+    "compose": "^0.1.2",
     "is-empty": "^1.2.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-google-maps": "^9.4.5",
     "react-redux": "^7.2.0",
     "react-remove-scroll": "^2.2.0",
     "react-remove-scroll-bar": "^2.0.0",
