@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"nodemon /server/index.js\" \"cd client && npm start\"",
-    "starti": "concurrently \"nodemon /server/index.js\" \"cd client && npm run starti\"",
+    "start": "concurrently \"nodemon ./server/index.js\" \"cd client && npm start\"",
+    "starti": "concurrently \"cd server && nodemon ./server/index.js\" \"cd client && npm run starti\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "starts": "nodemon /server/index.js"
   },
@@ -22,7 +22,7 @@
     "connect": "^3.2.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "googleapis": "^48.0.0",
+    "googleapis": "^39.2.0",
     "js-yaml": "^3.3.0",
     "mongodb": "^3.5.5",
     "nodemailer": "^6.4.6",

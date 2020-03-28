@@ -6,6 +6,8 @@ var {DoctorService} = require("./service/DoctorService");
 var {HamalService} = require("./service/HamalService");
 var path = require('path');
 var http = require('http');
+var cors = require('cors');
+var bodyParser=require('body-parser');
 
 var oas3Tools = require('oas3-tools');
 var serverPort = 3001;
@@ -20,6 +22,11 @@ var options = {
 var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
 expressAppConfig.addValidator();
 var app = expressAppConfig.getApp();
+
+app.use(cors());
+app.set('trust proxy', true);
+
+app.use(bodyParser.json())
 
 app.use("*", async (req,res,next) => {
     if(req.baseUrl.startsWith("/api")) {
