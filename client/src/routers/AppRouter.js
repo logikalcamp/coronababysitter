@@ -7,7 +7,7 @@ import {Landing} from '../components/Landing'
 import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
 import { VolunteersPage } from '../components/Volunteers';
-import {VolunteerHomepage} from '../components/VolunteerHomepage';
+import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
 
 import Policy from '../components/Policy'
 const AppRouter = () =>(
