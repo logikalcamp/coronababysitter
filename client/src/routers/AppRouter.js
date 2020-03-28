@@ -7,6 +7,8 @@ import {Landing} from '../components/Landing'
 import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
 import { VolunteersPage } from '../components/Volunteers';
+import {VolunteerHomepage} from '../components/VolunteerHomepage';
+
 import Policy from '../components/Policy'
 const AppRouter = () =>(
     <Router>
@@ -17,6 +19,7 @@ const AppRouter = () =>(
         <Route exact path="/signup/:type" component={Signup}/>
         <Route exact path="/homepage" component={HomePage}/>
         <Route exact path="/hamal" component={VolunteersPage}/>
+        <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
         {/* 
         <PrivateRoute exact path="/meeting/:id" component={Meeting} />
         <PrivateRoute exact path="/summary/:id" component={Summary} />

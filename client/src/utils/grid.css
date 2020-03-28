@@ -1,0 +1,35 @@
+.ag-theme-balham {
+    font-size: 14px;
+}
+  
+.ag-theme-balham .ag-header-row {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.ag-theme-balham .ag-root-wrapper {
+  border-radius: 8px;
+  border-color: transparent;
+}
+
+.ag-theme-balham .ag-header-cell::after, .ag-theme-balham .ag-header-group-cell::after {
+  background-color: transparent;
+}
+
+.ag-theme-balham .ag-header {
+  background-color: #fff;
+  border: none;
+}
+
+.ag-theme-balham .ag-cell {
+  display: flex;
+  align-items: center;
+}
+
+.ag-cell.ag-cell-not-inline-editing.ag-cell-auto-height.ag-cell-value.ag-cell-focus {
+  border: 1px solid transparent;
+}
+
+.grid-command {
+  cursor: pointer;
+}
