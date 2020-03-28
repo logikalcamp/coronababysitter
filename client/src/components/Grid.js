@@ -22,21 +22,28 @@ export default class GridComp extends Component {
     event.api.sizeColumnsToFit();
   }
 
+  handleRowDataChanged(event) {
+    debugger;
+  }
+
   render() {
     console.log(this.props);
 
     return(
-      <div className="ag-theme-balham" style={{height: '100%', width: '100%'}}>
-        <AgGridReact 
-          columnDefs={this.props.columnDefs}
-          rowData={this.props.rowData}
+      <div className="grid-wrapper">
+        <div className="ag-theme-balham" style={{height: '100%', width: '100%'}}>
+          <AgGridReact 
+            columnDefs={this.props.columnDefs}
+            rowData={this.props.rowData}
 
-          enableRtl={true}
-          rowHeight={50}
+            enableRtl={true}
+            rowHeight={50}
 
-          onGridReady={this.handleGridReady}
-          onGridSizeChanged={this.handleGridSizeChanged}
-        />
+            onGridReady={this.handleGridReady}
+            onGridSizeChanged={this.handleGridSizeChanged}
+            onRowDataChanged={this.handleRowDataChanged}
+          />
+        </div>
       </div>
     )
   }
