@@ -1,0 +1,14 @@
+'use strict';
+
+var utils = require('../utils/writer.js');
+var {UtilsService} = require('../service/UtilsService');
+
+module.exports.getFacebookPicture = function getFacebookPicture (req, res, next, body) {
+  req.UtilsService.getFacebookPicture(body)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(req,res, response);
+    });
+};
