@@ -43,8 +43,8 @@ module.exports.getAllUpcomingApprovedSessionsByVolunteer = function getAllUpcomi
     });
 };
 
-module.exports.getAllavailableSessions = function getAllavailableSessions (req, res, next, userId) {
-  req.SessionService.getAllavailableSessions(userId)
+module.exports.getAvailableSessions = function getAvailableSessions (req, res, next, userId) {
+  req.SessionService.getAvailableSessions(userId)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

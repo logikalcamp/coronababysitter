@@ -59,16 +59,32 @@ class SessionService {
    * userId String 
    * returns List
    **/
-  getAvailableSessions(body, userId) {
-    var X = 25;
-    var user = MongoDB.findOne("Volunteers", {"_id" : MongoDB.getMongoObjectId(userId)}, this.MongoClient)
-    var sessions = MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient)
-    var available = [];
-    sessions.forEach(element => {
-      if(Location.getDistance(user.lat, user.long, element.doctor.lat, element.doctor.long) < 26)
-        available.push(element);
+  getAvailableSessions(userId) {
+    return new Promise((resolve, reject) => {
+      var X = 25;
+      var user;
+      console.log(userId);
+      MongoDB.findOne("Volunteers", {"_id" : MongoDB.getMongoObjectId(userId)}, this.MongoClient).then((result1) => {
+        user = result1;
+        console.log(user);
+        var sessions = [];
+        MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient).then((result2) => {
+          sessions = result2
+          console.log(sessions);
+          var available = [];
+          sessions.forEach(element => {
+            if(element){
+              if(Location.getDistance(user.lat, user.long, element.doctor.lat, element.doctor.long) < 26){
+                available.push(element);
+                console.log(elemnt.doctor.lat);
+              }
+            }
+          
+          });
+          resolve(available);
+        });
     });
-    return available;
+  });
   }
 
   /**
