@@ -223,7 +223,12 @@ const CompleteDoctor = (props) => {
                                 // disabled={!_.isEmpty(errors)}
                                 // s={!_.isEmpty(errors)}
                                 onClick={()=>{
-                                    axios.put(BASE_URL+`/doctor/create/${id}`,details)
+                                    let data ={...details}
+                                    delete data._id
+                                    delete data.isApproved
+                                    // data.id = id
+                                    console.log(data)
+                                    axios.put(BASE_URL+`/doctor/create/${id}`,data)
                                     .then(res=>{
                                         console.log(res)
                                     })
