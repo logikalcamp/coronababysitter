@@ -509,7 +509,6 @@ components:
       required:
       - birthday
       - email
-      - name
       - tz
       type: object
       properties:
@@ -579,7 +578,6 @@ components:
     Doctor:
       required:
       - email
-      - name
       type: object
       properties:
         _id:
