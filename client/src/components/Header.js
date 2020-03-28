@@ -11,8 +11,8 @@ export const Header = (props) => {
         <HeaderCon>
             <SubCon>
                 <HeaderSubCon >
-                    <img src={window.location.origin + "/images/newL.png"} alt="nel" onClick={() => setHasModal(true)}/>
-                    <label>בייבי קורונה</label>
+                    <img src={window.location.origin + "/images/newL.png"} alt="nel" />
+                    <label>Sitter Seeker</label>
                 </HeaderSubCon>
                 <HeaderSubCon >
                     {auth && <label>שם משתמש |</label>}
@@ -84,13 +84,13 @@ const HeaderSubCon = styled.div`
     display:flex;
     align-items:center;
     img{
-        width:2rem;
-        height:2rem;
+        width:2.5rem;
+        height:3rem;
         margin-left:1rem;
     }
     label{
         color:white;
-        font-weight:bold;
+        ${'' /* font-weight:bold; */}
         font-size:22px;
     }
     button{
@@ -108,5 +108,5 @@ const SubCon = styled.div`
     margin:auto;
     display:flex;
     justify-content:space-between;
-    padding:1rem;
+    padding:.5rem 1rem;
 `

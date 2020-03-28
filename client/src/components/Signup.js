@@ -5,6 +5,7 @@ import {BASE_URL} from '../constants'
 import moment from 'moment'
 import Searchi from './Searchbox'
 import _ from 'lodash'
+import GeoMasking from '../utils/geoMasking'
 
 const Stepper = ({step,amount}) => {
     let steps = []
@@ -220,13 +221,6 @@ export const Signup = (props) => {
     const [done,setDone] = useState(false)
     const [sent,setSent] = useState(true)
 
-    useEffect(() => {
-      console.log(errors)
-    }, [errors])
-    useEffect(() => {
-        console.log(agree)
-      }, [agree])
-
     useEffect(()=>{
         if(type=="medical"){
             setState({
@@ -397,16 +391,16 @@ export const Signup = (props) => {
     }, [details])
 
     const handleChangeCenter =(lat,lng,address) =>{
+        let b = GeoMasking(lat,lng)
         let d = {...details}
-        d["lat"] = lat
-        d["long"] = lng
+        d["lat"] = b.geometry.coordinates[0]
+        d["long"] = b.geometry.coordinates[1]
         d["address"] = address
         let city = address.split(',')
         d["city"] = city[1].replace(" ","")
         let a = {...errors}
         delete a["address"]
         setError(a)
-        console.log(d)
         setState(d)
     }
 
@@ -602,7 +596,7 @@ const SignupForm = styled.div`
         display:flex;
         flex-direction:column;
     }
-    @media (max-width:450px) {
+    @media (max-width:900px) {
         width:80%;
     }
 
@@ -636,7 +630,7 @@ const Buttons = styled.div`
         font-weight:bold;
 
     }
-    @media (max-width:450px) {
+    @media (max-width:900px) {
         width:80%;
     }
 `

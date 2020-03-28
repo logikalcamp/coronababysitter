@@ -1,11 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import GeoMasking from '../utils/geoMasking';
 
 export const Landing = (props) => {
     console.log(props)
-    GeoMasking();
     return(
         <LandingCon>
                 <h1>ברוכים הבאים</h1>
