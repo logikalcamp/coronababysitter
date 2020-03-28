@@ -486,6 +486,10 @@ components:
           type: string
         address:
           type: string
+        lat:
+          type: number
+        long:
+          type: number
         photo:
           type: string
           description: Link to the user's photo, hosted on a photo server/cloud
@@ -545,6 +549,10 @@ components:
           type: string
         address:
           type: string
+        lat:
+          type: number
+        long:
+          type: number
         hobbies:
           type: array
           items:
