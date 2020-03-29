@@ -6,6 +6,7 @@ import moment from 'moment'
 import Searchi from './Searchbox'
 import _ from 'lodash'
 import GeoMasking from '../utils/geoMasking'
+import UploadPhoto from '../utils/uploadPhoto'
 
 const Stepper = ({step,amount}) => {
     let steps = []
@@ -213,7 +214,7 @@ export const Signup = (props) => {
     const [type,setType] = useState(props.match.params.type)
     const [step,setStep] = useState(1)
     const [step1,setStep1] = useState(false)
-    const [img,setImg] = useState('')
+    const [img,setImg] = useState(window.location.origin + "/images/profilePlaceholder.png")
     const [facebook,setFacebook] = useState('')
     const [details,setState] =  useState({})
     const [errors,setError] = useState({})
@@ -222,27 +223,13 @@ export const Signup = (props) => {
     const [sent,setSent] = useState(true)
     const [isUploadingImage, setImageUploading] = useState(false)
 
-    const onChange = (file) => {
+    const onChange = async (file) => {
     
         setImageUploading(true);
 
-        const formData = new FormData()
-        formData.append("customPhoto", file);
-    
-        axios({
-            method: 'post',
-            url: '/api/uploadphoto',
-            data: formData,
-            headers: {'Content-Type':'multipart-formdata'}
-        }).then(function (response) {
-            //handle success
-            setImg(response.url);
-            setImageUploading(false);
-        })
-        .catch(function (response) {
-            //handle error
-            console.log(response);
-        });
+        var url = await UploadPhoto(file, 'volunteer');
+        
+        setImg(url ? url : window.location.origin + "/images/profilePlaceholder.png");
       }
 
     useEffect(()=>{
@@ -476,7 +463,7 @@ export const Signup = (props) => {
 
                         <Text blur={onBlur} text={"לינק לפרופיל פייסבוק"} state={details} functio={setState} ke={"facebook"}/>
 
-                        {img &&
+                        {
                             <div style={{alignItems:"center"}}>
                                 <img style={{width:"130px",height:"130px",margin:"auto"}} src={img} alt="profile" />
                                 <input type='file' onChange={(e) => onChange(e.target.files[0])}/>

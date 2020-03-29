@@ -4,12 +4,13 @@ var {VolunteerService} = require("./service/VolunteerService");
 var {SessionService} = require("./service/SessionService");
 var {DoctorService} = require("./service/DoctorService");
 var {HamalService} = require("./service/HamalService");
+var {ImageService} = require("./service/ImageService");
 var path = require('path');
+var formidable = require('formidable');
 var http = require('http');
 var cors = require('cors');
 var bodyParser=require('body-parser');
-const fs = require('fs');
-var formidable = require('formidable');
+
 
 var oas3Tools = require('oas3-tools');
 var serverPort = 3001;
@@ -25,20 +26,15 @@ var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/open
 expressAppConfig.addValidator();
 var app = expressAppConfig.getApp();
 
-app.use(express.static(path.join(__dirname, 'client/build')));
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-});
-
 app.use(cors());
 app.set('trust proxy', true);
 
 app.use(bodyParser.json())
 
-app.post('/api/uploadphoto', (req,res,next) => {
+app.post('/api/uploadphoto', async (req,res,next) => {
     var form = new formidable.IncomingForm();
 
-    form.parse(req, function(err, fields, files) {
+    form.parse(req, async (err, fields, file) => {
         if (err) {
   
           // Check for and handle any errors here.
@@ -47,35 +43,20 @@ app.post('/api/uploadphoto', (req,res,next) => {
           return;
         }
         else {
-            const {GPhotos}     = require('upload-gphotos');
-            const gphotos = new GPhotos();
-    
-            var username = 'appsitterseeker@gmail.com';
-            var password = 'sitterseeker2020';
-         
-             (async () => {
-                 await gphotos.signin({
-                   username,
-                   password,
-                 });
-                 
-                 const album = await gphotos.searchAlbum({ title: 'Volunteers' });
-         
-                 const photo = await gphotos.upload({
-                     stream: fs.createReadStream(files['customPhoto'].path),
-                     size: (await fs.promises.stat(files['customPhoto'].path)).size,
-                     filename: path.basename(files['customPhoto'].path),
-                 });
+            var imageService = new ImageService();
 
-                 console.log(photo)
-             })().then(console.log).catch(console.error)
+            var photo = await imageService.uploadImageToGooglePhotos("Volunteers", file['photoFile'].path);
+
+            if(photo != undefined) {
+                res.send({photo: photo});
+            }
+            else {
+                res.status(500)
+                res.end("Error uploading photo");
+            }
         }
-        res.end()
     });
-       
-
-
-})
+});
 
 app.use("*", async (req,res,next) => {
     if(req.baseUrl.startsWith("/api")) {
