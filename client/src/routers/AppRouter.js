@@ -8,6 +8,7 @@ import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
 import { VolunteersPage } from '../components/Volunteers';
 import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
+import {FindSession} from '../components/FindSession';
 
 import Policy from '../components/Policy'
 const AppRouter = () =>(
@@ -20,6 +21,7 @@ const AppRouter = () =>(
         <Route exact path="/homepage" component={HomePage}/>
         <Route exact path="/hamal" component={VolunteersPage}/>
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
+        <Route exact path='/find-session' component={FindSession} />
         {/* 
         <PrivateRoute exact path="/meeting/:id" component={Meeting} />
         <PrivateRoute exact path="/summary/:id" component={Summary} />
