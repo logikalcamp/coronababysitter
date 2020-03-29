@@ -7,7 +7,8 @@ import {Landing} from '../components/Landing'
 import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
 import { VolunteersPage } from '../components/Volunteers';
-import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
+import CompleteDoctor from '../components/CompleteDoctor'
+import {VolunteerHomepage} from '../components/VolunteerHomepage';
 import {FindSession} from '../components/FindSession';
 
 import Policy from '../components/Policy'
@@ -17,6 +18,7 @@ const AppRouter = () =>(
       <Switch>          
         <Route exact path="/" component={Landing}/>
         <Route exact path="/policy" component={Policy}/>
+        <Route exact path="/doctor/:id" component={CompleteDoctor}/>
         <Route exact path="/signup/:type" component={Signup}/>
         <Route exact path="/homepage" component={HomePage}/>
         <Route exact path="/hamal" component={VolunteersPage}/>

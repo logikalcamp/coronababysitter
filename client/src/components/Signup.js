@@ -3,7 +3,9 @@ import styled from 'styled-components'
 import axios from 'axios'
 import {BASE_URL} from '../constants'
 import moment from 'moment'
+import Searchi from './Searchbox'
 import _ from 'lodash'
+import GeoMasking from '../utils/geoMasking'
 
 const Stepper = ({step,amount}) => {
     let steps = []
@@ -27,24 +29,32 @@ const errorRules = {
     name: "must",
     lastName:"must",
     institute: "must",
-    email: "email"
+    email: "email",
+    isFemale:"gender"
 }
 
 
 
-const SelectInput = ({text,state,opt,functio,ke})=>{
+const SelectInput = ({text,state,opt,functio,ke,blur})=>{
+    const [err,setErr] = useState('')
     return(
         <InCon>
             <label>{text}</label>
-            <select value={state[ke]} onChange={(e)=>{
+            <select 
+            style={{border: (err!="" ? "red 1px solid" : "1px solid #828282")}}
+             onBlur={()=>{
+                console.log("bluring")
+                blur(setErr,ke,state,text)}} value={state[ke]} onChange={(e)=>{
                         let m = {...state}
                         m[ke] = e.target.value 
+                        console.log(m)
                         functio(m)
             }}>
                 {opt.map((x,i)=>{
-                    return(<option key={i} value={false}>{x}</option>)
+                    return(<option key={i} value={x == "זכר" ? false : (x=="נקבה" ? true : 0)}>{x}</option>)
                 })}
             </select>
+            {err !="" && <label style={{color:"red"}}>{err}</label>}
         </InCon>
     )
 }
@@ -59,23 +69,59 @@ const Checkbox = ({text,value}) => {
 }
 
 const Tags = ({text,state,functio,ke}) => {
+    const [hob,setHob] = useState(["מוזיקה","בישול","ציור","ריקוד","ספורט"])
     return (
-        <InCon>
+        <InCon >
             <label>{text}</label>
-            <div style={{border:"1px solid #828282",flexDirection:"row",borderRadius:"5px",display:"flex"}}>
-                {state[ke].map((x)=>{
-                    return <div style={{padding:".2rem",background:"#e2e2e2",margin:"0 3px",borderRadius:"5px"}}>{x}</div>
+            <div >
+                <div style={{display:"flex",flexWrap:"wrap",flexDirection: "unset"}}>
+                {hob.map((x)=>{
+                    return (
+                        <React.Fragment>
+                            <Chosen 
+                            chosen={(state[ke].includes(x))}
+                            onClick={()=>{
+                                if(state[ke].includes(x)){
+                                    console.log("a")
+                                    let i = state[ke].indexOf(x)
+                                    console.log(i)
+                                    let d = {...state}
+                                     d[ke].splice(i,1)
+                                    functio(d)
+                                }
+                                else{
+                                    console.log("b")
+                                    let all = {...state}
+                                    all[ke].push(x)
+                                    functio(all)
+                                }
+                            }}>{x}</Chosen>
+                            <input value={state[ke].includes(x)} type="checkbox" style={{display:"none"}} />
+                        </React.Fragment>
+                    )
                 })}
-                <input 
-                style={{border:"none",width:"100%",outline:"none"}} onKeyDown={(e)=>{
-                    if(e.key=="Enter"){
-                        e.preventDefault()
-                        let d= {...state}
-                        d[ke] = d[ke].concat([e.target.value])
-                        functio(d)
+                </div>
+                <input placeholder="אחר" type="text"
+                onBlur={(e)=>{
+                    if(e.target.value!=''){
+                        let all = {...state}
+                        all[ke].push(e.target.value)
+
+                        setHob([...hob,e.target.value])
+                        functio(all)
                         e.target.value=""
                     }
-                }} type="text"/>
+                }}
+                 onKeyDown={(e)=>{
+                     if(e.key=="Enter" && e.target.value!=""){
+                        e.preventDefault()
+                        let all = {...state}
+                        all[ke].push(e.target.value)
+                        setHob([...hob,e.target.value])
+                        functio(all)
+                        e.target.value=""
+                    }
+                }}></input>
             </div>
         </InCon>
     )
@@ -97,6 +143,7 @@ const Text = ({text,state,functio,blur,ke}) => {
         </InCon>
     )
 }
+
 const Dates = ({text,state,functio,blur,ke}) => {
     const [err,setErr] = useState('')
     return(
@@ -139,22 +186,25 @@ const Dates = ({text,state,functio,blur,ke}) => {
 
 const Agreement = ({text,obj,setObj,ke,err,setErr}) =>{
     return (
-        <div>
+        <div style={{maxWidth:"80%",margin:"auto"}}>
             <label>{text}</label>
             <p>אני מודע כי עמותת הקרן ע"ש רות וורובל היא, מנהליה, עובדיה (יחד, "הקרן") היא רק גורם מקשר בין המתנדבים לבין הפונים לקבלת מענים. ידוע לי כי הקרן לא תישא בכל אחריות כלפיי בגין נזק כלשהו (לרבות נזק ישיר, עקיף או תוצאתי) הנגרם עקב התנדבותי, לרבות נזק הנובע מפעילותי, וכי לא תהינה לי תביעות, דרישות או טענות כנגד הקרן או מי מטעמה בנוגע לנזקים כלשהם.</p>
-            <input type="checkbox" checked={obj} onChange={()=>{
-                setObj(!obj)
-                if(!obj){
-                    let a = {...err}
-                    delete a[ke]
-                    setErr(a)
-                }else{
-                    let a = {...err}
-                    a[ke] = true
-                    setErr(a)
-                }
-                
-            }}/>
+            <div>
+                <input
+                type="checkbox" checked={obj} onChange={()=>{
+                    setObj(!obj)
+                    if(!obj){
+                        let a = {...err}
+                        delete a[ke]
+                        setErr(a)
+                    }else{
+                        let a = {...err}
+                        a[ke] = true
+                        setErr(a)
+                    }  
+                }}/>
+                <label>אני מאשר.ת את הסכם השימוש</label>
+            </div>
         </div>
     )
 }
@@ -169,14 +219,7 @@ export const Signup = (props) => {
     const [errors,setError] = useState({})
     const [agree,setAgreement] = useState(false)
     const [done,setDone] = useState(false)
-
-    useEffect(() => {
-      console.log(errors)
-    }, [errors])
-    useEffect(() => {
-        console.log(agree)
-      }, [agree])
-
+    const [sent,setSent] = useState(true)
 
     useEffect(()=>{
         if(type=="medical"){
@@ -196,8 +239,7 @@ export const Signup = (props) => {
                 institute:true,
                 profession:true,
                 email:true,
-                phone:true,
-                agreement:true
+                phone:true
             })
         }
         else{
@@ -205,14 +247,16 @@ export const Signup = (props) => {
                 birthday: "",
                 profession: "",
                 address: "",
+                lat:'',
+                long:'',
                 notes: "",
                 city: "",
                 tz: "",
                 facebook: "",
                 photo: "",
                 phone: "",
-                hobbies: [''],
-                isFemale:false,
+                hobbies: [],
+                isFemale:0,
                 name: "",
                 institute: "",
                 email: "",
@@ -229,7 +273,7 @@ export const Signup = (props) => {
                 lastName:true,
                 institute: true,
                 email: true,
-                agreement:true
+                isFemale:true
             })
         }
     },[])
@@ -310,10 +354,23 @@ export const Signup = (props) => {
                     setError(a)
                 }
                 break;
+            case "gender":
+                //gender format
+	            if(details[ke]== 0){
+                    setErr("יש לבחור "+text)
+                    let a = {...errors}
+                    a[ke] = true
+                    setError(a)
+                }
+                else{
+                    setErr('')
+                    let a = {...errors}
+                    delete a[ke]
+                    setError(a)
+                }
+                break;
         }
     }
-
-
 
     useEffect(() => {
         console.log("boom",details.facebook)
@@ -333,9 +390,22 @@ export const Signup = (props) => {
         }
     }, [details])
 
+    const handleChangeCenter =(lat,lng,address) =>{
+        let b = GeoMasking(lat,lng)
+        let d = {...details}
+        d["lat"] = b.geometry.coordinates[0]
+        d["long"] = b.geometry.coordinates[1]
+        d["address"] = address
+        let city = address.split(',')
+        d["city"] = city[1].replace(" ","")
+        let a = {...errors}
+        delete a["address"]
+        setError(a)
+        setState(d)
+    }
 
     return(
-        <div style={{height:"100%"}} >
+        <React.Fragment>
             <SignupCon>
                 <h2>להצטרפות</h2>
                 <h1>{type == "medical" ? "אני צוות רפואי":"אני מתנדב.ת"}</h1>
@@ -358,7 +428,7 @@ export const Signup = (props) => {
                         :
                         <React.Fragment>
                             <Dates blur={onBlur} text={"תאריך לידה"} state={details} functio={setState} ke={"birthday"}/>
-                            <SelectInput text={"מין"} opt={["יש לבחור","זכר","נקבה"]} state={details} functio={setState} ke={"isFemale"}/>
+                            <SelectInput blur={onBlur} text={"מין"} opt={["יש לבחור","זכר","נקבה"]} state={details} functio={setState} ke={"isFemale"}/>
                         </React.Fragment>
                         }
                         {step != 2 && type!="medical" &&<Butt   onClick={()=>setStep(step+1)}>הבא</Butt>}
@@ -366,23 +436,7 @@ export const Signup = (props) => {
                         disabled={!_.isEmpty(errors)}
                         s={!_.isEmpty(errors)}
                         onClick={()=>{
-                            console.log(details)
-                            let data = {
-                                "name": details.name,
-                                "tz": details.tz,
-                                "institute": details.job,
-                                "profession": details.role,
-                                "email": details.email,
-                                "phone": details.phone                                
-                            }
-                         axios.put(BASE_URL+'/api/doctor/register',details)
-                         .then(res=>{
-                             console.log(res)
-                             if(res.status == 200){
-                                 setDone(true)
-                             }
-                         })
-                           
+                            setDone(true)   
                         }}>סיים</Butt>}
                     </section>
                 }
@@ -391,8 +445,11 @@ export const Signup = (props) => {
                     <section>
                         <Text blur={onBlur} text={"מסלול לימודים / מקצוע"} state={details} functio={setState} ke={'profession'} />
                         <Text blur={onBlur} text={"מוסד לימודים / מקום עבודה"}  state={details} functio={setState} ke={'institute'}/>
-                        <Text blur={onBlur} text={"כתובת"}  state={details} functio={setState} ke={'address'}/>
-                        
+                        <InCon>
+                            <label>כתובת</label>
+                            <Searchi shay={handleChangeCenter}/>
+                        </InCon>
+
                         <Text blur={onBlur} text={"לינק לפרופיל פייסבוק"} state={details} functio={setState} ke={"facebook"}/>
 
                         {img &&
@@ -402,55 +459,70 @@ export const Signup = (props) => {
                             </div>
                         }
                         <Text blur={onBlur} text={"הערות נוספות"} state={details} functio={setState} ke={'comments'}/>
-                        {/* <Tags text={"תחומי עניין"} state={details} functio={setState} ke={"hobbies"}/> */}
-                        <Agreement err={errors} setErr={setError} text={"תנאי שימוש"} obj={agree} setObj={setAgreement} ke={"agreement"}/>
+                        <Tags text={"תחומי עניין"} state={details} functio={setState} ke={"hobbies"}/>
+                        
                     </section>
                 }
                 
                 </SignupForm>
                 <Buttons step={step}>
                     {step != 1 && <button onClick={()=>setStep(step-1)}>הקודם</button>}
-                    
                     {step == 2 && <Butt 
                     disabled={!_.isEmpty(errors)}
                     s={!_.isEmpty(errors)}
                     onClick={()=>{
-                        // let data= {
-                        // "birthday": new Date(),
-                        // "profession": details.profession,
-                        // "address": details.address,
-                        // "notes": details.notes+"asdas",
-                        // "city": "city",
-                        // "tz": details.tz,
-                        // "facebook": details.facebook,
-                        // "photo": "photo",
-                        // "phone": details.phone,
-                        // "hobbies": "hobbies",
-                        // "name": details.name,
-                        // "institute": details.institute,
-                        // "email": details.email
-                        // }
-                        let data = {...details}
-                        data.birthday = new Date (moment(details.birthday,"DD/MM/YYYY").format())
-                        console.log(data)
-                         axios.put(BASE_URL+'/api/volunteer/register',data)
-                         .then(res=>{
-                             console.log(res)
-                             if(res.status == 200){
-                                 setDone(true)
-                             }
-                         })
+                        setDone(true)
                     }}>סיים</Butt>}
+                    
                 </Buttons>
             </SignupCon>    
             <Back open={done} onClick={()=>{setDone(false)
             window.location.href = '/'}
             }/>
             <Modal open={done}>
-                <h2>תודה על הרשמתך!</h2>
-                <p>הפנייה נקלטה , החמל בודק את בקשתך ותקבל מייל עדכון בקרוב</p>
+            {
+                sent ? 
+                <div>
+                    <h2>שנייה לפני שמסיימים</h2>
+                        <Agreement err={errors} setErr={setError} text={"תנאי שימוש"} obj={agree} setObj={setAgreement} ke={"agreement"}/>
+                        {type=="medical" ? <Butt 
+                        disabled={!agree}
+                        s={!agree}
+                        onClick={()=>{
+                         axios.put(BASE_URL+'/api/doctor/register',details)
+                         .then(res=>{
+                             if(res.status == 200){
+                                 setSent(false)
+                             }
+                         })
+                           
+                        }}>הירשם</Butt>
+                        :
+                        <Butt 
+                        disabled={!agree}
+                        s={!agree}
+                        onClick={()=>{
+                            let data = {...details}
+                            data.birthday = new Date (moment(details.birthday,"DD/MM/YYYY").format())
+                            console.log(data)
+                            axios.put(BASE_URL+'/api/volunteer/register',data)
+                            .then(res=>{
+                                console.log(res)
+                                if(res.status == 200){
+                                    setSent(false)
+                                }
+                            })
+                        }}>הירשם</Butt>
+                        }
+                </div>
+                :
+                <React.Fragment>
+                    <h2>תודה על הרשמתך!</h2>
+                    <p>הפנייה נקלטה , החמל בודק את בקשתך ותקבל מייל עדכון בקרוב</p>
+                </React.Fragment>
+            }            
             </Modal>
-            </div>
+     </React.Fragment>
         )
 } 
 
@@ -483,6 +555,9 @@ const Modal = styled.div`
 const SignupCon = styled.div`
     max-width:1366px;
     padding:1rem;
+    height:100%;
+    width:100%;
+
     margin:auto;
     section{
         /* height:31rem; */
@@ -521,7 +596,7 @@ const SignupForm = styled.div`
         display:flex;
         flex-direction:column;
     }
-    @media (max-width:450px) {
+    @media (max-width:900px) {
         width:80%;
     }
 
@@ -555,7 +630,7 @@ const Buttons = styled.div`
         font-weight:bold;
 
     }
-    @media (max-width:450px) {
+    @media (max-width:900px) {
         width:80%;
     }
 `
@@ -573,5 +648,16 @@ const InCon = styled.div`
             padding:.5rem 0;
         }
     }
+
+`
+
+const Chosen = styled.label`
+    color:${props => props.chosen ? "#014649":"#828282"};
+    background:${props=>props.chosen ? "#039BA3" :"#e2e2e2"} ;
+    border:${props=>props.chosen ? "1px solid #00B5BD" :"0"} ;
+    padding:0.5rem;
+    border-radius:5px;
+    margin:5px;
+    cursor:pointer;
 
 `

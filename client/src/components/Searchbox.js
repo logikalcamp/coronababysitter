@@ -1,13 +1,13 @@
-const { compose, withProps, lifecycle } = require("recompose");
 import {
-    withScriptjs,
-    withGoogleMap,
-    GoogleMap,
-    Marker
-  } from "react-google-maps";
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker
+} from "react-google-maps";
 import React from 'react';
+const { compose, withProps, lifecycle } = require("recompose");
+
 const { StandaloneSearchBox } = require("react-google-maps/lib/components/places/StandaloneSearchBox");
-import {connect} from 'react-redux';
 
   const Searchi = compose(
     withProps({
@@ -46,13 +46,15 @@ import {connect} from 'react-redux';
             ref={props.onSearchBoxMounted}
             bounds={props.bounds}
             onPlacesChanged={()=>{
+              // console.log(props)
                let arr = props.onPlacesChanged()
-               props.shay(arr[0],arr[1])
+              //  console.log(arr)
+               props.shay(arr[0],arr[1],arr[2])
               }}
           >
             <input
               type="text"
-              placeholder="Type in location..."
+              placeholder=""
             />
           </StandaloneSearchBox>
         </div>

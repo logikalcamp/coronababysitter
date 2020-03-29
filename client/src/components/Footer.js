@@ -7,14 +7,13 @@ export const Footer = () => {
         <FooterCon>
             <SubCon>
                 <div>
-                    <img src={window.location.origin + "/images/logo.png"} alt="logo" style={{width:"25px",height:"25px"}}/>
-                    <label>בייבי קורונה 2020</label>
+                    <img src={window.location.origin + "/images/logo.png"} alt="logo" style={{width:"150px",height:"50px"}}/>
                 </div>
                 <div>
                     <a href="/mail"><img src={window.location.origin + "/images/mail.png"} alt="mail"/></a>
                     <a href="https://www.facebook.com/RuthVrobel/"><img src={window.location.origin + "/images/facebook.png"} alt="facebook"/></a>
                     <a id="phonem" href="tel:+972526384738"><img src={window.location.origin + "/images/phone.png"} alt="instagram"/></a>
-                    <a id="phonedesktop" href="callto:+972526384738"><img src={window.location.origin + "/images/phone.png"} alt="instagram"/></a>
+                    <a id="phonedesktop" href="tel:+972526384738"><img src={window.location.origin + "/images/phone.png"} alt="instagram"/></a>
                     <a href="https://www.youtube.com/channel/UCkjW1hsjTfcOpcrj2sQeXFQ/featured"><img src={window.location.origin + "/images/youtube.png"} alt="instagram"/></a>
                 </div>
                 <div>
@@ -32,7 +31,8 @@ const FooterCon = styled.div`
     right:0; */
     /* display:flex;
     justify-content:space-around; */
-    padding:1rem;
+    background:#ffffff;
+    padding:.5rem 1rem;
     border-top:1px solid #828282;
     img{
         width:28px;
