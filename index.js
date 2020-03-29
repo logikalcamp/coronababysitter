@@ -1,10 +1,10 @@
 'use strict';
 
-var {VolunteerService} = require("./service/VolunteerService");
-var {SessionService} = require("./service/SessionService");
-var {DoctorService} = require("./service/DoctorService");
-var {HamalService} = require("./service/HamalService");
-var {UtilsService} = require("./service/UtilsService");
+var {VolunteerService} = require("./server/service/VolunteerService");
+var {SessionService} = require("./server/service/SessionService");
+var {DoctorService} = require("./server/service/DoctorService");
+var {HamalService} = require("./server/service/HamalService");
+// var {UtilsService} = require("./server/service/UtilsService");
 var path = require('path');
 var http = require('http');
 var cors = require('cors');
@@ -13,14 +13,14 @@ var bodyParser=require('body-parser');
 var oas3Tools = require('oas3-tools');
 var serverPort = 3001;
 
-var dataBase = require("./database/DataBase")
+var dataBase = require("./server/database/DataBase")
 
 // swaggerRouter configuration
 var options = {
-    controllers: path.join(__dirname, './controllers')
+    controllers: path.join(__dirname, './server/controllers')
 };
 
-var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
+var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'server/api/openapi.yaml'), options);
 expressAppConfig.addValidator();
 var app = expressAppConfig.getApp();
 
@@ -37,7 +37,7 @@ app.use("*", async (req,res,next) => {
             req.SessionService = new SessionService(req.MongoDB);
             req.DoctorService = new DoctorService(req.MongoDB);
             req.HamalService = new HamalService(req.MongoDB);
-            req.UtilsService = new UtilsService(req.MongoDB);
+            // req.UtilsService = new UtilsService(req.MongoDB);
     }
 
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
