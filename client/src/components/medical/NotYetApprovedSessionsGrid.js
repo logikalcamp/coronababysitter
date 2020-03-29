@@ -3,7 +3,6 @@ import Axios from 'axios';
 import moment from 'moment';
 import {BASE_URL} from '../../constants'
 import GridComp from '../Grid';
-import { BASE_URL } from '../../constants';
 
 const NotYetApprovedSessionsGridCommands = (props) => {
   const prefix = window.location.origin
@@ -47,11 +46,7 @@ export const NotYetApprovedSessionsGrid = (props) => {
   ]);
   
   useEffect(() => {
-<<<<<<< HEAD
     Axios.get(BASE_URL+'/api/session/getnotyetapprovedsessions/5e7ca72c343daa68c8d7277f').then(result => {
-=======
-    Axios.get(BASE_URL + '/api/session/getnotyetapprovedsessions/5e7ca72c343daa68c8d7277f').then(result => {
->>>>>>> 705d9ed01a840abebf184072c49b89520c9f193c
       setNotYetApprovedSessions(result.data);
     })
   }, [])
