@@ -1,8 +1,8 @@
 'use strict';
 
 var {Roles} = require("../utils/enums");
-const MongoDB = require("../database/DataBase")
-
+const MongoDB = require("../database/DataBase");
+var {Location} = require("../utils/location");
 var COLLECTION_NAME = "Sessions"
 
 class SessionService {
@@ -53,6 +53,40 @@ class SessionService {
     return MongoDB.findMany(COLLECTION_NAME, filter, this.MongoClient);
   }
 
+
+  /**
+   * Get all available sessions to volunteer, within X distance.
+   * userId String 
+   * returns List
+   **/
+  getAvailableSessions(userId) {
+    return new Promise((resolve, reject) => {
+      var X = 25;
+      var user;
+      console.log(userId);
+      MongoDB.findOne("Volunteers", {"_id" : MongoDB.getMongoObjectId(userId)}, this.MongoClient).then((result1) => {
+        user = result1;
+        console.log(user);
+        var sessions = [];
+        MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient).then((result2) => {
+          sessions = result2
+          console.log(sessions);
+          var available = [];
+          sessions.forEach(element => {
+            if(element){
+              if(Location.getDistance(user.lat, user.long, element.doctor.lat, element.doctor.long) < 26){
+                available.push(element);
+                console.log(elemnt.doctor.lat);
+              }
+            }
+          
+          });
+          resolve(available);
+        });
+    });
+  });
+  }
+
   /**
    * Get all upcoming sessions of a specified volunteer
    * userId String 
@@ -62,13 +96,16 @@ class SessionService {
     return MongoDB.findMany(COLLECTION_NAME, {"filledBy._id" : MongoDB.getMongoObjectId(userId)}, this.MongoClient);
   }
 
+    /**
+   * Get all upcoming, not yet approved sessions of a specified volunteer
+   * userId String 
+   * returns List
+   **/
   getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
     var filter = {$and: [{"filledBy" : null}, 
     {"requests": {$elemMatch : {"_id" : MongoDB.getMongoObjectId(userId)}}}]};
 
     return MongoDB.findMany(COLLECTION_NAME, filter, this.MongoClient);
-  
-    //return MongoDB.findMany(COLLECTION_NAME, {"requests": {"$elemMatch" : {_id : MongoDB.getMongoObjectId(userId)}}}, this.MongoClient).then();
   }
 
   /**
