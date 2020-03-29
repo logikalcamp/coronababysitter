@@ -37,10 +37,22 @@ const Map = withScriptjs(withGoogleMap(props =>
     <Marker
       position={{ lat: 32.344084 , lng: 34.870139 }}
     />
+    <Marker
+      position={{ lat: 32.334084 , lng: 34.860139 }}
+    />
   </GoogleMap>
 ));
 
 export const FindSession = (props) => {
+  useEffect(()=>{
+    try{
+      console.log(document.getElementsByClassName("gm-control-active gm-fullscreen-control"))
+      document.getElementsByClassName("gm-control-active gm-fullscreen-control").display = "none"
+    }
+    catch(err){
+      console.log(err)
+    }
+  },[])
   return (
     <FindSessionComp>
       <TableComp>Table</TableComp>
