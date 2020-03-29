@@ -63,7 +63,11 @@ export const UpcomingSessionsGrid = (props) => {
   ]);
 
   useEffect(() => {
+<<<<<<< HEAD
     Axios.get(BASE_URL+'/api/session/getupcomingsessions/5e7ca72c343daa68c8d7277f').then(result => {
+=======
+    Axios.get(BASE_URL + '/api/session/getupcomingsessions/5e7ca72c343daa68c8d7277f').then(result => {
+>>>>>>> 705d9ed01a840abebf184072c49b89520c9f193c
       setUpcomingSessions(result.data);
     })
   }, [])

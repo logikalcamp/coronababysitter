@@ -20,7 +20,6 @@ const AppRouter = () =>(
         <Route exact path="/policy" component={Policy}/>
         <Route exact path="/doctor/:id" component={CompleteDoctor}/>
         <Route exact path="/signup/:type" component={Signup}/>
-        <Route exact path="/homepage" component={HomePage}/>
         <Route exact path="/medical" component={MedicalDashboard}/>
         {/* <Route exact path="/hamal" component={VolunteersPage}/> */}
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
