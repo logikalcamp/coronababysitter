@@ -23,7 +23,7 @@ export default class GridComp extends Component {
   }
 
   handleRowDataChanged(event) {
-    debugger;
+    //debugger;
   }
 
   render() {
@@ -35,6 +35,7 @@ export default class GridComp extends Component {
           <AgGridReact 
             columnDefs={this.props.columnDefs}
             rowData={this.props.rowData}
+            frameworkComponents={this.props.frameworkComponents}
 
             enableRtl={true}
             rowHeight={50}
