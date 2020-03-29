@@ -1,8 +1,37 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import Axios from 'axios';
 
 export const Landing = (props) => {
     console.log(props)
+    
+    const [uploading, setUploading] = useState(false)
+
+    var onChange = (file) => {
+    
+        setUploading(true);
+
+        const formData = new FormData()
+        formData.append("customPhoto", file);
+    
+        Axios({
+            method: 'post',
+            url: '/api/uploadphoto',
+            data: formData,
+            headers: {'Content-Type':'multipart-formdata'}
+        }).then(function (response) {
+            //handle success
+            console.log(response);
+        })
+        .catch(function (response) {
+            //handle error
+            console.log(response);
+        });
+      }
+
+      const [image, setImage] = useState('');
+      
+
     return(
         <LandingCon>
                 <h1>ברוכים הבאים</h1>
@@ -17,6 +46,8 @@ export const Landing = (props) => {
                     <button onClick={()=>props.history.push('/signup/volunteer')}>אני רוצה להתנדב</button>
                     <button onClick={()=>props.history.push('/signup/medical')}>אני צוות רפואי</button>
                 </div>
+                <input type='file' onChange={(e) => onChange(e.target.files[0])}/>
+                <img src={image}/>
         </LandingCon>
     )
 }
