@@ -43,6 +43,15 @@ module.exports.getAllUpcomingApprovedSessionsByVolunteer = function getAllUpcomi
     });
 };
 
+module.exports.getAvailableSessions = function getAvailableSessions (req, res, next, userId) {
+  req.SessionService.getAvailableSessions(userId)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(req,res, response);
+    });
+};
 
 module.exports.updateSession = function updateSession (req, res, next, body, sessionId) {
   req.SessionService.updateSession(body, sessionId)

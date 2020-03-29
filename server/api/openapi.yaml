@@ -23,6 +23,8 @@ tags:
   description: All hamal users
 - name: admin
   description: User in charge of everyone and everything, can add Hamal members
+- name: utils
+  description: General necessary util routes.
 paths:
   /volunteer/all/{page}:
     get:
@@ -361,7 +363,6 @@ paths:
         "405":
           description: Invalid input
       x-swagger-router-controller: Session
-
   /session/getUpcomingSessions/{userId}:
     get:
       tags:
@@ -389,7 +390,6 @@ paths:
         "404":
           description: No sessions found
       x-swagger-router-controller: Session
-
   /session/getNotYetApprovedSessions/{userId}:
     get:
       tags:
@@ -417,6 +417,34 @@ paths:
         "404":
           description: No sessions found
       x-swagger-router-controller: Session
+  /session/getAvailableSessions/{userId}:
+    get:
+      tags:
+      - sessions
+      summary: Get all not yet approved upcoming sessions for volunteer
+      operationId: getAvailableSessions
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: All available sessions near the specified volunteer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
+      x-swagger-router-controller: Session
+  
   /hamal:
     post:
       tags:
@@ -480,13 +508,42 @@ paths:
         "405":
           description: Invalid input
       x-swagger-router-controller: Hamal
+  /utils/facebookimage:
+    post:
+      tags:
+      - utils
+      summary: Get a link to a user's facebook profile photo using his facebook profile link.
+      operationId: getFacebookPicture
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                facebookURL:
+                  type: string
+            example:
+              facebookURL: https://www.facebook.com/ImOmerM/
+      responses:
+        "200":
+          description: Photo found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pictureURL:
+                    type: string
+        "404":
+          description: Content not found
+      x-swagger-router-controller: Utils
+
 components:
   schemas:
     Volunteer:
       required:
       - birthday
       - email
-      - name
       - tz
       type: object
       properties:
@@ -556,7 +613,6 @@ components:
     Doctor:
       required:
       - email
-      - name
       type: object
       properties:
         _id:
@@ -657,6 +713,9 @@ components:
           - daily
           - weekly
           - monthly
+        contact:
+          type: string
+          description: A contact's phone number
       example:
         doctor:
           profession: profession
@@ -716,6 +775,7 @@ components:
         - taskName: taskName
           taskSelected: true
         didHappen: true
+        contact: 054-4445555
       xml:
         name: Session
     Hamal:

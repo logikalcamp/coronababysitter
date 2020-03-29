@@ -5,6 +5,7 @@ var {SessionService} = require("./service/SessionService");
 var {DoctorService} = require("./service/DoctorService");
 var {HamalService} = require("./service/HamalService");
 var {ImageService} = require("./service/ImageService");
+var {UtilsService} = require("./service/UtilsService");
 var path = require('path');
 var formidable = require('formidable');
 var http = require('http');
@@ -65,7 +66,8 @@ app.use("*", async (req,res,next) => {
             req.VolunteerService = new VolunteerService(req.MongoDB);
             req.SessionService = new SessionService(req.MongoDB);
             req.DoctorService = new DoctorService(req.MongoDB);
-            req.HamalService = new HamalService(req.MongoDB)
+            req.HamalService = new HamalService(req.MongoDB);
+            req.UtilsService = new UtilsService(req.MongoDB);
     }
 
     next()
