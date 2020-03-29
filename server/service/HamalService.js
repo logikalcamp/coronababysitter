@@ -28,52 +28,33 @@ class HamalService {
 
           // Update the user status, add the user to the hamal's user approved/rejected users lists
           MongoDB.findByMongoId(userCollection, userId, this.MongoClient).then((result) => {
-            var user = result;
-            var userCollectionLowerCase = userCollection.toLowerCase()
-            MongoDB.findOneAndUpdate(userCollection, { '_id': MongoDB.getMongoObjectId(userId) }, { "$set": { "isApproved": body.isApproved }}, this.MongoClient)
-            MongoDB.findOneAndUpdate(COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(hamalUser._id) }, { "$push": { userCollectionLowerCase: user }}, this.MongoClient)
+            try {
+              var user = result;
+              var userCollectionLowerCase = userCollection.toLowerCase()
+              MongoDB.findOneAndUpdate(userCollection, { '_id': MongoDB.getMongoObjectId(userId) }, { "isApproved": body.isApproved }, this.MongoClient)
+              MongoDB.findOneAndUpdate(COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(hamalUser._id.toString()) }, { "$push": { userCollectionLowerCase: user }}, this.MongoClient)
 
-            var emailInfo;
-            var emailService = new EmailService();
-            if (body.isApproved) {
-              emailInfo = emailService.getApproveEmail("http://localhost:3001/" + userCollectionLowerCase + "/" + user._id);
-            } else {
-              emailInfo = emailService.getRejectEmail();
+              var emailInfo;
+              var emailService = new EmailService();
+              if (body.isApproved) {
+                emailInfo = emailService.getApproveEmail("http://localhost:3001/" + userCollectionLowerCase + "/" + user._id);
+              } else {
+                emailInfo = emailService.getRejectEmail();
+              }
+
+              emailService.sendEmail(user.email, emailInfo);
+              resolve("Email sent!");
             }
-
-            emailService.sendEmail(user.email, emailInfo);
-
+            catch (error) {
+              reject(error);
+            }
           }).catch((error) => {
-            reject(error)
+            reject(error);
           });
-
         }).catch((error) => {
-          reject(error)
+          reject(error);
         });
-
-        var isDoctor = true;
-        var userCollection = ""
-
-
-
-        // Checks whether its a doctor or a volunteer
-        if (body.role == "volunteer") isDoctor = false;
-        if (isDoctor) {
-          //possible validation (not tested)  MongoDB.findOne("Doctors", {"doctor._id" : MongoDB.getMongoObjectId(body.userId)}, this.MongoClient).then((result) => {
-          //    if(!result) reject("error : couldn't find doctor to update");
-          userCollection = "Doctors";
-          MongoDB.findOneAndUpdate(userCollection, { '_id': MongoDB.getMongoObjectId(userId)},{isApproved : body.isApproved},this.MongoClient);
-        }
-        else {
-          userCollection = "Volunteers"
-          MongoDB.findOneAndUpdate(userCollection, { '_id': MongoDB.getMongoObjectId(userId)},{isApproved : body.isApproved},this.MongoClient);
-        }
-        
-        user = MongoDB.findByMongoId(userCollection, userId, this.MongoClient)
-        
-
       });
-        
     }
   
  

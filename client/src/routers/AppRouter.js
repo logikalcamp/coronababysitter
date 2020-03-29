@@ -6,7 +6,7 @@ import {Footer} from '../components/Footer'
 import {Landing} from '../components/Landing'
 import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
-import { VolunteersPage } from '../components/Volunteers';
+import { HamalVolunteersPage } from '../components/Volunteers';
 import CompleteDoctor from '../components/CompleteDoctor'
 import {FindSession} from '../components/FindSession';
 
@@ -20,7 +20,7 @@ const AppRouter = () =>(
         <Route exact path="/doctor/:id" component={CompleteDoctor}/>
         <Route exact path="/signup/:type" component={Signup}/>
         <Route exact path="/homepage" component={HomePage}/>
-        <Route exact path="/hamal" component={VolunteersPage}/>
+        <Route exact path="/hamal" component={HamalVolunteersPage}/>
         <Route exact path='/find-session' component={FindSession} />
         {/* 
         <PrivateRoute exact path="/meeting/:id" component={Meeting} />
