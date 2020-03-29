@@ -220,6 +220,30 @@ export const Signup = (props) => {
     const [agree,setAgreement] = useState(false)
     const [done,setDone] = useState(false)
     const [sent,setSent] = useState(true)
+    const [isUploadingImage, setImageUploading] = useState(false)
+
+    const onChange = (file) => {
+    
+        setImageUploading(true);
+
+        const formData = new FormData()
+        formData.append("customPhoto", file);
+    
+        axios({
+            method: 'post',
+            url: '/api/uploadphoto',
+            data: formData,
+            headers: {'Content-Type':'multipart-formdata'}
+        }).then(function (response) {
+            //handle success
+            setImg(response.url);
+            setImageUploading(false);
+        })
+        .catch(function (response) {
+            //handle error
+            console.log(response);
+        });
+      }
 
     useEffect(()=>{
         if(type=="medical"){
@@ -455,7 +479,7 @@ export const Signup = (props) => {
                         {img &&
                             <div style={{alignItems:"center"}}>
                                 <img style={{width:"130px",height:"130px",margin:"auto"}} src={img} alt="profile" />
-                                <input type='file'/>
+                                <input type='file' onChange={(e) => onChange(e.target.files[0])}/>
                             </div>
                         }
                         <Text blur={onBlur} text={"הערות נוספות"} state={details} functio={setState} ke={'comments'}/>
