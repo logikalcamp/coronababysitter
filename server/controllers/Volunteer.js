@@ -13,8 +13,18 @@ module.exports.createVolunteer = function createVolunteer (req, res, next, body,
     });
 };
 
-module.exports.getAllVolunteers = function getAllVolunteers (req, res, next) {
-  req.VolunteerService.getAllVolunteers()
+module.exports.getAllVolunteers = function getAllVolunteers (req, res, next, page) {
+  req.VolunteerService.getAllVolunteers(page)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(req,res, response);
+    });
+};
+
+module.exports.getApprovedVolunteers = function getApprovedVolunteers (req, res, next, page) {
+  req.VolunteerService.getApprovedVolunteers(page)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

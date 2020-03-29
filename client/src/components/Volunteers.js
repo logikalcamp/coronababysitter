@@ -162,15 +162,16 @@ const styles = makeStyles(theme => ({
     }
   }));
 
-export const VolunteersPage = (props) => {
+export const HamalVolunteersPage = (props) => {
     const classes = styles();
 
     const [volunteersMap, setVolunteersMap] = useState('');
     const [volunteers, setVolunteers] = useState('');
     const [selectedVolunteer,setSelectedVolunteer] = useState(undefined)
+    const [page,setPage] = useState(0)
 
     useEffect(() => {
-        Axios.get('/api/volunteer/all').then(result => {
+        Axios.get('/api/volunteer/approved/' + page).then(result => {
             if(volunteers) return;
             var vols = result.data.map(item => <div className={classes.tableRow} onClick={() => setSelectedVolunteer(item)}>
                 <div className={classes.imageCell} >

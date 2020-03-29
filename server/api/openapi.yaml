@@ -24,15 +24,50 @@ tags:
 - name: admin
   description: User in charge of everyone and everything, can add Hamal members
 paths:
-  /volunteer/all:
+  /volunteer/all/{page}:
     get:
       tags:
       - volunteer
       summary: Get all volunteers
       operationId: getAllVolunteers
+      parameters:
+      - name: page
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
       responses:
         "200":
           description: All volunteers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Volunteer'
+                x-content-type: application/json
+        "404":
+          description: No volunteers found
+      x-swagger-router-controller: Volunteer
+  /volunteer/approved/{page}:
+    get:
+      tags:
+      - volunteer
+      summary: Get all approved volunteers
+      operationId: getApprovedVolunteers
+      parameters:
+      - name: page
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: All Approved volunteers
           content:
             application/json:
               schema:

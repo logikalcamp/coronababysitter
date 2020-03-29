@@ -63,9 +63,15 @@ exports.findByMongoId = (collection, id, db) => {
     }
 }
 
-exports.findMany = (collection, filter, db) => {
+exports.findMany = (collection, filter, db, from = 0, to = 0) => {
     return new Promise((resolve,reject) => {
-        db.collection(collection).find(filter).toArray((err,result) => {
+        var query = db.collection(collection).find(filter).skip(from)
+        
+        if(to  > from) {
+            query.limit(to - from);
+        }
+        
+        query.toArray((err,result) => {
             if(err) reject(err);
 
             resolve(result);

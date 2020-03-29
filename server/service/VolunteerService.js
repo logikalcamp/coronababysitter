@@ -2,6 +2,8 @@
 
 const MongoDB = require("../database/DataBase")
 
+const { getPagingDbData } = require('../utils/paging');
+
 var COLLECTION_NAME = "Volunteers";
 
 class VolunteerService {
@@ -28,8 +30,21 @@ class VolunteerService {
    *
    * returns List
    **/
-  getAllVolunteers() {
-    return MongoDB.findMany(COLLECTION_NAME,{}, this.MongoClient);
+  getAllVolunteers(page) {
+    var{from, to} = getPagingDbData(page, "volunteers");
+
+    return MongoDB.findMany(COLLECTION_NAME,{}, this.MongoClient, from, to);
+  }
+
+  /**
+   * Get all volunteers
+   *
+   * returns List
+   **/
+  getApprovedVolunteers(page) {
+    var{from, to} = getPagingDbData(page, "volunteers");
+
+    return MongoDB.findMany(COLLECTION_NAME,{isApproved: true}, this.MongoClient,from,to);
   }
 
   /**
