@@ -8,9 +8,9 @@ import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
 import { VolunteersPage } from '../components/Volunteers';
 import CompleteDoctor from '../components/CompleteDoctor'
-import {VolunteerHomepage} from '../components/VolunteerHomepage';
+import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
 import {FindSession} from '../components/FindSession';
-
+import MedicalDashboard from '../components/medical/Dashboard'
 import Policy from '../components/Policy'
 const AppRouter = () =>(
     <Router>
@@ -21,6 +21,7 @@ const AppRouter = () =>(
         <Route exact path="/doctor/:id" component={CompleteDoctor}/>
         <Route exact path="/signup/:type" component={Signup}/>
         <Route exact path="/homepage" component={HomePage}/>
+        <Route exact path="/medical" component={MedicalDashboard}/>
         <Route exact path="/hamal" component={VolunteersPage}/>
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
         <Route exact path='/find-session' component={FindSession} />
