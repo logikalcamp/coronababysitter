@@ -8,6 +8,8 @@ var path = require('path');
 var http = require('http');
 var cors = require('cors');
 var bodyParser=require('body-parser');
+const fs = require('fs');
+var formidable = require('formidable');
 
 var oas3Tools = require('oas3-tools');
 var serverPort = 3001;
@@ -27,6 +29,48 @@ app.use(cors());
 app.set('trust proxy', true);
 
 app.use(bodyParser.json())
+
+app.post('/api/uploadphoto', (req,res,next) => {
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function(err, fields, files) {
+        if (err) {
+  
+          // Check for and handle any errors here.
+  
+          console.error(err.message);
+          return;
+        }
+        else {
+            const {GPhotos}     = require('upload-gphotos');
+            const gphotos = new GPhotos();
+    
+            var username = 'appsitterseeker@gmail.com';
+            var password = 'sitterseeker2020';
+         
+             (async () => {
+                 await gphotos.signin({
+                   username,
+                   password,
+                 });
+                 
+                 const album = await gphotos.searchAlbum({ title: 'Volunteers' });
+         
+                 const photo = await gphotos.upload({
+                     stream: fs.createReadStream(files['customPhoto'].path),
+                     size: (await fs.promises.stat(files['customPhoto'].path)).size,
+                     filename: path.basename(files['customPhoto'].path),
+                 });
+
+                 console.log(photo)
+             })().then(console.log).catch(console.error)
+        }
+        res.end()
+    });
+       
+
+
+})
 
 app.use("*", async (req,res,next) => {
     if(req.baseUrl.startsWith("/api")) {

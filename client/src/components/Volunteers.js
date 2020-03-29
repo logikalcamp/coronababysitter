@@ -299,7 +299,7 @@ export const VolunteersPage = (props) => {
 }
 
 const ModalCon = styled.div`
-    position: absolute;
+    position: fixed;
     z-index: 1;
     left: 0;
     top: 0;
@@ -312,7 +312,7 @@ const ModalCon = styled.div`
 `;
 
 const ModalContentCon = styled.div`
-    position: absolute;
+    position: fixed;
     z-index: 2;
     left: 0;
     top: 0;
