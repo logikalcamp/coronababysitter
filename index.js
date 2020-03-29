@@ -4,7 +4,7 @@ var {VolunteerService} = require("./server/service/VolunteerService");
 var {SessionService} = require("./server/service/SessionService");
 var {DoctorService} = require("./server/service/DoctorService");
 var {HamalService} = require("./server/service/HamalService");
-// var {UtilsService} = require("./server/service/UtilsService");
+var {UtilsService} = require("./server/service/UtilsService");
 var path = require('path');
 var cors = require('cors');
 var bodyParser=require('body-parser');
@@ -37,7 +37,7 @@ app.use("*", async (req,res,next) => {
             req.SessionService = new SessionService(req.MongoDB);
             req.DoctorService = new DoctorService(req.MongoDB);
             req.HamalService = new HamalService(req.MongoDB);
-            // req.UtilsService = new UtilsService(req.MongoDB);
+            req.UtilsService = new UtilsService(req.MongoDB);
             next();
     } else {
       res.sendFile(path.resolve(__dirname, 'client', 'public', 'index.html'));
