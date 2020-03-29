@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import moment from 'moment';
+import {BASE_URL} from '../../constants'
 
 import GridComp from '../Grid';
 
@@ -62,7 +63,7 @@ export const UpcomingSessionsGrid = (props) => {
   ]);
 
   useEffect(() => {
-    Axios.get('/api/session/getupcomingsessions/5e7ca72c343daa68c8d7277f').then(result => {
+    Axios.get(BASE_URL+'/api/session/getupcomingsessions/5e7ca72c343daa68c8d7277f').then(result => {
       setUpcomingSessions(result.data);
     })
   }, [])

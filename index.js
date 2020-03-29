@@ -39,8 +39,6 @@ app.use("*", async (req,res,next) => {
             req.HamalService = new HamalService(req.MongoDB);
             req.UtilsService = new UtilsService(req.MongoDB);
             next();
-    } else {
-      res.sendFile(path.resolve(__dirname, 'client', 'public', 'index.html'));
     }
     // res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     next();
