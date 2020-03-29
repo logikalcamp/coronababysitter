@@ -228,7 +228,7 @@ const CompleteDoctor = (props) => {
                                     delete data.isApproved
                                     // data.id = id
                                     console.log(data)
-                                    axios.put(BASE_URL+`/doctor/create/${id}`,data)
+                                    axios.put(BASE_URL+`/api/doctor/create/${id}`,data)
                                     .then(res=>{
                                         console.log(res)
                                     })
