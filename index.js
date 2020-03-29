@@ -38,10 +38,10 @@ app.use("*", async (req,res,next) => {
             req.DoctorService = new DoctorService(req.MongoDB);
             req.HamalService = new HamalService(req.MongoDB);
             // req.UtilsService = new UtilsService(req.MongoDB);
+            next();
+    } else {
+      res.sendFile(path.resolve(__dirname, 'client', 'public', 'index.html'));
     }
-
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    next();
 })
 
 // app.use(express.static(path.join(__dirname, 'client/build')));
