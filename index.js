@@ -6,15 +6,13 @@ var {DoctorService} = require("./server/service/DoctorService");
 var {HamalService} = require("./server/service/HamalService");
 // var {UtilsService} = require("./server/service/UtilsService");
 var path = require('path');
-var http = require('http');
 var cors = require('cors');
 var bodyParser=require('body-parser');
-
+var express = require('express')
 var oas3Tools = require('oas3-tools');
-var serverPort = 3001;
-
+var serverPort = process.env.PORT || 3001;
+// var app = express()
 var dataBase = require("./server/database/DataBase")
-
 // swaggerRouter configuration
 var options = {
     controllers: path.join(__dirname, './server/controllers')
@@ -23,6 +21,8 @@ var options = {
 var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'server/api/openapi.yaml'), options);
 expressAppConfig.addValidator();
 var app = expressAppConfig.getApp();
+
+var http = require('http').Server(app);
 
 app.use(cors());
 app.set('trust proxy', true);
@@ -39,17 +39,16 @@ app.use("*", async (req,res,next) => {
             req.HamalService = new HamalService(req.MongoDB);
             // req.UtilsService = new UtilsService(req.MongoDB);
     }
-
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    // res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     next();
 })
 
-// app.use(express.static(path.join(__dirname, 'client/build')));
-// app.get('*', (req, res) => {
-//   res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-// });
+app.use(express.static(path.join(__dirname, 'client/build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+});
 
 // Initialize the Swagger middleware
-http.createServer(app).listen(serverPort, function () {
+var server = http.listen(serverPort, function () {
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
 });
