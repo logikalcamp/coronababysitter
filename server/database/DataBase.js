@@ -63,19 +63,37 @@ exports.findByMongoId = (collection, id, db) => {
     }
 }
 
-exports.findMany = (collection, filter, db, from = 0, to = 0) => {
+exports.findMany = (collection, options = {}, db) => {
     return new Promise((resolve,reject) => {
-        var query = db.collection(collection).find(filter).skip(from)
-        
-        if(to  > from) {
-            query.limit(to - from);
-        }
-        
-        query.toArray((err,result) => {
+        var toArrayCallback = (err,result) => {
             if(err) reject(err);
 
             resolve(result);
-        });
+        };
+        
+        var query = {};
+
+        try{
+            if(options.join) {
+                query = db.collection(collection).aggregate([{
+                    $lookup: options.join
+                },{
+                    $match: options.filter
+                }]);
+            }
+            else {
+                query = db.collection(collection).find(options.filter);
+            }
+
+            if(options.to  > options.from) {
+                query.skip(option.from);
+                query.limit(options.to - options.from);
+            }
+            
+            query.toArray(toArrayCallback);
+        } catch(err) {
+            console.log(err)
+        }
     });
 }
 

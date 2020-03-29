@@ -3,7 +3,7 @@
 var {Roles} = require("../utils/enums");
 const MongoDB = require("../database/DataBase");
 var {Location} = require("../utils/location");
-var COLLECTION_NAME = "Sessions"
+var COLLECTION_NAME = "Sessions_temp"
 
 class SessionService {
   
@@ -41,16 +41,22 @@ class SessionService {
    **/
   getAllSessionsByUser(body,userId) {
     var filter = null;
+    var join = {
+      from: 'Doctors_temp',
+      localField: 'doctor',
+      foreignField:'_id',
+      as: "doctor_o"
+    }
 
     if(body.role == Roles.volunteer) {
-      filter = {"doctor._id" : MongoDB.getMongoObjectId(userId)}
+      filter = {"doctor" : MongoDB.getMongoObjectId(userId)}
     }
     else if (body.role == Roles.doctor) {
       filter = {$or: [{"filledBy._id" : MongoDB.getMongoObjectId(userId)}, 
                       {"requests": {"$elemMatch" : {_id : MongoDB.getMongoObjectId(userId)}}}]};
     }
 
-    return MongoDB.findMany(COLLECTION_NAME, filter, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME, {filter:filter, join: join}, this.MongoClient);
   }
 
 
@@ -68,7 +74,7 @@ class SessionService {
         user = result1;
         console.log(user);
         var sessions = [];
-        MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient).then((result2) => {
+        MongoDB.findMany(COLLECTION_NAME, {filter:{}}, this.MongoClient).then((result2) => {
           sessions = result2
           console.log(sessions);
           var available = [];
@@ -93,7 +99,7 @@ class SessionService {
    * returns List
    **/
   getAllUpcomingApprovedSessionsByVolunteer(userId) {
-    return MongoDB.findMany(COLLECTION_NAME, {"filledBy._id" : MongoDB.getMongoObjectId(userId)}, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME, {filter:{"filledBy._id" : MongoDB.getMongoObjectId(userId)}}, this.MongoClient);
   }
 
     /**
@@ -105,7 +111,7 @@ class SessionService {
     var filter = {$and: [{"filledBy" : null}, 
     {"requests": {$elemMatch : {"_id" : MongoDB.getMongoObjectId(userId)}}}]};
 
-    return MongoDB.findMany(COLLECTION_NAME, filter, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME, {filter:filter}, this.MongoClient);
   }
 
   /**
