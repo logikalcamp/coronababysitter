@@ -1,5 +1,6 @@
-exports.getDistance = function(lat1, lon1, lat2, lon2) 
-{
+
+var exports = {};
+exports.getDistance = (lat1, lon1, lat2, lon2) => {
   var R = 6371; // km
   var dLat = toRad(lat2-lat1);
   var dLon = toRad(lon2-lon1);
@@ -18,3 +19,5 @@ function toRad(Value)
 {
     return Value * Math.PI / 180;
 }
+
+module.exports = exports;

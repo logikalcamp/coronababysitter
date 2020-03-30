@@ -2,7 +2,7 @@
 
 var {Roles} = require("../utils/enums");
 const MongoDB = require("../database/DataBase");
-var {Location} = require("../utils/location");
+const Location = require("../utils/location");
 var COLLECTION_NAME = "Sessions"
 
 class SessionService {
@@ -70,13 +70,11 @@ class SessionService {
         var sessions = [];
         MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient).then((result2) => {
           sessions = result2
-          console.log(sessions);
           var available = [];
           sessions.forEach(element => {
             if(element){
               if(Location.getDistance(user.lat, user.long, element.doctor.lat, element.doctor.long) < 26){
                 available.push(element);
-                console.log(elemnt.doctor.lat);
               }
             }
           
