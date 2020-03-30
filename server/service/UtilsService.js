@@ -31,6 +31,22 @@ class UtilsService {
       }
     });
   }
+
+  loginUser(body, session) {
+    return new Promise((resolve, reject) => {
+      var userSession = session.loginCodes[body.email];
+      if (userSession) {
+        var isValid = userSession == body.code
+
+        // User is logged in, delete code from session.
+        if (isValid) delete session.loginCodes[body.email];
+        
+        resolve({valid: isValid});
+      } else {
+        reject("No code available for this email.");
+      }
+    })
+  }
 }
 
 module.exports.UtilsService = UtilsService

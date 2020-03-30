@@ -9,6 +9,7 @@ var path = require('path');
 var cors = require('cors');
 var bodyParser=require('body-parser');
 var express = require('express')
+var session = require('express-session');
 var oas3Tools = require('oas3-tools');
 var serverPort = process.env.PORT || 3001;
 // var app = express()
@@ -28,6 +29,7 @@ app.use(cors());
 app.set('trust proxy', true);
 
 app.use(bodyParser.json())
+app.use(session({secret: 'sitterseeker2020'}));
 
 app.use("*", async (req,res,next) => {
     if(req.baseUrl.startsWith("/api")) {

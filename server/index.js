@@ -11,7 +11,7 @@ var formidable = require('formidable');
 var http = require('http');
 var cors = require('cors');
 var bodyParser=require('body-parser');
-
+var session = require('express-session');
 
 var oas3Tools = require('oas3-tools');
 var serverPort = 3001;
@@ -31,6 +31,7 @@ app.use(cors());
 app.set('trust proxy', true);
 
 app.use(bodyParser.json())
+app.use(session({secret: 'sitterseeker2020'}));
 
 app.post('/api/uploadphoto', async (req,res,next) => {
     var form = new formidable.IncomingForm();
