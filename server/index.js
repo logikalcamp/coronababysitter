@@ -32,7 +32,7 @@ app.set('trust proxy', true);
 
 app.use(bodyParser.json())
 
-app.post(BASE_URL + '/api/uploadphoto', async (req,res,next) => {
+app.post('/api/uploadphoto', async (req,res,next) => {
     var form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields, file) => {
