@@ -1,6 +1,6 @@
 'use strict';
 
-var getLookUp = function (tableFrom, local, foreign, as){
+var getLookUp = (tableFrom, local, foreign, as) => {
   return ({
     $lookup:{
     from: tableFrom,
@@ -8,6 +8,12 @@ var getLookUp = function (tableFrom, local, foreign, as){
     foreignField: foreign,
     as: as
     }});
+}
+var lookUpForSessions = (arr) => {
+  arr.push(getLookUp("Doctors_temp", "doctor", "_id", "doctor_o"));
+  arr.push(getLookUp("Volunteers", "requests", "_id", "volunteers_array_o"));
+  arr.push(getLookUp("Volunteers", "filledBy", "_id", "chosen_volunteer_o"));
+
 }
 
 var {Roles} = require("../utils/enums");
@@ -55,10 +61,7 @@ class SessionService {
     var aggregate = [];
 
     if(body.role == Roles.doctor) {
-        aggregate.push(getLookUp("Doctors_temp", "doctor", "_id", "doctor_o"));
-        aggregate.push(getLookUp("Volunteers", "requests", "_id", "volunteers_array_o"));
-        aggregate.push(getLookUp("Volunteers", "filledBy", "_id", "chosen_volunteer_o"));
-        
+        lookUpForSessions(aggregate);
         
         filter = {
           $match:{
@@ -69,20 +72,16 @@ class SessionService {
 
     }
     else if (body.role == Roles.volunteer) {
-      console.log("volun");
-      aggregate.push(getLookUp("Volunteers", "requests", "_id", "volunteers_array_o"));
-      aggregate.push(getLookUp("Doctors_temp", "doctor", "_id", "doctor_o"));
-      aggregate.push(getLookUp("Volunteers", "filledBy", "_id", "chosen_volunteer_o"));
+      lookUpForSessions(aggregate);
 
       filter = {$match:
         {$or: 
          [{"filledBy" : MongoDB.getMongoObjectId(userId)}, 
-                     {"requests": {$in: [MongoDB.getMongoObjectId(userId)]
-                     }}]}};
+                     {"requests": {$elemMatch: { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
       aggregate.push(filter);
       }
 
-    return MongoDB.findMany(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);  }
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);  }
 
 
   /**
@@ -94,17 +93,21 @@ class SessionService {
     return new Promise((resolve, reject) => {
       var X = 25;
       var user;
-      console.log(userId);
       MongoDB.findOne("Volunteers", {"_id" : MongoDB.getMongoObjectId(userId)}, this.MongoClient).then((result1) => {
         user = result1;
-        console.log(user);
         var sessions = [];
-        MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient).then((result2) => {
-          sessions = result2
+        var aggregate = [];
+        lookUpForSessions(aggregate);
+        var filter = {$match : {filledBy: null}};
+        aggregate.push(filter);  
+        MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate: aggregate}, this.MongoClient).then((result2) => {
+          sessions = result2;
           var available = [];
           sessions.forEach(element => {
             if(element){
-              if(Location.getDistance(user.lat, user.long, element.doctor.lat, element.doctor.long) < 26){
+              console.log(user);
+              console.log(user.lat + "   "+ user.long + "    " + element.doctor_o.lat +"   " + element.doctor_o.long);
+              if(Location.getDistance(user.lat, user.lon, element.doctor_o.lat, element.doctor_o.lon) < X){
                 available.push(element);
               }
             }
@@ -122,7 +125,14 @@ class SessionService {
    * returns List
    **/
   getAllUpcomingApprovedSessionsByVolunteer(userId) {
-    return MongoDB.findMany(COLLECTION_NAME, {"filledBy._id" : MongoDB.getMongoObjectId(userId)}, this.MongoClient);
+    var aggregate = [];
+    lookUpForSessions(aggregate);
+    var filter = {$match: {
+      "filledBy": MongoDB.getMongoObjectId(userId)
+            }
+    };
+    aggregate.push(filter);
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
   }
 
     /**
@@ -132,14 +142,14 @@ class SessionService {
    **/
   getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
     var filter = {$match : {$and: [{"filledBy" : null}, 
-    {"requests": {$elemMatch : {"_id" : MongoDB.getMongoObjectId(userId)}}}]}};
+    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
     var aggregate = [];
-    aggregate.push(getLookUp("Doctors_temp", "doctor", "_id", "doctor_o"));
-    aggregate.push(getLookUp("Volunteers", "requests", "_id", "volunteers_array_o"));
-    aggregate.push(getLookUp("Volunteers", "filledBy", "_id", "chosen_volunteer_o"));
-    //aggregate.push(filter);
 
-    return MongoDB.findMany(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
+    lookUpForSessions(aggregate);
+    aggregate.push(filter);
+
+
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
   }
 
   /**
