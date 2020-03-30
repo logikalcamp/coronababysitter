@@ -44,13 +44,19 @@ exports.getMongoObjectId = (id) => {
 }
 
 // Find only one document in a collection specified
-exports.findOne = (collection, filter, db) => {
+exports.findOne = (collection, options = {}, db) => {
     return new Promise((resolve, reject) => {
-        db.collection(collection).findOne(filter, (err,result) => {
+        var query;
+        if(options.aggregate){
+            query = db.collection(collection).aggregate(options.aggregate);
+        }
+        else{
+        db.collection(collection).findOne(options.filter, (err,result) => {
             if(err) reject(err);
 
             resolve(result);
         });
+        }
     })
 }
 
@@ -68,16 +74,20 @@ exports.findMany = (collection, options = {}, db) => {
         var query = {};
 
         try{
-            if(options.join) {
+         /*   if(options.join) {
                 query = db.collection(collection).aggregate([{
                     $lookup: options.join
                 },{
                     $match: options.filter
                 }]);
             }
-            else {
+         */
+                if (options.aggregate){
+                    query = db.collection(collection).aggregate(options.aggregate);
+                }
+                else {
                 query = db.collection(collection).find(options.filter);
-            }
+               }
 
             if(options.to  > options.from) {
                 query.skip(options.from);
