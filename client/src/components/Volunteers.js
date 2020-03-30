@@ -171,7 +171,7 @@ export const HamalVolunteersPage = (props) => {
     const [page,setPage] = useState(0)
 
     useEffect(() => {
-        Axios.get('/api/volunteer/approved/' + page).then(result => {
+        Axios.get(BASE_URL+'/api/volunteer/approved/' + page).then(result => {
             if(volunteers) return;
             var vols = result.data.map(item => <div className={classes.tableRow} onClick={() => setSelectedVolunteer(item)}>
                 <div className={classes.imageCell} >
