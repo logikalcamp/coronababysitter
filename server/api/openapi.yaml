@@ -156,17 +156,8 @@ paths:
             schema:
               type: object
               properties:
-                volTz:
+                email:
                   type: string
-                emailTitle:
-                  type: string
-                emailBody:
-                  type: string
-                  description: HTML of the message to send, code generated included
-            example:
-              volTz: 206325748
-              emailTitle: קוד התחברות
-              emailBody: <h2>התחבר כעת!</h2><p>הכנס את הקוד 3481 במסך התחברות על מנת להכנס למערכת</p>
       responses:
         "200":
           description: Email sent
@@ -268,17 +259,8 @@ paths:
             schema:
               type: object
               properties:
-                docTz:
+                email:
                   type: string
-                emailTitle:
-                  type: string
-                emailBody:
-                  type: string
-                  description: HTML of the message to send, code generated included
-            example:
-              docTz: 130014001
-              emailTitle: קוד התחברות
-              emailBody: <h2>התחבר כעת!</h2><p>הכנס את הקוד 3481 במסך התחברות על מנת להכנס למערכת</p>
       responses:
         "200":
           description: Email sent
@@ -537,7 +519,39 @@ paths:
         "404":
           description: Content not found
       x-swagger-router-controller: Utils
-
+  /utils/login-user:
+    post:
+      tags:
+      - doctor
+      - volunteer
+      summary: Checks if the code given matches the code sent to the user's email.
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                code:
+                  type: string
+            example:
+              email: imomerm@gmail.com
+              code: "412077"
+      responses:
+        "200":
+          description: "Email found, code might be correct or incorrect"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+        "400":
+          description: Bad request.
+      x-swagger-router-controller: Utils
 components:
   schemas:
     Volunteer:

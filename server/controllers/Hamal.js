@@ -8,7 +8,8 @@ module.exports.approveOrRejectUser = function approveOrRejectUser (req, res, nex
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      utils.writeJson(req,res, response);
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };
 
@@ -18,7 +19,8 @@ module.exports.createHamalUser = function createHamalUser (req, res, next, body)
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      utils.writeJson(req,res, response);
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };
 
@@ -28,6 +30,7 @@ module.exports.getAllHamalUsers = function getAllHamalUsers (req, res, next) {
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      utils.writeJson(req,res, response);
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };

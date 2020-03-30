@@ -45,6 +45,17 @@ class EmailService {
             'body': '<h1>Oh no!</h1><p>החמ"ל שלנו עבר על הפרטים שלך, והיו כמה דברים שלא הסתדרו..</p><br><p>בשלב זה לא נוכל ליצור לך משתמש, אבל תמיד אפשר ליצור קשר עם החמ"ל כדי להבין מה הייתה הבעיה</p>'
         }
     }
+
+    getLoginEmail(code) {
+        var emailInfo = {
+            'title': 'קוד ההתחברות שלך',
+            'body': '<h1>שלום!</h1><p>קוד ההתחברות שלך הינו ABCDEFG</p>'
+        }
+        
+        emailInfo.body = emailInfo.body.replace('ABCDEFG', code.toString());
+
+        return emailInfo;
+    }
 }
 
 module.exports.EmailService = EmailService;

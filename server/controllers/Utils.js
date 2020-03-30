@@ -9,6 +9,18 @@ module.exports.getFacebookPicture = function getFacebookPicture (req, res, next,
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.loginUser = function loginUser (req, res, next, body) {
+  req.UtilsService.loginUser(body, req.session)
+    .then(function (response) {
       utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };
