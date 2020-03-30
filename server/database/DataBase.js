@@ -65,12 +65,6 @@ exports.findByMongoId = (collection, id, db) => {
 
 exports.findMany = (collection, options = {}, db) => {
     return new Promise((resolve,reject) => {
-        var toArrayCallback = (err,result) => {
-            if(err) reject(err);
-
-            resolve(result);
-        };
-        
         var query = {};
 
         try{
@@ -86,11 +80,15 @@ exports.findMany = (collection, options = {}, db) => {
             }
 
             if(options.to  > options.from) {
-                query.skip(option.from);
+                query.skip(options.from);
                 query.limit(options.to - options.from);
             }
             
-            query.toArray(toArrayCallback);
+            query.toArray((err,result) => {
+                if(err) reject(err);
+    
+                resolve(result);
+            });
         } catch(err) {
             console.log(err)
         }
