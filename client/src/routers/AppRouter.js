@@ -8,7 +8,7 @@ import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
 import { VolunteersPage } from '../components/Volunteers';
 import CompleteDoctor from '../components/CompleteDoctor'
-import {VolunteerHomepage} from '../components/VolunteerHomepage';
+import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
 import {FindSession} from '../components/FindSession';
 
 import Policy from '../components/Policy'
