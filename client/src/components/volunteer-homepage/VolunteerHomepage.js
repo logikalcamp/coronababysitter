@@ -11,25 +11,19 @@ import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
 //#region Styles
 const VolunteerDashboardComp = styled.div`
   height: 100%;
-  width: 100%;
-
+  padding: 100px 50px 50px 50px;
+`;
+const Wrapper = styled.div`
+  height: 100%;
   max-width: 1366px;
   margin: auto;
 
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-
-  @media(max-width:450px) {
-    height: 100%;
-    padding: 0 5%;
-    overflow-x: auto;
-  }
 `;
-
 const HeaderComp = styled.div`
   height: 15%;
-  padding: 0 100px;
 
   display: flex;
   justify-content: space-between;
@@ -65,13 +59,8 @@ const HeaderComp = styled.div`
   }
 `;
 
-const HeaderButtonComp = styled.div`
-  
-`;
-
 const DashboardComp = styled.div`
   height: 75%;
-  padding: 0 100px;
   
   display: flex;
   justify-content: space-between;
@@ -129,20 +118,21 @@ const GridHeaderComp = styled.div`
 export const VolunteerHomepage = (props) => {
   return (
     <VolunteerDashboardComp>
-      <HeaderComp>
-        <div>
-          <h1>
-            היי עדי, כיף שבאת
-            <img src={window.location.origin + '/images/icons8_so_so_120px_2.png'} />
-          </h1>
-          <h2>כשהמציאות לא קלה, אנשים טובים יכולים לשפר אותה</h2>
-        </div>
-        <Link to="/find-session">
-          <img src={window.location.origin + '/images/icons8_volunteering_96px_1.png'} />
-          מצאו לי התנדבויות
-        </Link>
-      </HeaderComp>
-      <DashboardComp>
+      <Wrapper>
+        <HeaderComp>
+          <div>
+            <h1>
+              היי עדי, כיף שבאת
+              <img src={window.location.origin + '/images/icons8_so_so_120px_2.png'} />
+            </h1>
+            <h2>כשהמציאות לא קלה, אנשים טובים יכולים לשפר אותה</h2>
+          </div>
+          <Link to="/find-session">
+            <img src={window.location.origin + '/images/icons8_volunteering_96px_1.png'} />
+            מצאו לי התנדבויות
+          </Link>
+        </HeaderComp>
+        <DashboardComp>
         <GridWrapper primary>
           <GridHeaderComp>
             <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
@@ -158,6 +148,7 @@ export const VolunteerHomepage = (props) => {
           <NotYetApprovedSessionsGrid />
         </GridWrapper>
       </DashboardComp>
+      </Wrapper>
     </VolunteerDashboardComp>
   )
 };
