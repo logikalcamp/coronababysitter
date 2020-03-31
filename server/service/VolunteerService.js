@@ -50,6 +50,17 @@ class VolunteerService {
   }
 
   /**
+   * Get all volunteers
+   *
+   * returns List
+   **/
+  getPendingVolunteers(page) {
+    var{from, to} = getPagingDbData(page, "volunteers");
+
+    return MongoDB.findMany(COLLECTION_NAME,{isApproved: false}, this.MongoClient,from,to);
+  }
+
+  /**
    * Get a single volunteer by Id
    *
    * volId String 
@@ -99,6 +110,14 @@ class VolunteerService {
         reject(error)
       });
     });
+  }
+
+  countAllVolunteers() {
+    return MongoDB.count(COLLECTION_NAME,{isApproved: true}, this.MongoClient);
+  }
+
+  countPendingVolunteers() {
+    return MongoDB.count(COLLECTION_NAME,{isApproved: false}, this.MongoClient);
   }
 }
 

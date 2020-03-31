@@ -68,3 +68,26 @@ module.exports.updateSession = function updateSession (req, res, next, body, ses
       res.status(400).json({'message': response.toString()});
     });
 };
+
+module.exports.countMatchedSessions = function countMatchedSessions (req, res, next, body) {
+  req.SessionService.countMatchedSessions(body)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.countUrgentPendingSessions = function countUrgentPendingSessions (req, res, next, body) {
+  utils.writeJson(req,res,{count: 0});
+  // req.SessionService.countUrgentSessions(body)
+  //   .then(function (response) {
+  //     utils.writeJson(req,res, response);
+  //   })
+  //   .catch(function (response) {
+  //     // utils.writeJson(req,res, response);
+  //     res.status(400).json({'message': response.toString()});
+  //   });
+};

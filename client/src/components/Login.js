@@ -70,12 +70,11 @@ const Login = () => {
             var response = await axios.post(BASE_URL + `/api/utils/login-user`, {email,code});
 
             if(response.data.valid) {
-                // history.push("/hamal") 
                 if(isDoctorLogin) {
-
+                    history.push("/doctor-homepage");
                 }
                 else {
-                    
+                    history.push("/volunteer-homepage");
                 }
             }
             else {
@@ -209,7 +208,7 @@ const Container = styled.div`
 
 const LoginDetailsContainer = styled.div`
     width: 410px;
-    height: 560px;
+    height: 530px;
     padding: 25px;
     display:flex;
     flex-direction:column;

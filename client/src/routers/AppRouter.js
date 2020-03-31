@@ -15,6 +15,7 @@ import CreateSession from '../components/medical/CreateSession'
 import OptionalVolunteers from '../components/medical/OptionalVolunteers'
 import Policy from '../components/Policy'
 import Login from '../components/Login'
+import HamalHome from '../components/HamalHome';
 
 const AppRouter = () =>(
     <Router>
@@ -35,7 +36,8 @@ const AppRouter = () =>(
         
         {/* <Route exact path="/hamal" component={VolunteersPage}/> */}
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
-        <Route exact path="/hamal" component={HamalVolunteersPage}/>
+        <Route exact path="/hamal-volunteers" component={HamalVolunteersPage}/>
+        <Route exact path="/hamal-homepage" component={HamalHome}/>
         <Route exact path='/find-session' component={FindSession} />
         {/* 
         <PrivateRoute exact path="/meeting/:id" component={Meeting} />

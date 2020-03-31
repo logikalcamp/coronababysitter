@@ -170,6 +170,12 @@ export const HamalVolunteersPage = (props) => {
     const [selectedVolunteer,setSelectedVolunteer] = useState(undefined)
     const [page,setPage] = useState(0)
 
+    const calculateAge = (birthday) => { // birthday is a date
+        var ageDifMs = Date.now() - birthday.getTime();
+        var ageDate = new Date(ageDifMs); // miliseconds from epoch
+        return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
+
     useEffect(() => {
         Axios.get(BASE_URL+'/api/volunteer/approved/' + page).then(result => {
             if(volunteers) return;
@@ -234,7 +240,7 @@ export const HamalVolunteersPage = (props) => {
                     <div className={classes.volunteerHeader}>
                         <img className={classes.volunteerImage} src={selectedVolunteer ? selectedVolunteer.picture ? selectedVolunteer.picture : window.location.origin + "/images/profilePlaceholder.png" : ''}></img>
                         <div className={classes.modalTitle}>{selectedVolunteer ? selectedVolunteer.firstName + ' ' + selectedVolunteer.lastName : ''}</div>
-                        <div>גיל XX</div>
+                        <div>גיל {calculateAge(selectedVolunteer ? new Date(selectedVolunteer.birthday) : new Date())}</div>
                     </div>
                     <div className={classes.volunteerDetails}>
                       <div className={classes.detailsHeader}>

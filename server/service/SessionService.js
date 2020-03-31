@@ -153,6 +153,15 @@ class SessionService {
     return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
   }
 
+    /**
+   * Get all upcoming, not yet approved sessions of a specified volunteer
+   * userId String 
+   * returns List
+   **/
+  countMatchedSessions(userId) {
+    return MongoDB.count(COLLECTION_NAME, {filledBy:{$exists:true, $ne:null}}, this.MongoClient);
+  }
+
   /**
    * Update a session
    *
