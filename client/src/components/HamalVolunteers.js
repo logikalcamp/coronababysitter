@@ -181,7 +181,7 @@ export const HamalVolunteersPage = (props) => {
             if(volunteers) return;
             var vols = result.data.map(item => <div className={classes.tableRow} onClick={() => setSelectedVolunteer(item)}>
                 <div className={classes.imageCell} >
-                    <img className={classes.userImage} src={item.picture}></img>
+                <img className={classes.userImage} src={item.picture ? item.picture : window.location.origin + "/images/profilePlaceholder.png"}></img>
                     <div className={classes.userFullName}>
                         {item.firstName + ' ' + item.lastName}
                     </div>

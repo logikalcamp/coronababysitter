@@ -15,6 +15,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import {BASE_URL} from '../constants'
 import Axios from 'axios';
+import ChildCareIcon from '@material-ui/icons/ChildCare';
 
 const styles = makeStyles(theme => ({
     root: {
@@ -143,17 +144,17 @@ const styles = makeStyles(theme => ({
     marginLeft: {
         marginLeft: '5px'
     },
-    hobbies: {
+    children: {
         flex: 1,
         borderTop: '1px solid gray',
         borderBottom: '1px solid gray',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '3px 20px 3px 20px'
+        padding: '3px 25px 3px 25px'
     },
     smallIcon: {
-        width: '15px',
+        width: '25px',
         marginLeft: '5px'
     },
     notes: {
@@ -181,7 +182,7 @@ export const HamalDoctorsPage = (props) => {
             if(doctors) return;
             var vols = result.data.map(item => <div className={classes.tableRow} onClick={() => setSelectedDoctor(item)}>
                 <div className={classes.imageCell} >
-                    <img className={classes.userImage} src={item.picture}></img>
+                    <img className={classes.userImage} src={item.picture ? item.picture : window.location.origin + "/images/profilePlaceholder.png"}></img>
                     <div className={classes.userFullName}>
                         {item.firstName + ' ' + item.lastName}
                     </div>
@@ -273,18 +274,18 @@ export const HamalDoctorsPage = (props) => {
                         </div>
                       </div>
                     </div>
-                    <div className={classes.hobbies}>
+                    <div className={classes.children}>
                         <div className={classes.iconText}>
-                            <FavoriteIcon className={classes.smallIcon}/>
-                            <div>{selectedDoctor ? selectedDoctor.hobbies[0] : ' '}</div>
+                            <ChildCareIcon className={classes.smallIcon}/>
+                            <div>{selectedDoctor && selectedDoctor.children.length > 0 ? selectedDoctor.children[1].isFemale ? 'בת ' : 'בן ' + selectedDoctor.children[0].age : ' '}</div>
                         </div>
                         <div className={classes.iconText}>
-                            <FavoriteIcon className={classes.smallIcon}/>
-                            <div>{selectedDoctor ? selectedDoctor.hobbies[1] : ' '}</div>
+                            <ChildCareIcon className={classes.smallIcon}/>
+                            <div>{selectedDoctor && selectedDoctor.children.length > 1 ? selectedDoctor.children[1].isFemale ? 'בת ' : 'בן ' + selectedDoctor.children[1].age : ' '}</div>
                         </div>
                         <div className={classes.iconText}>
-                            <FavoriteIcon className={classes.smallIcon}/>
-                            <div>{selectedDoctor ? selectedDoctor.hobbies[2] : ' '}</div>
+                            <ChildCareIcon className={classes.smallIcon}/>
+                            <div>{selectedDoctor && selectedDoctor.children.length > 2 ? selectedDoctor.children[2].isFemale ? 'בת ' : 'בן ' + selectedDoctor.children[2].age : ' '}</div>
                         </div>
                     </div>
                     <div className={classes.notes}>

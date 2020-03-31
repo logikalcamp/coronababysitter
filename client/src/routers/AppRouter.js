@@ -39,7 +39,7 @@ const AppRouter = () =>(
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
         <Route exact path="/hamal/volunteers" component={HamalVolunteersPage}/>
         <Route exact path="/hamal/doctors" component={HamalDoctorsPage}/>
-        <Route exact path="/hamal-homepage" component={HamalHome}/>
+        <Route exact path="/hamal" component={HamalHome}/>
         <Route exact path='/find-session' component={FindSession} />
         {/* 
         <PrivateRoute exact path="/meeting/:id" component={Meeting} />
