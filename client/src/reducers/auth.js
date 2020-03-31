@@ -5,12 +5,10 @@ const isEmpty = require("is-empty");
 
 const initialState = {
   isAuthenticated: (localStorage.getItem("userdata") ? true : false),
-  user: JSON.parse(localStorage.getItem("userdata")) || {},
+  user: JSON.parse(localStorage.getItem("userdata")) || {userid:"5e7a2cae7a5f5811f8d069c7"},
   loading: false,
-  integration:{
-    monday:''
-  }
 };
+
 export default function(state = initialState, action) {
   switch (action.type) {
     case "INTEGRATE_MONDAY":

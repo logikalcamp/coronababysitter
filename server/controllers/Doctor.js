@@ -70,7 +70,7 @@ module.exports.registerDoctor = function registerDoctor (req, res, next, body) {
 };
 
 module.exports.loginEmailDoctor = function loginEmailDoctor (req, res, next, body) {
-  req.DoctorService.loginEmailDoctor(body, req.session)
+  req.DoctorService.loginEmailDoctor(body)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

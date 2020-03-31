@@ -4,26 +4,36 @@ import styled from 'styled-components';
 import moment from 'moment';
 import Axios from 'axios';
 import { MdAdd } from "react-icons/md";
-import {connect} from 'react-redux'
 import GridComp from '../Grid';
-import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
-import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
+// import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
+// import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
+
 
 const VolunteerDashboardComp = styled.div`
   height: 100%;
-  padding:  50px;
-`;
-const Wrapper = styled.div`
-  height: 100%;
-  max-width: 1366px;
+  padding:1rem;
+  #Con{
+    max-width: 1366px;
+    height: 100%;
   margin: auto;
 
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  }
+
+  
+
+  @media(max-width:450px) {
+    height: 100%;
+    padding: 0 5%;
+    overflow-x: auto;
+  }
 `;
+
 const HeaderComp = styled.div`
   height: 15%;
+  padding: 0 100px;
 
   display: flex;
   justify-content: space-between;
@@ -59,8 +69,13 @@ const HeaderComp = styled.div`
   }
 `;
 
+const HeaderButtonComp = styled.div`
+  
+`;
+
 const DashboardComp = styled.div`
   height: 75%;
+  padding: 0 100px;
   
   display: flex;
   justify-content: space-between;
@@ -113,31 +128,14 @@ const GridHeaderComp = styled.div`
     border-bottom: 1px solid #D1D1D1;
   }
 `;
+const CreateSession = () => {
 
-const Button = styled.button`
-  border:1px solid #53B493;
-  color:#53B493;
-  background:white;
-  border-radius:5px;
-  &:hover{
-    background:#e2e2e2;
-    cursor:pointer;
-  }
-`
-
-const MedicalDashboard = (props) => {
-    console.log(props)
-    const id = props.auth.user.userid
     return (
         <VolunteerDashboardComp>
-            <Wrapper>
+            <div id="Con">
                 <HeaderComp>
                 <div>
-                    <h1>
-                    היי רון, כיף שבאת
-                    <img src={window.location.origin + '/images/icons8_so_so_120px_2.png'} />
-                    </h1>
-                    <h2>אנחנו כאן לעזור לך ולדאוג שהמשפחה שלך תקבל את הטוב ביותר!</h2>
+                    <h2>ניהול בקשות פתוחות</h2>
                 </div>
                 <Link to="/newsession">
                     <MdAdd style={{width:"1.5rem",height:"1.5rem"}}/>
@@ -150,27 +148,20 @@ const MedicalDashboard = (props) => {
                     <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
                     יומן פעילויות מתוזמנות
                     </GridHeaderComp>
-                    <UpcomingSessionsGrid id={id} />
+                    {/* <UpcomingSessionsGrid /> */}
                 </GridWrapper>
                 <GridWrapper>
-                    <GridHeaderComp style={{justifyContent:"space-between"}}>
-                    <div style={{display:"flex"}}>
-                      <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
-                      בקשות פתוחות
-                    </div>
-                    <Link to="/optionalvolunteers"><Button>למסך מלא</Button></Link>
+                    <GridHeaderComp>
+                    <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
+                    בקשות פתוחות
+                    <button>מסך מלא</button>
                     </GridHeaderComp>
-                    <NotYetApprovedSessionsGrid  id={id}/>
+                    {/* <NotYetApprovedSessionsGrid /> */}
                 </GridWrapper>
                 </DashboardComp>
-              </Wrapper>
+            </div>
         </VolunteerDashboardComp>
         )
 }
 
-const ToProps = (state,props) => {
-    return {
-        auth: state.auth
-    }
-}
-export default connect(ToProps)(MedicalDashboard);
+export default CreateSession;

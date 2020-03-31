@@ -90,7 +90,7 @@ class VolunteerService {
     });
   }
 
-  loginEmailVolunteer(body, session) {
+  loginEmailVolunteer(body, req) {
     return new Promise((resolve, reject) => {
       MongoDB.findOne(COLLECTION_NAME, { email: body.email }, this.MongoClient).then((result) => {
         if (result == null) reject("Volunteer not found.");
@@ -99,11 +99,11 @@ class VolunteerService {
           var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.
           emailService.sendEmail(result.email, emailService.getLoginEmail(loginCode));
 
-          if (!session.loginCodes) {
-            session.loginCodes = {}
+          if (!global.session.loginCodes) {
+            global.session.loginCodes = {};
           }
 
-          session.loginCodes[body.email] = loginCode
+          global.session.loginCodes[body.email] = loginCode;
           resolve("Login email sent.")
         }
       }).catch((error) => {
@@ -114,5 +114,3 @@ class VolunteerService {
 }
 
 module.exports.VolunteerService = VolunteerService;
-
-

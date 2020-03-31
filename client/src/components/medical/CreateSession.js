@@ -1,29 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react'
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
 import Axios from 'axios';
-
+import { MdAdd } from "react-icons/md";
 import GridComp from '../Grid';
 import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
 import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
 
-//#region Styles
+
 const VolunteerDashboardComp = styled.div`
   height: 100%;
-  padding: 100px 50px 50px 50px;
-`;
-const Wrapper = styled.div`
-  height: 100%;
-  max-width: 1366px;
+  padding:1rem;
+  #Con{
+    max-width: 1366px;
+    height: 100%;
   margin: auto;
 
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  }
+
+  
+
+  @media(max-width:450px) {
+    height: 100%;
+    padding: 0 5%;
+    overflow-x: auto;
+  }
 `;
+
 const HeaderComp = styled.div`
   height: 15%;
+  padding: 0 100px;
 
   display: flex;
   justify-content: space-between;
@@ -59,8 +69,13 @@ const HeaderComp = styled.div`
   }
 `;
 
+const HeaderButtonComp = styled.div`
+  
+`;
+
 const DashboardComp = styled.div`
   height: 75%;
+  padding: 0 100px;
   
   display: flex;
   justify-content: space-between;
@@ -113,42 +128,41 @@ const GridHeaderComp = styled.div`
     border-bottom: 1px solid #D1D1D1;
   }
 `;
-//#endregion
+const CreateSession = () => {
 
-export const VolunteerHomepage = (props) => {
-  return (
-    <VolunteerDashboardComp>
-      <Wrapper>
-        <HeaderComp>
-          <div>
-            <h1>
-              היי עדי, כיף שבאת
-              <img src={window.location.origin + '/images/icons8_so_so_120px_2.png'} />
-            </h1>
-            <h2>כשהמציאות לא קלה, אנשים טובים יכולים לשפר אותה</h2>
-          </div>
-          <Link to="/find-session">
-            <img src={window.location.origin + '/images/icons8_volunteering_96px_1.png'} />
-            מצאו לי התנדבויות
-          </Link>
-        </HeaderComp>
-        <DashboardComp>
-        <GridWrapper primary>
-          <GridHeaderComp>
-            <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
-            ההתנדבויות הבאות שלי
-          </GridHeaderComp>
-          <UpcomingSessionsGrid />
-        </GridWrapper>
-        <GridWrapper>
-          <GridHeaderComp>
-            <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
-            התנדבויות שעוד לא אושרו
-          </GridHeaderComp>
-          <NotYetApprovedSessionsGrid />
-        </GridWrapper>
-      </DashboardComp>
-      </Wrapper>
-    </VolunteerDashboardComp>
-  )
-};
+    return (
+        <VolunteerDashboardComp>
+            <div id="Con">\
+            לא רלוונטי
+                <HeaderComp>
+                <div>
+                    <h2>ניהול בקשות פתוחות</h2>
+                </div>
+                <Link to="/newsession">
+                    <MdAdd style={{width:"1.5rem",height:"1.5rem"}}/>
+                    בקשה חדשה
+                </Link>
+                </HeaderComp>
+                <DashboardComp>
+                <GridWrapper primary>
+                    <GridHeaderComp>
+                    <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
+                    יומן פעילויות מתוזמנות
+                    </GridHeaderComp>
+                    {/* <UpcomingSessionsGrid /> */}
+                </GridWrapper>
+                <GridWrapper>
+                    <GridHeaderComp>
+                    <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
+                    בקשות פתוחות
+                    <button>מסך מלא</button>
+                    </GridHeaderComp>
+                    {/* <NotYetApprovedSessionsGrid /> */}
+                </GridWrapper>
+                </DashboardComp>
+            </div>
+        </VolunteerDashboardComp>
+        )
+}
+
+export default CreateSession;

@@ -4,6 +4,7 @@ import moment from 'moment';
 import {BASE_URL} from '../../constants'
 import GridComp from '../Grid';
 
+
 const NotYetApprovedSessionsGridCommands = (props) => {
   const prefix = window.location.origin
   const onClick = (event) => console.log(event);
@@ -19,6 +20,7 @@ const NotYetApprovedSessionsGridCommands = (props) => {
 }
 
 export const NotYetApprovedSessionsGrid = (props) => {
+  console.log(props)
   const [notYetApprovedSessions, setNotYetApprovedSessions] = useState([]);
   const [columnDefs] = useState([
     { 
@@ -46,8 +48,9 @@ export const NotYetApprovedSessionsGrid = (props) => {
   ]);
   
   useEffect(() => {
-    Axios.get(BASE_URL+'/api/session/getnotyetapprovedsessions/5e7ca72c343daa68c8d7277f').then(result => {
-      setNotYetApprovedSessions(result.data);
+    Axios.get(BASE_URL+`/api/session/getnotyetapprovedsessions/${props.id}`).then(result => {
+      // setNotYetApprovedSessions(result.data)
+      console.log(result);
     })
   }, [])
   
@@ -61,3 +64,4 @@ export const NotYetApprovedSessionsGrid = (props) => {
     />
   )
 };
+

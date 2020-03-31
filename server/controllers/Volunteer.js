@@ -70,7 +70,7 @@ module.exports.registerVolunteer = function registerVolunteer (req, res, next, b
 };
 
 module.exports.loginEmailVolunteer = function loginEmailVolunteer (req, res, next, body) {
-  req.VolunteerService.loginEmailVolunteer(body, req.session)
+  req.VolunteerService.loginEmailVolunteer(body)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
