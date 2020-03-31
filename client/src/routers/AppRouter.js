@@ -6,7 +6,8 @@ import {Footer} from '../components/Footer'
 import {Landing} from '../components/Landing'
 import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
-import { HamalVolunteersPage } from '../components/Volunteers';
+import { HamalVolunteersPage } from '../components/HamalVolunteers';
+import { HamalDoctorsPage } from '../components/HamalDoctors';
 import CompleteDoctor from '../components/CompleteDoctor'
 import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
 import {FindSession} from '../components/FindSession';
@@ -36,7 +37,8 @@ const AppRouter = () =>(
         
         {/* <Route exact path="/hamal" component={VolunteersPage}/> */}
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
-        <Route exact path="/hamal-volunteers" component={HamalVolunteersPage}/>
+        <Route exact path="/hamal/volunteers" component={HamalVolunteersPage}/>
+        <Route exact path="/hamal/doctors" component={HamalDoctorsPage}/>
         <Route exact path="/hamal-homepage" component={HamalHome}/>
         <Route exact path='/find-session' component={FindSession} />
         {/* 
