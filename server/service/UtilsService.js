@@ -34,6 +34,7 @@ class UtilsService {
 
   loginUser(body, session) {
     return new Promise((resolve, reject) => {
+      console.log(session.loginCodes);
       var userSession = session.loginCodes[body.email];
       if (userSession) {
         var isValid = userSession == body.code

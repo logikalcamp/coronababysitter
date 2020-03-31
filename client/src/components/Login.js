@@ -1,4 +1,5 @@
 import React,{useState,useEffect} from 'react'
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -24,6 +25,7 @@ const styles = makeStyles(theme => ({
 
 const Login = () => {
     const classes = styles();
+    const history = useHistory();
 
     const [loginDetails,setLoginDetails] =  useState({})
     const [isDoctorLogin, setIsDoctorLogin] = useState(false)
@@ -33,6 +35,16 @@ const Login = () => {
     const [loginState, setLoginState] = useState('email')
     const [code, setCode] = useState('')
     const [isCodeValid, setIsCodeValid] = useState(false)
+    const [modalData, setModalData] = useState({
+        open: false,
+        title: 'כותרת ראשית',
+        secondaryTitle: 'כותרת משנית',
+        button: {text: '', action: () => {}}
+    })
+
+    const toggleModal = (open, title= '', secondaryTitle= '', button ={}) => {
+        setModalData({open, title,secondaryTitle, button});
+    }
 
     const login = async () => {
         if(!isValidEmailFormat) return;
@@ -45,22 +57,45 @@ const Login = () => {
             setLoginState('code');
         }
         catch (error) {
-            // TODO : Inform of error
+            //console.log(error);
         }
     }
 
     const confirmCode = async () => {
         if(!isCodeValid) return;
-
+        
         var loginApi = isDoctorLogin ? 'doctor' : 'volunteer';
 
         try {
             var response = await axios.post(BASE_URL + `/api/utils/login-user`, {email,code});
 
-            // TODO : Login or not login
+            if(response.data.valid) {
+                // history.push("/hamal") 
+                if(isDoctorLogin) {
+
+                }
+                else {
+                    
+                }
+            }
+            else {
+                toggleModal(true, 'קוד שגוי', 'אנא וודא שוב שהקוד שהזנת תקין', 
+                {
+                    text:'סגור', 
+                    action :() => {
+                        toggleModal(false)
+                    }
+                });
+            }
         }
         catch (error) {
-
+            toggleModal(true, 'התרחשה שגיאה', 'הצוות דואג לזה, לא לדאוג', 
+            {
+                text:'סגור', 
+                action :() => {
+                    toggleModal(false)
+                }
+            });
         }
     }
 
@@ -82,7 +117,6 @@ const Login = () => {
     }
 
     const checkEmailFormat = (email) => {
-
         if(timeout) {
             clearTimeout(timeout);
         }
@@ -103,8 +137,6 @@ const Login = () => {
                 setIsValidEmailFormat(true);
             }
         }).bind(this), 350)
-
-        
     }
 
     const performAction = () => {
@@ -118,20 +150,31 @@ const Login = () => {
 
     return(
         <Container>
+            <ModalBackdrop open={modalData.open}>
+                <Modal open={modalData.open}>
+                    <ContainerTitle>
+                        <div className={classes.title1}>{modalData.title}</div>
+                        <div className={classes.title2}>{modalData.secondaryTitle}</div>
+                    </ContainerTitle>
+                    <Button onClick={() => modalData.button.action()}>{modalData.button.text}</Button>
+                </Modal>
+            </ModalBackdrop>
             <LoginDetailsContainer>
                 <img className={classes.loginImage} src={window.location.origin + "/images/login.png"}></img>
                 <ContainerTitle>
                     <div className={classes.title1}>{loginState == 'email' ? 'אהלן!' : 'מצוין!'}</div>
                     <div className={classes.title2}>{loginState == 'email' ? 'כיף לראות שחזרת, הזן אימייל להתחברות' : 'עוד מספר שניות תקבל קוד למייל, תזין אותו שם למטה'}</div>
-                    <Toggle>
-                    <ToggleOption onClick={() => {setIsDoctorLogin(false)}}>
-                            מתנדב
-                        </ToggleOption>
-                        <ToggleOption onClick={() => {setIsDoctorLogin(true)}}>
-                            צוות רפואי
-                        </ToggleOption>
-                        <ToggleHighlight left={isDoctorLogin} className={classes.selected}></ToggleHighlight>
-                    </Toggle>
+                    {loginState == 'email' && (
+                        <Toggle>
+                            <ToggleOption onClick={() => {setIsDoctorLogin(false)}}>
+                                מתנדב
+                            </ToggleOption>
+                            <ToggleOption onClick={() => {setIsDoctorLogin(true)}}>
+                                צוות רפואי
+                            </ToggleOption>
+                            <ToggleHighlight left={isDoctorLogin} className={classes.selected}></ToggleHighlight>
+                        </Toggle>
+                    )}
                 </ContainerTitle>
                 
                     { loginState == 'email' && (
@@ -243,7 +286,6 @@ const ToggleHighlight = styled.div`
     width: 90px;
     height: 50px;
     clear:both;
-    z-index: 999px;
     border-radius: 8px;
 
     animation: ${props => props.left ? "toggle-left 0.5s forwards" : "toggle-right 0.5s forwards"};
@@ -290,11 +332,30 @@ const ToggleOption = styled.div`
     height: 50px;
     padding: 0px 5px 0px 5px;
     background-color:transparent;
-    z-index: 1000px;
 `
 
 const ModalBackdrop = styled.div`
     position: absolute;
     width: 100%;
     height: 100%;
+    background-color: rgba(0,0,0,0.35);
+    top: 0;
+    left: 0;
+    display:${props=>props.open ? "flex":"none"};
+    justify-content: center;
+    align-items: center;
+    z-index:1000;
+`
+
+const Modal = styled.div`
+    width: 550px;
+    background-color:white;
+    height: 150px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px gray;
+    padding: 15px;
+    display:${props=>props.open ? "flex":"none"};
+    flex-direction: column;
+    align-items:center;
+    justify-content:space-between;
 `
