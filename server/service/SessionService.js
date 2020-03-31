@@ -103,17 +103,18 @@ class SessionService {
         MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate: aggregate}, this.MongoClient).then((result2) => {
           sessions = result2;
           var available = [];
-          sessions.forEach(element => {
+        /*  sessions.forEach((element) => {
             if(element){
-              console.log(user);
-              console.log(user.lat + "   "+ user.long + "    " + element.doctor_o.lat +"   " + element.doctor_o.long);
-              if(Location.getDistance(user.lat, user.lon, element.doctor_o.lat, element.doctor_o.lon) < X){
+              console.log(element);
+              console.log(user.lat + "   "+ user.lon + "    " + element.doctor_o.lat +"   " + element.doctor_o.long);
+              if(Location.getDistance(user.lat, user.lon, (element.doctor_o).pop.lat, (element.doctor_o).pop.lon) < X){
                 available.push(element);
               }
             }
           
           });
-          resolve(available);
+         */
+         resolve(sessions);
         });
     });
   });
