@@ -40,7 +40,7 @@ const Login = () => {
         var loginApi = isDoctorLogin ? 'doctor' : 'volunteer';
 
         try {
-            var response = await axios.post(BASE_URL + `/api/${loginApi}/login-email`, {email});
+            var response = await axios.post(BASE_URL + `/api/${loginApi}/loginemail`, {email});
 
             setLoginState('code');
         }
@@ -49,20 +49,18 @@ const Login = () => {
         }
     }
 
-    const confirmCode = () => {
-        const login = async () => {
-            if(!isCodeValid) return;
-    
-            var loginApi = isDoctorLogin ? 'doctor' : 'volunteer';
-    
-            try {
-                var response = await axios.post(BASE_URL + `/api/login-user`, {email,code});
+    const confirmCode = async () => {
+        if(!isCodeValid) return;
 
-                // TODO : Login or not login
-            }
-            catch (error) {
-    
-            }
+        var loginApi = isDoctorLogin ? 'doctor' : 'volunteer';
+
+        try {
+            var response = await axios.post(BASE_URL + `/api/utils/login-user`, {email,code});
+
+            // TODO : Login or not login
+        }
+        catch (error) {
+
         }
     }
 
@@ -70,6 +68,17 @@ const Login = () => {
 
     const checkCodeValid = (code) => {
         if(!code) return;
+
+        if(code.length == 6 && !isNaN(code)) {
+            setIsCodeValid(true);
+            setError('');
+            setCode(code);
+        }
+        else {
+            setError("הקוד לא תקין");
+            setIsCodeValid(false);
+            setCode('');
+        }
     }
 
     const checkEmailFormat = (email) => {
@@ -96,6 +105,15 @@ const Login = () => {
         }).bind(this), 350)
 
         
+    }
+
+    const performAction = () => {
+        if (loginState == 'email') {
+            login();
+        }
+        else {
+            confirmCode();
+        }
     }
 
     return(
@@ -130,7 +148,7 @@ const Login = () => {
                             <ErrorLabel>{error}</ErrorLabel>
                         </InputField>
                     )}
-                <Button onClick={() => login()}>התחבר</Button>
+                <Button onClick={() => performAction()}>{loginState == 'email' ? 'שלח' : 'אמת'}</Button>
             </LoginDetailsContainer>
         </Container>
     )
