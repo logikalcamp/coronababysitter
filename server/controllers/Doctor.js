@@ -14,8 +14,30 @@ module.exports.createDoctor = function createDoctor (req, res, next, body, docId
     });
 };
 
-module.exports.getAllDoctors = function getAllDoctors (req, res, next) {
-  req.DoctorService.getAllDoctors()
+module.exports.getAllDoctors = function getAllDoctors (req, res, next,page) {
+  req.DoctorService.getAllDoctors(page)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.getApprovedDoctors = function getApprovedDoctors (req, res, next,page) {
+  req.DoctorService.getApprovedDoctors(page)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.getPendingDoctors = function getPendingDoctors (req, res, next,page) {
+  req.DoctorService.getPendingDoctors(page)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import {BASE_URL} from '../constants'
 import PinDropIcon from '@material-ui/icons/PinDrop';
+import * as Enumerable from 'linq';
 
 const styles = makeStyles(theme => ({
     title1: {
@@ -18,11 +19,60 @@ const styles = makeStyles(theme => ({
     icon: {
         width: '50px',
         height: '40px'
+    },
+    userRowTitle: {
+        fontWeight: 'bold'
+    },
+    flexFour: {
+        flex:'4'
     }
 }));
 
 const HamalHome = () => {
     const classes = styles();
+    const [page, setPage] = useState(0);
+    const [pendingUsers, setPendingUsers] = useState([]);
+    const [pendingUsersUI, setPendingUsersUI] = useState([]);
+
+    const getUsers = async () => {
+        if(pendingUsers && pendingUsers.length > 0) return;
+
+        try {
+            var results = await Promise.all([axios.get(BASE_URL + '/api/volunteer/pending/' + page),
+                                             axios.get(BASE_URL + '/api/doctor/pending/' + page)])
+
+            var pendingUsers_temp = [];
+            results[0].data.forEach((vol) => {
+                vol.type= "vol";
+            });
+            results[1].data.forEach((med) => {
+                med.type= "med";
+            });
+
+            pendingUsers_temp = pendingUsers_temp.concat(results[0].data);
+            pendingUsers_temp = pendingUsers_temp.concat(results[1].data);
+
+            pendingUsers_temp = Enumerable.from(pendingUsers_temp).orderBy(x => x.firstName + x.lastName).toArray();
+
+            var pendingUsersUI = pendingUsers_temp.map(pendingUser => 
+                    <UserRow>
+                        <UserRowPart>12.12.2020</UserRowPart>
+                        <UserRowPart>{pendingUser.firstName + ' ' + pendingUser.lastName}</UserRowPart>
+                        <UserRowPart>{pendingUser.type == 'med' ? 'רופא' : 'מתנדב'}</UserRowPart>
+                    </UserRow>
+            );
+
+            setPendingUsers(pendingUsers_temp);
+            setPendingUsersUI(pendingUsersUI);
+        }
+        catch(error) {
+            setPendingUsers([]);
+        }
+    }
+
+    useEffect(() => {
+        getUsers();
+    },[pendingUsers])
 
     return (
         <Container>
@@ -78,7 +128,22 @@ const HamalHome = () => {
                 </CountBlock>
             </CountBlocksContainer>
             <PageMainContent>
+                <div className={classes.flexFour}>
+                    <Title>משתמשים הממתינים לאישור</Title>
+                    <UserTableContainer>
+                        <UserTable>
+                            <UserRow className={classes.userRowTitle}>
+                                <UserRowPart>תאריך הרשמה</UserRowPart>
+                                <UserRowPart>שם</UserRowPart>
+                                <UserRowPart>סוג</UserRowPart>
+                            </UserRow>
+                            {pendingUsersUI}
+                        </UserTable>
+                    </UserTableContainer>
+                </div>
+                <MeatingTableContainer>
 
+                </MeatingTableContainer>
             </PageMainContent>
         </Container>
     )
@@ -86,8 +151,60 @@ const HamalHome = () => {
 
 export default HamalHome;
 
-const Container = styled.div`
+const Title = styled.div`
+    font-weight:bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+`
+
+const UserTableContainer = styled.div`
+    overflow-y: scroll;
+    height: 300px;
+    background-color: white;
+    border-radius: 8px;
+    direction: ltr;
+    &::-webkit-scrollbar {
+        width: 5px;
+     }
+     /* Track */
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: #00C2CB;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+`
+
+const UserTable = styled.div`
+    clear:both;
+`
+
+const UserRow = styled.div`
     width: 100%;
+    display:flex;
+    height: 50px;
+`
+
+const UserRowPart = styled.div`
+    flex: 1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+`
+
+const MeatingTableContainer = styled.div`
+    flex:6  
+
+`
+
+const Container = styled.div`
     height: 100%;
     display:flex;
     justify-content: center;
@@ -105,7 +222,7 @@ const TopTitle = styled.div`
 `
 
 const CountBlocksContainer = styled.div`
-    width: 90%;
+    width: 100%;
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -146,4 +263,7 @@ const PageMainContent = styled.div`
     flex:10;
     display:flex;
     clear:both;
+    flex-direction:row;
+    height: 100%;
+    width: 100%;
 `

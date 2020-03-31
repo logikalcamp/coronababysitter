@@ -2,6 +2,7 @@
 
 const MongoDB = require("../database/DataBase")
 const {EmailService} = require("./EmailService")
+const { getPagingDbData } = require('../utils/paging');
 
 var COLLECTION_NAME = "Doctors";
 
@@ -33,7 +34,7 @@ class DoctorService {
   }
 
   /**
-   * Get all volunteers
+   * Get all approved doctors
    *
    * returns List
    **/
@@ -43,6 +44,16 @@ class DoctorService {
     return MongoDB.findMany(COLLECTION_NAME,{isApproved: true}, this.MongoClient,from,to);
   }
 
+  /**
+   * Get all pending doctors
+   *
+   * returns List
+   **/
+  getPendingDoctors(page) {
+    var{from, to} = getPagingDbData(page, "doctors");
+
+    return MongoDB.findMany(COLLECTION_NAME,{isApproved: false}, this.MongoClient,from,to);
+  }
 
   /**
    * Get a single doctor by Id

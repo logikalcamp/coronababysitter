@@ -80,6 +80,33 @@ paths:
         "404":
           description: No volunteers found
       x-swagger-router-controller: Volunteer
+  /volunteer/pending/{page}:
+    get:
+      tags:
+      - volunteer
+      summary: Get all pending volunteers
+      operationId: getPendingVolunteers
+      parameters:
+      - name: page
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: All Approved volunteers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Volunteer'
+                x-content-type: application/json
+        "404":
+          description: No volunteers found
+      x-swagger-router-controller: Volunteer
   /volunteer/{volId}:
     get:
       tags:
@@ -164,15 +191,77 @@ paths:
         "204":
           description: Volunteer not found
       x-swagger-router-controller: Volunteer
-  /doctor/all:
+  /doctor/all/{page}:
     get:
       tags:
       - doctor
       summary: Get all doctors
       operationId: getAllDoctors
+      parameters:
+      - name: page
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
       responses:
         "200":
           description: All doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+                x-content-type: application/json
+        "404":
+          description: No doctors found
+      x-swagger-router-controller: Doctor
+  /doctor/approved/{page}:
+    get:
+      tags:
+      - doctor
+      summary: Get all approved doctors
+      operationId: getApprovedDoctors
+      parameters:
+      - name: page
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: All Approved Doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+                x-content-type: application/json
+        "404":
+          description: No Doctor found
+      x-swagger-router-controller: Doctor
+  /doctor/pending/{page}:
+    get:
+      tags:
+      - doctor
+      summary: Get all pending doctors
+      operationId: getPendingDoctors
+      parameters:
+      - name: page
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: All pending doctors
           content:
             application/json:
               schema:
