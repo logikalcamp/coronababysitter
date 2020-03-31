@@ -91,3 +91,14 @@ module.exports.countUrgentPendingSessions = function countUrgentPendingSessions 
   //     res.status(400).json({'message': response.toString()});
   //   });
 };
+
+module.exports.getDoctorSessions = function getDoctorSessions (req, res, next, body, doctorId) {
+  req.SessionService.getDoctorSessions(body, doctorId)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};

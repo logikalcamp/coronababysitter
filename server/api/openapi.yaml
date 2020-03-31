@@ -615,7 +615,41 @@ paths:
         "404":
           description: No sessions found
       x-swagger-router-controller: Session
-  
+  /session/{doctorId}:
+    post:
+      tags:
+      - sessions
+      summary: Get all sessions by a doctor's ID, add isFilled true/false.
+      operationId: getDoctorSessions
+      parameters:
+      - name: doctorId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isFilled:
+                  type: boolean
+      responses:
+        "200":
+          description: All sessions of the doctor with the filter applied.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found.
+      x-swagger-router-controller: Session
   /hamal:
     post:
       tags:
