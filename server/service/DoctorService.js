@@ -107,6 +107,10 @@ class DoctorService {
       });
     });
   }
+
+  countAllDoctors() {
+    return MongoDB.count(COLLECTION_NAME,{}, this.MongoClient);
+  }
 }
 
 module.exports.DoctorService = DoctorService

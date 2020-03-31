@@ -79,3 +79,14 @@ module.exports.loginEmailDoctor = function loginEmailDoctor (req, res, next, bod
       res.status(400).json({'message': response.toString()});
     });
 };
+
+module.exports.countAllDoctors = function countAllDoctors (req, res, next, body) {
+  req.DoctorService.countAllDoctors(body)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};

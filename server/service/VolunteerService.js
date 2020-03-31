@@ -111,6 +111,14 @@ class VolunteerService {
       });
     });
   }
+
+  countAllVolunteers() {
+    return MongoDB.count(COLLECTION_NAME,{isApproved: true}, this.MongoClient);
+  }
+
+  countPendingVolunteers() {
+    return MongoDB.count(COLLECTION_NAME,{isApproved: false}, this.MongoClient);
+  }
 }
 
 module.exports.VolunteerService = VolunteerService;

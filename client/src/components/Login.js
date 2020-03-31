@@ -70,12 +70,11 @@ const Login = () => {
             var response = await axios.post(BASE_URL + `/api/utils/login-user`, {email,code});
 
             if(response.data.valid) {
-                // history.push("/hamal") 
                 if(isDoctorLogin) {
-
+                    history.push("/doctor-homepage");
                 }
                 else {
-                    
+                    history.push("/volunteer-homepage");
                 }
             }
             else {

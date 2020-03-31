@@ -102,4 +102,14 @@ exports.findOneAndUpdate = (collection, filter, newValues, db) => {
     })
 }
 
+exports.count = (collection, filter, db) => {
+    return new Promise((resolve,reject) => {
+        db.collection(collection).find(filter).count((err, result) => {
+            if(err) reject(err)
+
+            resolve({count: result});
+        })
+    });
+}
+
 module.exports = exports;

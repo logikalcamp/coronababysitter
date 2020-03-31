@@ -79,3 +79,25 @@ module.exports.loginEmailVolunteer = function loginEmailVolunteer (req, res, nex
       res.status(400).json({'message': response.toString()});
     });
 };
+
+module.exports.countAllVolunteers = function countAllVolunteers (req, res, next, body) {
+  req.VolunteerService.countAllVolunteers(body)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.countPendingVolunteers = function countPendingVolunteers (req, res, next, body) {
+  req.VolunteerService.countPendingVolunteers(body)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};

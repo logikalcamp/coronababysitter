@@ -39,13 +39,20 @@ const HamalHome = () => {
     const [page, setPage] = useState(0);
     const [pendingUsers, setPendingUsers] = useState([]);
     const [pendingUsersUI, setPendingUsersUI] = useState([]);
+    const [counts, setCount] = useState({
+        pendingVolunteers: 0,
+        volunteers: 0,
+    })
 
     const getUsers = async () => {
         if(pendingUsers && pendingUsers.length > 0) return;
 
         try {
             var results = await Promise.all([axios.get(BASE_URL + '/api/volunteer/pending/' + page),
-                                             axios.get(BASE_URL + '/api/doctor/pending/' + page)])
+                                             axios.get(BASE_URL + '/api/doctor/pending/' + page),
+                                             axios.get(BASE_URL+'/api/volunteer/countpending'),
+                                             axios.get(BASE_URL+'/api/volunteer/count'),
+                                             axios.get(BASE_URL+'/api/doctor/count')])
 
             var pendingUsers_temp = [];
             results[0].data.forEach((vol) => {

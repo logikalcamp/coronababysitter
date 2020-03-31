@@ -26,6 +26,46 @@ tags:
 - name: utils
   description: General necessary util routes.
 paths:
+  /volunteer/count:
+    get:
+      tags:
+      - volunteer
+      summary: Count All volunteers
+      operationId: countAllVolunteers
+      responses:
+        "200":
+          description: amount of all volunteers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                x-content-type: application/json
+        "404":
+          description: No volunteers found
+      x-swagger-router-controller: Volunteer
+  /volunteer/countpending:
+    get:
+      tags:
+      - volunteer
+      summary: Count All pending volunteers
+      operationId: countPendingVolunteers
+      responses:
+        "200":
+          description: amount of all pending volunteers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                x-content-type: application/json
+        "404":
+          description: No pending volunteers found
+      x-swagger-router-controller: Volunteer
   /volunteer/all/{page}:
     get:
       tags:
@@ -191,6 +231,26 @@ paths:
         "204":
           description: Volunteer not found
       x-swagger-router-controller: Volunteer
+  /doctor/count:
+    get:
+      tags:
+      - doctor
+      summary: Count All doctors
+      operationId: countAllDoctors
+      responses:
+        "200":
+          description: amount of all doctors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                x-content-type: application/json
+        "404":
+          description: No doctors found
+      x-swagger-router-controller: Doctor
   /doctor/all/{page}:
     get:
       tags:
