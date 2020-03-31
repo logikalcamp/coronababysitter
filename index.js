@@ -9,7 +9,6 @@ var path = require('path');
 var cors = require('cors');
 var bodyParser=require('body-parser');
 var express = require('express')
-var session = require('express-session');
 var oas3Tools = require('oas3-tools');
 var serverPort = process.env.PORT || 3001;
 
@@ -32,7 +31,6 @@ app.use(cors());
 app.set('trust proxy', true);
 
 app.use(bodyParser.json())
-app.use(session({secret: 'sitterseeker2020'}));
 
 app.post('/api/uploadphoto', async (req,res,next) => {
     var form = new formidable.IncomingForm();
@@ -87,3 +85,5 @@ if(env == 'production') {
 var server = http.listen(serverPort, function () {
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
 });
+
+global.session = {};
