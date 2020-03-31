@@ -5,8 +5,8 @@ import moment from 'moment';
 import Axios from 'axios';
 import { MdAdd } from "react-icons/md";
 import GridComp from '../Grid';
-import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
-import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
+// import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
+// import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
 
 
 const VolunteerDashboardComp = styled.div`
@@ -132,8 +132,7 @@ const CreateSession = () => {
 
     return (
         <VolunteerDashboardComp>
-            <div id="Con">\
-            לא רלוונטי
+            <div id="Con">
                 <HeaderComp>
                 <div>
                     <h2>ניהול בקשות פתוחות</h2>

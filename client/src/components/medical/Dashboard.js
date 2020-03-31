@@ -9,32 +9,21 @@ import GridComp from '../Grid';
 import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
 import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
 
-
 const VolunteerDashboardComp = styled.div`
   height: 100%;
-  padding:1rem;
-  #Con{
-    max-width: 1366px;
-    height: 100%;
+  padding:  50px;
+`;
+const Wrapper = styled.div`
+  height: 100%;
+  max-width: 1366px;
   margin: auto;
 
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  }
-
-  
-
-  @media(max-width:450px) {
-    height: 100%;
-    padding: 0 5%;
-    overflow-x: auto;
-  }
 `;
-
 const HeaderComp = styled.div`
   height: 15%;
-  padding: 0 100px;
 
   display: flex;
   justify-content: space-between;
@@ -70,13 +59,8 @@ const HeaderComp = styled.div`
   }
 `;
 
-const HeaderButtonComp = styled.div`
-  
-`;
-
 const DashboardComp = styled.div`
   height: 75%;
-  padding: 0 100px;
   
   display: flex;
   justify-content: space-between;
@@ -131,7 +115,14 @@ const GridHeaderComp = styled.div`
 `;
 
 const Button = styled.button`
-  
+  border:1px solid #53B493;
+  color:#53B493;
+  background:white;
+  border-radius:5px;
+  &:hover{
+    background:#e2e2e2;
+    cursor:pointer;
+  }
 `
 
 const MedicalDashboard = (props) => {
@@ -139,7 +130,7 @@ const MedicalDashboard = (props) => {
     const id = props.auth.user.userid
     return (
         <VolunteerDashboardComp>
-            <div id="Con">
+            <Wrapper>
                 <HeaderComp>
                 <div>
                     <h1>
@@ -162,15 +153,17 @@ const MedicalDashboard = (props) => {
                     <UpcomingSessionsGrid id={id} />
                 </GridWrapper>
                 <GridWrapper>
-                    <GridHeaderComp>
-                    <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
-                    בקשות פתוחות
-                    <Link to="/optionalvolunteers"><Button>מסך מלא</Button></Link>
+                    <GridHeaderComp style={{justifyContent:"space-between"}}>
+                    <div style={{display:"flex"}}>
+                      <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
+                      בקשות פתוחות
+                    </div>
+                    <Link to="/optionalvolunteers"><Button>למסך מלא</Button></Link>
                     </GridHeaderComp>
                     <NotYetApprovedSessionsGrid  id={id}/>
                 </GridWrapper>
                 </DashboardComp>
-            </div>
+              </Wrapper>
         </VolunteerDashboardComp>
         )
 }

@@ -64,7 +64,8 @@ export const UpcomingSessionsGrid = (props) => {
 
   useEffect(() => {
     Axios.get(BASE_URL+`/api/session/getupcomingsessions/${props.id}`).then(result => {
-      setUpcomingSessions(result.data);
+      // setUpcomingSessions(result.data);
+      console.log(result);
     })
   }, [])
 

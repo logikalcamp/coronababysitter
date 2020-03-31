@@ -12,6 +12,7 @@ import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomep
 import {FindSession} from '../components/FindSession';
 import MedicalDashboard from '../components/medical/Dashboard'
 import CreateSession from '../components/medical/CreateSession'
+import OptionalVolunteers from '../components/medical/OptionalVolunteers'
 import Policy from '../components/Policy'
 import Login from '../components/Login'
 
@@ -28,6 +29,7 @@ const AppRouter = () =>(
         
         <Route exact path="/medical" component={MedicalDashboard}/>
         <Route exact path="/newsession" component={CreateSession}/>
+        <Route exact path="/optionalvolunteers" component={OptionalVolunteers}/>
         {/* <Route exact path="/optionalvolunteers" component={CreateSession}/> */}
 
         
