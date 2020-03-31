@@ -73,7 +73,7 @@ exports.findMany = (collection, filter, db, from = 0, to = 0) => {
         
         query.toArray((err,result) => {
             if(err) reject(err);
-
+            console.log(result);
             resolve(result);
         });
     });

@@ -12,6 +12,9 @@ var express = require('express')
 var session = require('express-session');
 var oas3Tools = require('oas3-tools');
 var serverPort = process.env.PORT || 3001;
+
+var env = process.env.NODE_ENV || 'dev'
+
 // var app = express()
 var dataBase = require("./server/database/DataBase")
 // swaggerRouter configuration
@@ -31,6 +34,33 @@ app.set('trust proxy', true);
 app.use(bodyParser.json())
 app.use(session({secret: 'sitterseeker2020'}));
 
+app.post('/api/uploadphoto', async (req,res,next) => {
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, async (err, fields, file) => {
+        if (err) {
+  
+          // Check for and handle any errors here.
+  
+          console.error(err.message);
+          return;
+        }
+        else {
+            var imageService = new ImageService();
+
+            var photo = await imageService.uploadImageToGooglePhotos("Volunteers", file['photoFile'].path);
+
+            if(photo != undefined) {
+                res.send({photo: photo});
+            }
+            else {
+                res.status(500)
+                res.end("Error uploading photo");
+            }
+        }
+    });
+});
+
 app.use("*", async (req,res,next) => {
     if(req.baseUrl.startsWith("/api")) {
             req.MongoClient = await dataBase.getConnection();
@@ -40,16 +70,18 @@ app.use("*", async (req,res,next) => {
             req.DoctorService = new DoctorService(req.MongoDB);
             req.HamalService = new HamalService(req.MongoDB);
             req.UtilsService = new UtilsService(req.MongoDB);
-            next();
     }
-    // res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    
     next();
 })
 
-app.use(express.static(path.join(__dirname, 'client/build')));
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-});
+if(env == 'production') {
+    app.use(express.static(path.join(__dirname, 'client/build')));
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
+}
+
 
 // Initialize the Swagger middleware
 var server = http.listen(serverPort, function () {
