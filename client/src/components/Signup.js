@@ -386,9 +386,9 @@ export const Signup = (props) => {
     useEffect(() => {
         console.log("boom",details.facebook)
         if(details.facebook!='' && details.facebook){
-            axios.post(BASE_URL+'/api/getimage',{url:facebook})
+            axios.post(BASE_URL+'/api/utils/facebookimage',{facebookURL:details.facebook})
             .then(res=>{
-                setImg(res.data)
+                setImg(res.data.pictureURL)
                 console.log(res)})
         }
     }, [details.facebook])
@@ -580,6 +580,10 @@ const SignupCon = styled.div`
     }
     button{
         font-size:18px;
+    }
+    @media(max-width:450px){
+        max-width:350px;
+        height:unset;
     }
    
 `

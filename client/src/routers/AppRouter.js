@@ -11,7 +11,6 @@ import CompleteDoctor from '../components/CompleteDoctor'
 import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
 import {FindSession} from '../components/FindSession';
 import MedicalDashboard from '../components/medical/Dashboard'
-import CreateSession from '../components/medical/CreateSession'
 import OptionalVolunteers from '../components/medical/OptionalVolunteers'
 import Policy from '../components/Policy'
 import Login from '../components/Login'
@@ -28,15 +27,17 @@ const AppRouter = () =>(
         
         
         <Route exact path="/medical" component={MedicalDashboard}/>
-        <Route exact path="/newsession" component={CreateSession}/>
         <Route exact path="/optionalvolunteers" component={OptionalVolunteers}/>
         {/* <Route exact path="/optionalvolunteers" component={CreateSession}/> */}
 
         
         {/* <Route exact path="/hamal" component={VolunteersPage}/> */}
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
-        <Route exact path="/hamal" component={HamalVolunteersPage}/>
         <Route exact path='/find-session' component={FindSession} />
+        
+        
+        
+        <Route exact path="/hamal" component={HamalVolunteersPage}/>
         {/* 
         <PrivateRoute exact path="/meeting/:id" component={Meeting} />
         <PrivateRoute exact path="/summary/:id" component={Summary} />
