@@ -882,8 +882,8 @@ components:
         _id:
           type: string
           description: MongoID
-        doctor:
-          $ref: '#/components/schemas/Doctor'
+        doctor_id:
+          type: string
         timeRequested:
           type: string
           format: date-time
@@ -894,9 +894,9 @@ components:
           type: array
           description: List of all volunteers who requested this session
           items:
-            $ref: '#/components/schemas/Volunteer'
+            type: string
         filledBy:
-          $ref: '#/components/schemas/Volunteer'
+          type: string
         didHappen:
           type: boolean
         startTime:
