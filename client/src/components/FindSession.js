@@ -5,6 +5,7 @@ import {
   withGoogleMap,
   GoogleMap,
   Marker,
+  InfoBox
 } from 'react-google-maps';
 
 import GridComp from './Grid';
@@ -125,7 +126,17 @@ const Map = withScriptjs(withGoogleMap(props =>
     streetView = {false}
     defaultZoom={11}
     center={{ lat: 32.344084 , lng: 34.870139 }}
-  >
+  > 
+    <InfoBox
+      defaultPosition={{ lat: 32.344084 , lng: 34.870139 }}
+      options={{ closeBoxURL: ``, enableEventPropagation: true }}
+    >
+      <div style={{ backgroundColor: `yellow`, opacity: 0.75, padding: `12px` }}>
+        <div style={{ fontSize: `16px`, fontColor: `#08233B` }}>
+          Hello, Taipei!
+        </div>
+      </div>
+    </InfoBox>
     <Marker
       position={{ lat: 32.344084 , lng: 34.870139 }}
     />
