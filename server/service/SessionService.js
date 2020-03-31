@@ -10,7 +10,7 @@ var getLookUp = (tableFrom, local, foreign, as) => {
     }});
 }
 var lookUpForSessions = (arr) => {
-  arr.push(getLookUp("Doctors_temp", "doctor", "_id", "doctor_o"));
+  arr.push(getLookUp("Doctors", "doctor_id", "_id", "doctor_o"));
   arr.push(getLookUp("Volunteers", "requests", "_id", "volunteers_array_o"));
   arr.push(getLookUp("Volunteers", "filledBy", "_id", "chosen_volunteer_o"));
 
@@ -65,9 +65,9 @@ class SessionService {
         
         filter = {
           $match:{
-            "doctor" : MongoDB.getMongoObjectId(userId)
+            "doctor_id" : userId
           }};
-          aggregate.push(filter);
+        aggregate.push(filter);
 
 
     }
@@ -76,8 +76,8 @@ class SessionService {
 
       filter = {$match:
         {$or: 
-         [{"filledBy" : MongoDB.getMongoObjectId(userId)}, 
-                     {"requests": {$elemMatch: { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
+         [{"filledBy" : userId}, 
+                     {"requests": {$elemMatch: { $eq : userId}}}]}};
       aggregate.push(filter);
       }
 
@@ -129,7 +129,7 @@ class SessionService {
     var aggregate = [];
     lookUpForSessions(aggregate);
     var filter = {$match: {
-      "filledBy": MongoDB.getMongoObjectId(userId)
+      "filledBy": userId
             }
     };
     aggregate.push(filter);
@@ -143,7 +143,7 @@ class SessionService {
    **/
   getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
     var filter = {$match : {$and: [{"filledBy" : null}, 
-    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
+    {"requests": {$elemMatch : { $eq : userId}}}]}};
     var aggregate = [];
 
     lookUpForSessions(aggregate);
