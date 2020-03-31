@@ -19,7 +19,7 @@ var lookUpForSessions = (arr) => {
 var {Roles} = require("../utils/enums");
 const MongoDB = require("../database/DataBase");
 const Location = require("../utils/location");
-var COLLECTION_NAME = "Sessions_temp";
+var COLLECTION_NAME = "Sessions";
 
 class SessionService {
   
@@ -36,7 +36,7 @@ class SessionService {
   async createSession(body) {
     return new Promise((resolve, reject) => {
       // Check if a session with the same start time already exists for this doctor
-      MongoDB.findOne(COLLECTION_NAME, {"doctor._id" : MongoDB.getMongoObjectId(body.doctor._id),
+      MongoDB.findOne(COLLECTION_NAME, {"doctor_id" : MongoDB.getMongoObjectId(body.doctor_id),
                                              startTime: body.startTime}, this.MongoClient).then((result) => {
         if(result) 
           reject("Session already exists");
@@ -173,6 +173,11 @@ class SessionService {
     return new Promise(function(resolve, reject) {
       resolve();
     });
+  }
+
+  getDoctorSessions(body, doctorId) {
+    var isFilled = (body.isFilled) ? { $ne: null } : null; // If user wants the filled sessions, get all not empty objects.
+    return MongoDB.findMany(COLLECTION_NAME, { "doctor_id": doctorId, "filledBy": isFilled }, this.MongoClient);
   }
 }
 
