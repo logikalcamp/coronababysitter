@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import Axios from 'axios';
 
 
 export const Landing = (props) => {

@@ -9,7 +9,8 @@ module.exports.createSession = function createSession (req, res, next, body) {
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      utils.writeJson(req,res, response);
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };
 
@@ -19,7 +20,8 @@ module.exports.getAllSessionsByUser = function getAllSessionsByUser (req, res, n
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      utils.writeJson(req,res, response);
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };
 
@@ -29,7 +31,8 @@ module.exports.getAllUpcomingNotYetApprovedSessionsByVolunteer = function getAll
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      utils.writeJson(req,res, response);
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };
 
@@ -39,10 +42,21 @@ module.exports.getAllUpcomingApprovedSessionsByVolunteer = function getAllUpcomi
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      utils.writeJson(req,res, response);
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };
 
+module.exports.getAvailableSessions = function getAvailableSessions (req, res, next, userId) {
+  req.SessionService.getAvailableSessions(userId)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
 
 module.exports.updateSession = function updateSession (req, res, next, body, sessionId) {
   req.SessionService.updateSession(body, sessionId)
@@ -50,6 +64,7 @@ module.exports.updateSession = function updateSession (req, res, next, body, ses
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      utils.writeJson(req,res, response);
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };

@@ -9,17 +9,30 @@ module.exports.createVolunteer = function createVolunteer (req, res, next, body,
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      utils.writeJson(req,res, response);
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };
 
-module.exports.getAllVolunteers = function getAllVolunteers (req, res, next) {
-  req.VolunteerService.getAllVolunteers()
+module.exports.getAllVolunteers = function getAllVolunteers (req, res, next, page) {
+  req.VolunteerService.getAllVolunteers(page)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.getApprovedVolunteers = function getApprovedVolunteers (req, res, next, page) {
+  req.VolunteerService.getApprovedVolunteers(page)
+    .then(function (response) {
       utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };
 
@@ -29,7 +42,8 @@ module.exports.getVolunteerById = function getVolunteerById (req, res, next, vol
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      utils.writeJson(req,res, response);
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };
 
@@ -39,6 +53,18 @@ module.exports.registerVolunteer = function registerVolunteer (req, res, next, b
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.loginEmailVolunteer = function loginEmailVolunteer (req, res, next, body) {
+  req.VolunteerService.loginEmailVolunteer(body)
+    .then(function (response) {
       utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
     });
 };

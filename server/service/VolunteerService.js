@@ -1,6 +1,10 @@
 'use strict';
 
+const randomize = require('randomatic');
 const MongoDB = require("../database/DataBase")
+const {EmailService} = require("./EmailService")
+
+const { getPagingDbData } = require('../utils/paging');
 
 var COLLECTION_NAME = "Volunteers";
 
@@ -28,8 +32,21 @@ class VolunteerService {
    *
    * returns List
    **/
-  getAllVolunteers() {
-    return MongoDB.findMany(COLLECTION_NAME,{}, this.MongoClient);
+  getAllVolunteers(page) {
+    var{from, to} = getPagingDbData(page, "volunteers");
+
+    return MongoDB.findMany(COLLECTION_NAME,{}, this.MongoClient, from, to);
+  }
+
+  /**
+   * Get all volunteers
+   *
+   * returns List
+   **/
+  getApprovedVolunteers(page) {
+    var{from, to} = getPagingDbData(page, "volunteers");
+
+    return MongoDB.findMany(COLLECTION_NAME,{isApproved: true}, this.MongoClient,from,to);
   }
 
   /**
@@ -61,8 +78,28 @@ class VolunteerService {
       });
     });
   }
+
+  loginEmailVolunteer(body, req) {
+    return new Promise((resolve, reject) => {
+      MongoDB.findOne(COLLECTION_NAME, { email: body.email }, this.MongoClient).then((result) => {
+        if (result == null) reject("Volunteer not found.");
+        else {
+          var emailService = new EmailService();
+          var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.
+          emailService.sendEmail(result.email, emailService.getLoginEmail(loginCode));
+
+          if (!global.session.loginCodes) {
+            global.session.loginCodes = {};
+          }
+
+          global.session.loginCodes[body.email] = loginCode;
+          resolve("Login email sent.")
+        }
+      }).catch((error) => {
+        reject(error)
+      });
+    });
+  }
 }
 
 module.exports.VolunteerService = VolunteerService;
-
-

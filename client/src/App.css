@@ -39,3 +39,23 @@
     transform: rotate(360deg);
   }
 }
+.gmnoprint{
+
+}
+
+.gmnoprint gm-bundled-control gm-bundled-control-on-bottom{
+  left:0;
+}
+.gm-bundled-control, .gm-bundled-control-on-bottom{
+  left:0;
+}
+
+.gm-svpc, .gm-style-mtc{
+  display:none !important;
+}
+.gm-control-active gm-fullscreen-control{
+  display: none !important;
+}
+.gm-fullscreen-control{
+  display: none !important;
+}

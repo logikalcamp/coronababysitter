@@ -1,6 +1,7 @@
 'use strict';
 
 const MongoDB = require("../database/DataBase")
+const {EmailService} = require("./EmailService")
 
 var COLLECTION_NAME = "Doctors";
 
@@ -18,7 +19,7 @@ class DoctorService {
    * no response value expected for this operation
    **/
   createDoctor(body, docId) {
-      return MongoDB.findOneAndUpdate(this.COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(docId) }, body, this.MongoClient);
+      return MongoDB.findOneAndUpdate(COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(docId) }, body, this.MongoClient);
   }
 
 
@@ -59,7 +60,28 @@ class DoctorService {
         else {
           MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
-        
+      });
+    });
+  }
+
+  loginEmailDoctor(body) {
+    return new Promise((resolve, reject) => {
+      MongoDB.findOne(COLLECTION_NAME, { email: body.email }, this.MongoClient).then((result) => {
+        if (result == null) reject("Doctor not found.");
+        else {
+          var emailService = new EmailService();
+          var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.
+          emailService.sendEmail(result.email, emailService.getLoginEmail(loginCode));
+
+          if (!global.session.loginCodes) {
+            global.session.loginCodes = {}
+          }
+
+          global.session.loginCodes[body.email] = loginCode
+          resolve("Login email sent.")
+        }
+      }).catch((error) => {
+        reject(error)
       });
     });
   }

@@ -3,12 +3,11 @@
 const mailer = require('nodemailer')
 
 class EmailService {
-
     constructor() {
-
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
     }
 
-    sendEmail(recipientEmail, email) {
+    async sendEmail(recipientEmail, email) {
         var transporter = mailer.createTransport({
             service: 'gmail',
             auth: this.getSystemEmail()
@@ -21,22 +20,15 @@ class EmailService {
             html: email.body
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-                return 0
-            }
-
-            return 1
-        });
+        transporter.sendMail(mailOptions);
     }
 
     getSystemEmail() {
         // TODO: Save in DB / encrypted ?
         return {
-            type: 'OAuth2',
-            user: 'sitterseekerapp@gmail.com',
-            pass: 'coronababy2020'
+            // type: 'OAuth2',
+            user: 'AppSitterSeeker@gmail.com',
+            pass: 'sitterseeker2020'
         }
     }
 
@@ -52,6 +44,17 @@ class EmailService {
             'title': 'לצעירנו אי אפשר להוסיף לך משתמש',
             'body': '<h1>Oh no!</h1><p>החמ"ל שלנו עבר על הפרטים שלך, והיו כמה דברים שלא הסתדרו..</p><br><p>בשלב זה לא נוכל ליצור לך משתמש, אבל תמיד אפשר ליצור קשר עם החמ"ל כדי להבין מה הייתה הבעיה</p>'
         }
+    }
+
+    getLoginEmail(code) {
+        var emailInfo = {
+            'title': 'קוד ההתחברות שלך',
+            'body': '<h1>שלום!</h1><p>קוד ההתחברות שלך הינו ABCDEFG</p>'
+        }
+        
+        emailInfo.body = emailInfo.body.replace('ABCDEFG', code.toString());
+
+        return emailInfo;
     }
 }
 
