@@ -6,6 +6,8 @@ import axios from 'axios';
 import {BASE_URL} from '../constants'
 import PinDropIcon from '@material-ui/icons/PinDrop';
 import * as Enumerable from 'linq';
+import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const styles = makeStyles(theme => ({
     title1: {
@@ -25,6 +27,10 @@ const styles = makeStyles(theme => ({
     },
     flexFour: {
         flex:'4'
+    },
+    flexSix: {
+        flex:'6',
+        paddingRight: '20px'
     }
 }));
 
@@ -55,11 +61,11 @@ const HamalHome = () => {
             pendingUsers_temp = Enumerable.from(pendingUsers_temp).orderBy(x => x.firstName + x.lastName).toArray();
 
             var pendingUsersUI = pendingUsers_temp.map(pendingUser => 
-                    <UserRow>
-                        <UserRowPart>12.12.2020</UserRowPart>
-                        <UserRowPart>{pendingUser.firstName + ' ' + pendingUser.lastName}</UserRowPart>
-                        <UserRowPart>{pendingUser.type == 'med' ? 'רופא' : 'מתנדב'}</UserRowPart>
-                    </UserRow>
+                    <Row>
+                        <RowPart>12.12.2020</RowPart>
+                        <RowPart>{pendingUser.firstName + ' ' + pendingUser.lastName}</RowPart>
+                        <RowPart>{pendingUser.type == 'med' ? 'רופא' : 'מתנדב'}</RowPart>
+                    </Row>
             );
 
             setPendingUsers(pendingUsers_temp);
@@ -132,18 +138,26 @@ const HamalHome = () => {
                     <Title>משתמשים הממתינים לאישור</Title>
                     <UserTableContainer>
                         <UserTable>
-                            <UserRow className={classes.userRowTitle}>
-                                <UserRowPart>תאריך הרשמה</UserRowPart>
-                                <UserRowPart>שם</UserRowPart>
-                                <UserRowPart>סוג</UserRowPart>
-                            </UserRow>
+                            <Row className={classes.userRowTitle}>
+                                <RowPart>תאריך הרשמה</RowPart>
+                                <RowPart>שם</RowPart>
+                                <RowPart>סוג</RowPart>
+                            </Row>
                             {pendingUsersUI}
                         </UserTable>
                     </UserTableContainer>
                 </div>
-                <MeatingTableContainer>
-
-                </MeatingTableContainer>
+                <div className={classes.flexSix}>
+                    <Title>בקשות דחופות</Title>
+                    <MeatingTableContainer>
+                        <Row className={classes.userRowTitle}>
+                            <RowPart>מספר הצעות</RowPart>
+                            <RowPart>טווח שעות</RowPart>
+                            <RowPart>שם המתנדב</RowPart>
+                            <RowPart>תאריך</RowPart>
+                        </Row>
+                    </MeatingTableContainer>
+                </div>
             </PageMainContent>
         </Container>
     )
@@ -159,10 +173,10 @@ const Title = styled.div`
 
 const UserTableContainer = styled.div`
     overflow-y: scroll;
-    height: 300px;
     background-color: white;
     border-radius: 8px;
     direction: ltr;
+    max-height: 500px;
     &::-webkit-scrollbar {
         width: 5px;
      }
@@ -186,13 +200,13 @@ const UserTable = styled.div`
     clear:both;
 `
 
-const UserRow = styled.div`
+const Row = styled.div`
     width: 100%;
     display:flex;
     height: 50px;
 `
 
-const UserRowPart = styled.div`
+const RowPart = styled.div`
     flex: 1;
     display:flex;
     justify-content:center;
@@ -200,25 +214,48 @@ const UserRowPart = styled.div`
 `
 
 const MeatingTableContainer = styled.div`
-    flex:6  
+    clear:both;
+    overflow-y: scroll;
+    background-color: white;
+    border-radius: 8px;
+    direction: ltr;
+    max-height: 500px;
+    &::-webkit-scrollbar {
+        width: 5px;
+     }
+     /* Track */
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
 
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: #00C2CB;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 `
 
 const Container = styled.div`
     height: 100%;
+    width: 100%;
+    max-width: 1366px;
+    margin: auto;
     display:flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 20px;
 `
 
 const TopTitle = styled.div`
     display:flex;
     flex-direction: column;
     align-items:flex-start;
-    flex:1;
     width: 100%;
+    height: 10%
 `
 
 const CountBlocksContainer = styled.div`
@@ -226,9 +263,9 @@ const CountBlocksContainer = styled.div`
     display:flex;
     justify-content:space-between;
     align-items:center;
-    flex:1;
     padding-top: 20px;
     padding-bottom:20px;
+    height: 15%
 `
 
 const CountBlock = styled.div`
@@ -260,10 +297,10 @@ const CountBlockText = styled.div`
 `
 
 const PageMainContent = styled.div`
-    flex:10;
     display:flex;
     clear:both;
     flex-direction:row;
     height: 100%;
     width: 100%;
+    height: 75%
 `

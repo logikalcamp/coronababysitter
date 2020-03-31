@@ -26,6 +26,7 @@
     "formidable": "^1.2.2",
     "fs": "0.0.1-security",
     "googleapis": "^39.2.0",
+    "i": "^0.3.6",
     "js-yaml": "^3.3.0",
     "linq": "^3.2.2",
     "mongodb": "^3.5.5",
