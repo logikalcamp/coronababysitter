@@ -79,6 +79,34 @@ exports.findMany = (collection, filter, db, from = 0, to = 0) => {
     });
 }
 
+exports.findManyAggregate = (collection, options = {}, db) => {
+    return new Promise((resolve,reject) => {
+        var query = {};
+
+        try{
+                if (options.aggregate){
+                    query = db.collection(collection).aggregate(options.aggregate);
+                }
+                else {
+                query = db.collection(collection).find(options.filter);
+               }
+
+            if(options.to  > options.from) {
+                query.skip(options.from);
+                query.limit(options.to - options.from);
+            }
+            
+            query.toArray((err,result) => {
+                if(err) reject(err);
+    
+                resolve(result);
+            });
+        } catch(err) {
+            console.log(err)
+        }
+    });
+}
+
 exports.insertOne = (collection, object, db) => {
     return new Promise((resolve,reject) => {
         db.collection(collection).insertOne(object, (err,obj) => {
@@ -100,6 +128,16 @@ exports.findOneAndUpdate = (collection, filter, newValues, db) => {
             resolve(obj)
         });
     })
+}
+
+exports.count = (collection, filter, db) => {
+    return new Promise((resolve,reject) => {
+        db.collection(collection).find(filter).count((err, result) => {
+            if(err) reject(err)
+
+            resolve({count: result});
+        })
+    });
 }
 
 module.exports = exports;

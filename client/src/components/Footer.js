@@ -14,7 +14,7 @@ export const Footer = () => {
                     </div>
                 }
                 <div>
-                    <a target="_blank" href="/mail"><img src={window.location.origin + "/images/mail.png"} alt="mail"/></a>
+                    <a target="_blank" href="mailto:info@ruthf.org?subject=מייל מאתר סיטרסיקר"><img src={window.location.origin + "/images/mail.png"} alt="mail"/></a>
                     <a target="_blank" href="https://www.facebook.com/RuthVrobel/"><img src={window.location.origin + "/images/facebook.png"} alt="facebook"/></a>
                     <a id="phonem" href="tel:+972526384738"><img src={window.location.origin + "/images/phone.png"} alt="instagram"/></a>
                     <a id="phonedesktop" href="tel:+972526384738"><img src={window.location.origin + "/images/phone.png"} alt="instagram"/></a>

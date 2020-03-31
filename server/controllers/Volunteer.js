@@ -36,6 +36,17 @@ module.exports.getApprovedVolunteers = function getApprovedVolunteers (req, res,
     });
 };
 
+module.exports.getPendingVolunteers = function getPendingVolunteers (req, res, next, page) {
+  req.VolunteerService.getPendingVolunteers(page)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
 module.exports.getVolunteerById = function getVolunteerById (req, res, next, volId) {
   req.VolunteerService.getVolunteerById(volId)
     .then(function (response) {
@@ -60,6 +71,28 @@ module.exports.registerVolunteer = function registerVolunteer (req, res, next, b
 
 module.exports.loginEmailVolunteer = function loginEmailVolunteer (req, res, next, body) {
   req.VolunteerService.loginEmailVolunteer(body)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.countAllVolunteers = function countAllVolunteers (req, res, next, body) {
+  req.VolunteerService.countAllVolunteers(body)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.countPendingVolunteers = function countPendingVolunteers (req, res, next, body) {
+  req.VolunteerService.countPendingVolunteers(body)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

@@ -6,7 +6,8 @@ import {Footer} from '../components/Footer'
 import {Landing} from '../components/Landing'
 import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
-import { HamalVolunteersPage } from '../components/Volunteers';
+import { HamalVolunteersPage } from '../components/HamalVolunteers';
+import { HamalDoctorsPage } from '../components/HamalDoctors';
 import CompleteDoctor from '../components/CompleteDoctor'
 import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
 import {FindSession} from '../components/FindSession';
@@ -14,6 +15,7 @@ import MedicalDashboard from '../components/medical/Dashboard'
 import OptionalVolunteers from '../components/medical/OptionalVolunteers'
 import Policy from '../components/Policy'
 import Login from '../components/Login'
+import HamalHome from '../components/HamalHome';
 
 const AppRouter = () =>(
     <Router>
@@ -33,11 +35,14 @@ const AppRouter = () =>(
         
         {/* <Route exact path="/hamal" component={VolunteersPage}/> */}
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
+        <Route exact path="/hamal/volunteers" component={HamalVolunteersPage}/>
+        <Route exact path="/hamal/doctors" component={HamalDoctorsPage}/>
+        <Route exact path="/hamal" component={HamalHome}/>
         <Route exact path='/find-session' component={FindSession} />
         
         
         
-        <Route exact path="/hamal" component={HamalVolunteersPage}/>
+        {/* <Route exact path="/hamal" component={HamalVolunteersPage}/> */}
         {/* 
         <PrivateRoute exact path="/meeting/:id" component={Meeting} />
         <PrivateRoute exact path="/summary/:id" component={Summary} />
