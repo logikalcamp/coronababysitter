@@ -32,15 +32,15 @@ class UtilsService {
     });
   }
 
-  loginUser(body, session) {
+  loginUser(body) {
     return new Promise((resolve, reject) => {
-      console.log(session.loginCodes);
-      var userSession = session.loginCodes[body.email];
+      console.log(global.session);
+      var userSession = global.session.loginCodes[body.email];
       if (userSession) {
-        var isValid = userSession == body.code
+        var isValid = (userSession == body.code);
 
         // User is logged in, delete code from session.
-        if (isValid) delete session.loginCodes[body.email];
+        if (isValid) delete global.session.loginCodes[body.email];
         
         resolve({valid: isValid});
       } else {

@@ -15,7 +15,7 @@ module.exports.getFacebookPicture = function getFacebookPicture (req, res, next,
 };
 
 module.exports.loginUser = function loginUser (req, res, next, body) {
-  req.UtilsService.loginUser(body, req.session)
+  req.UtilsService.loginUser(body)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
@@ -24,3 +24,4 @@ module.exports.loginUser = function loginUser (req, res, next, body) {
       res.status(400).json({'message': response.toString()});
     });
 };
+
