@@ -13,6 +13,7 @@ import {FindSession} from '../components/FindSession';
 import MedicalDashboard from '../components/medical/Dashboard'
 import Policy from '../components/Policy'
 import Login from '../components/Login'
+import HamalHome from '../components/HamalHome';
 
 const AppRouter = () =>(
     <Router>
@@ -25,7 +26,8 @@ const AppRouter = () =>(
         <Route exact path="/medical" component={MedicalDashboard}/>
         {/* <Route exact path="/hamal" component={VolunteersPage}/> */}
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
-        <Route exact path="/hamal" component={HamalVolunteersPage}/>
+        <Route exact path="/hamal-volunteers" component={HamalVolunteersPage}/>
+        <Route exact path="/hamal-homepage" component={HamalHome}/>
         <Route exact path='/find-session' component={FindSession} />
         <Route exact path='/login' component={Login} />
         {/* 

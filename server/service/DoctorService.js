@@ -32,6 +32,17 @@ class DoctorService {
     return MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient);
   }
 
+  /**
+   * Get all volunteers
+   *
+   * returns List
+   **/
+  getApprovedDoctors(page) {
+    var{from, to} = getPagingDbData(page, "doctors");
+
+    return MongoDB.findMany(COLLECTION_NAME,{isApproved: true}, this.MongoClient,from,to);
+  }
+
 
   /**
    * Get a single doctor by Id

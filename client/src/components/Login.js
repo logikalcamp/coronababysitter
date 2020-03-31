@@ -209,7 +209,7 @@ const Container = styled.div`
 
 const LoginDetailsContainer = styled.div`
     width: 410px;
-    height: 560px;
+    height: 530px;
     padding: 25px;
     display:flex;
     flex-direction:column;
