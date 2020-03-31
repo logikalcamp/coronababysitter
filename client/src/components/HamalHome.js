@@ -6,8 +6,11 @@ import axios from 'axios';
 import {BASE_URL} from '../constants'
 import PinDropIcon from '@material-ui/icons/PinDrop';
 import * as Enumerable from 'linq';
+import PersonIcon from '@material-ui/icons/Person';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 
 const styles = makeStyles(theme => ({
     title1: {
@@ -39,9 +42,12 @@ const HamalHome = () => {
     const [page, setPage] = useState(0);
     const [pendingUsers, setPendingUsers] = useState([]);
     const [pendingUsersUI, setPendingUsersUI] = useState([]);
-    const [counts, setCount] = useState({
+    const [counts, setCounts] = useState({
         pendingVolunteers: 0,
         volunteers: 0,
+        doctors: 0,
+        urgentRequests: 0,
+        matchedSessions: 0
     })
 
     const getUsers = async () => {
@@ -52,7 +58,19 @@ const HamalHome = () => {
                                              axios.get(BASE_URL + '/api/doctor/pending/' + page),
                                              axios.get(BASE_URL+'/api/volunteer/countpending'),
                                              axios.get(BASE_URL+'/api/volunteer/count'),
-                                             axios.get(BASE_URL+'/api/doctor/count')])
+                                             axios.get(BASE_URL+'/api/doctor/count'),
+                                             axios.get(BASE_URL+'/api/session/counturgentpending'),
+                                             axios.get(BASE_URL+'/api/session/countmatched')])
+
+            var counts = {
+                pendingVolunteers: results[2].data.count,
+                volunteers: results[3].data.count,
+                doctors: results[4].data.count,
+                urgentRequests: results[5].data.count,
+                matchedSessions: results[6].data.count
+            }
+
+            setCounts(counts)
 
             var pendingUsers_temp = [];
             results[0].data.forEach((vol) => {
@@ -96,48 +114,48 @@ const HamalHome = () => {
             <CountBlocksContainer>
                 <CountBlock>
                     <CountBlockImageNumContainer>
-                        <PinDropIcon className={classes.icon}></PinDropIcon>
+                        <PersonIcon className={classes.icon}></PersonIcon>
                         <div>
-                            159
+                            {counts.pendingVolunteers}
                         </div>
                     </CountBlockImageNumContainer>
                     <CountBlockText>יוזרים ממתינים לאישור</CountBlockText>
                 </CountBlock>
                 <CountBlock>
                     <CountBlockImageNumContainer>
-                        <PinDropIcon className={classes.icon}></PinDropIcon>
+                        <PriorityHighIcon className={classes.icon}></PriorityHighIcon>
                         <div>
-                            159
+                        {counts.urgentRequests}
                         </div>
                     </CountBlockImageNumContainer>
-                    <CountBlockText>יוזרים ממתינים לאישור</CountBlockText>
+                    <CountBlockText>בקשות דחופות</CountBlockText>
                 </CountBlock>
                 <CountBlock>
                     <CountBlockImageNumContainer>
-                        <PinDropIcon className={classes.icon}></PinDropIcon>
+                        <FavoriteIcon className={classes.icon}></FavoriteIcon>
                         <div>
-                            159
+                            {counts.volunteers}
                         </div>
                     </CountBlockImageNumContainer>
-                    <CountBlockText>יוזרים ממתינים לאישור</CountBlockText>
+                    <CountBlockText>מתנדבים</CountBlockText>
                 </CountBlock>
                 <CountBlock>
                     <CountBlockImageNumContainer>
-                        <PinDropIcon className={classes.icon}></PinDropIcon>
+                        <LocalHospitalIcon className={classes.icon}></LocalHospitalIcon>
                         <div>
-                            159
+                            {counts.doctors}
                         </div>
                     </CountBlockImageNumContainer>
-                    <CountBlockText>יוזרים ממתינים לאישור</CountBlockText>
+                    <CountBlockText>צוות רפואי</CountBlockText>
                 </CountBlock>
                 <CountBlock>
                     <CountBlockImageNumContainer>
-                        <PinDropIcon className={classes.icon}></PinDropIcon>
+                        <EventAvailableIcon className={classes.icon}></EventAvailableIcon>
                         <div>
-                            159
+                            {counts.matchedSessions}
                         </div>
                     </CountBlockImageNumContainer>
-                    <CountBlockText>יוזרים ממתינים לאישור</CountBlockText>
+                    <CountBlockText>התנדבויות תואמו</CountBlockText>
                 </CountBlock>
             </CountBlocksContainer>
             <PageMainContent>

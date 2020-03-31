@@ -416,6 +416,46 @@ paths:
         "204":
           description: Doctor not found
       x-swagger-router-controller: Doctor
+  /session/countmatched:
+    get:
+      tags:
+      - session
+      summary: Count All matched sessions
+      operationId: countMatchedSessions
+      responses:
+        "200":
+          description: amount of all matched sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                x-content-type: application/json
+        "404":
+          description: No matched sessions
+      x-swagger-router-controller: Session
+  /session/counturgentpending:
+    get:
+      tags:
+      - session
+      summary: Count All urgent requests
+      operationId: countUrgentPendingSessions
+      responses:
+        "200":
+          description: amount of all urgent pending sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                x-content-type: application/json
+        "404":
+          description: No matched sessions
+      x-swagger-router-controller: Session
   /session:
     post:
       tags:
