@@ -434,7 +434,6 @@ export const Signup = (props) => {
                         <React.Fragment>
                             <Text blur={onBlur} text={"תפקיד"} state={details} functio={setState} ke={"profession"}/>
                             <Text blur={onBlur} text={"מקום עבודה"} state={details} functio={setState} ke={"institute"}/>
-                            <Agreement err={errors} setErr={setError} text={"תנאי שימוש"} obj={agree} setObj={setAgreement} ke={"agreement"}/>
                         </React.Fragment>
                         :
                         <React.Fragment>

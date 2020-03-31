@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
 import Axios from 'axios';
-import { MdAdd } from "react-icons/md";
-import {connect} from 'react-redux'
+
 import GridComp from '../Grid';
 import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
 import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
@@ -129,14 +128,8 @@ const GridHeaderComp = styled.div`
     border-bottom: 1px solid #D1D1D1;
   }
 `;
+const CreateSession = () => {
 
-const Button = styled.button`
-  
-`
-
-const MedicalDashboard = (props) => {
-    console.log(props)
-    const id = props.auth.user.userid
     return (
         <VolunteerDashboardComp>
             <div id="Con">
@@ -149,7 +142,7 @@ const MedicalDashboard = (props) => {
                     <h2>אנחנו כאן לעזור לך ולדאוג שהמשפחה שלך תקבל את הטוב ביותר!</h2>
                 </div>
                 <Link to="/newsession">
-                    <MdAdd style={{width:"1.5rem",height:"1.5rem"}}/>
+                    <img src={window.location.origin + '/images/icons8_volunteering_96px_1.png'} />
                     בקשה חדשה
                 </Link>
                 </HeaderComp>
@@ -159,15 +152,15 @@ const MedicalDashboard = (props) => {
                     <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
                     יומן פעילויות מתוזמנות
                     </GridHeaderComp>
-                    <UpcomingSessionsGrid id={id} />
+                    <UpcomingSessionsGrid />
                 </GridWrapper>
                 <GridWrapper>
                     <GridHeaderComp>
                     <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
                     בקשות פתוחות
-                    <Link to="/optionalvolunteers"><Button>מסך מלא</Button></Link>
+                    <button>מסך מלא</button>
                     </GridHeaderComp>
-                    <NotYetApprovedSessionsGrid  id={id}/>
+                    <NotYetApprovedSessionsGrid />
                 </GridWrapper>
                 </DashboardComp>
             </div>
@@ -175,9 +168,4 @@ const MedicalDashboard = (props) => {
         )
 }
 
-const ToProps = (state,props) => {
-    return {
-        auth: state.auth
-    }
-}
-export default connect(ToProps)(MedicalDashboard);
+export default CreateSession;

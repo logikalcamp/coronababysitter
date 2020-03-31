@@ -11,6 +11,7 @@ import CompleteDoctor from '../components/CompleteDoctor'
 import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
 import {FindSession} from '../components/FindSession';
 import MedicalDashboard from '../components/medical/Dashboard'
+import CreateSession from '../components/medical/CreateSession'
 import Policy from '../components/Policy'
 import Login from '../components/Login'
 
@@ -19,15 +20,21 @@ const AppRouter = () =>(
       <Header/>
       <Switch>          
         <Route exact path="/" component={Landing}/>
+        <Route exact path='/login' component={Login} />
         <Route exact path="/policy" component={Policy}/>
         <Route exact path="/doctor/:id" component={CompleteDoctor}/>
-        <Route exact path="/signup/:type" component={Signup}/>
+        <Route exact path="/Registration/:type" component={Signup}/>
+        
+        
         <Route exact path="/medical" component={MedicalDashboard}/>
+        <Route exact path="/newsession" component={CreateSession}/>
+        {/* <Route exact path="/optionalvolunteers" component={CreateSession}/> */}
+
+        
         {/* <Route exact path="/hamal" component={VolunteersPage}/> */}
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
         <Route exact path="/hamal" component={HamalVolunteersPage}/>
         <Route exact path='/find-session' component={FindSession} />
-        <Route exact path='/login' component={Login} />
         {/* 
         <PrivateRoute exact path="/meeting/:id" component={Meeting} />
         <PrivateRoute exact path="/summary/:id" component={Summary} />

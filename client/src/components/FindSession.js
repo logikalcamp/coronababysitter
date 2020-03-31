@@ -44,15 +44,6 @@ const Map = withScriptjs(withGoogleMap(props =>
 ));
 
 export const FindSession = (props) => {
-  useEffect(()=>{
-    try{
-      console.log(document.getElementsByClassName("gm-control-active gm-fullscreen-control"))
-      document.getElementsByClassName("gm-control-active gm-fullscreen-control").display = "none"
-    }
-    catch(err){
-      console.log(err)
-    }
-  },[])
   return (
     <FindSessionComp>
       <TableComp>Table</TableComp>

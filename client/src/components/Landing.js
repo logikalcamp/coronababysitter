@@ -4,7 +4,7 @@ import Axios from 'axios';
 
 
 export const Landing = (props) => {
-    console.log(props)
+    // console.log(props)
     return(
         <LandingCon>
                 <h1>ברוכים הבאים</h1>
@@ -16,8 +16,8 @@ export const Landing = (props) => {
                 </p>
                 <h2>להצטרפות</h2>
                 <div>
-                    <button onClick={()=>props.history.push('/signup/volunteer')}>אני רוצה להתנדב</button>
-                    <button onClick={()=>props.history.push('/signup/medical')}>אני צוות רפואי</button>
+                    <button onClick={()=>props.history.push('/Registration/volunteer')}>אני רוצה להתנדב</button>
+                    <button onClick={()=>props.history.push('/Registration/medical')}>אני צוות רפואי</button>
                 </div>
         </LandingCon>
     )
