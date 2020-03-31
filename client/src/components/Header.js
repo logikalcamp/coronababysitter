@@ -22,10 +22,6 @@ export const Header = (props) => {
                 </HeaderSubCon>
             </SubCon>
             {redirect && <Redirect to={auth ? "/logout":"/login"}/>}
-            <ModalCon open={hasModal} onClick={() => setHasModal(false)} />
-            <ModalContentCon open={hasModal}>
-                Modal Content Here
-            </ModalContentCon>
         </HeaderCon>
     )
 }

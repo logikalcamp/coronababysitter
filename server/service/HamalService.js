@@ -82,7 +82,7 @@ class HamalService {
    * returns List
    **/
   getAllHamalUsers(body) {
-     return MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient);
+     return MongoDB.findMany(COLLECTION_NAME, {filter:{}}, this.MongoClient);
     
   }
 }

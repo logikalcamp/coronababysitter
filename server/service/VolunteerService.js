@@ -35,7 +35,7 @@ class VolunteerService {
   getAllVolunteers(page) {
     var{from, to} = getPagingDbData(page, "volunteers");
 
-    return MongoDB.findMany(COLLECTION_NAME,{}, this.MongoClient, from, to);
+    return MongoDB.findMany(COLLECTION_NAME,{filter:{}, from: from, to: to}, this.MongoClient);
   }
 
   /**
@@ -46,7 +46,18 @@ class VolunteerService {
   getApprovedVolunteers(page) {
     var{from, to} = getPagingDbData(page, "volunteers");
 
-    return MongoDB.findMany(COLLECTION_NAME,{isApproved: true}, this.MongoClient,from,to);
+    return MongoDB.findMany(COLLECTION_NAME,{filter:{isApproved: true}, from: from, to: to}, this.MongoClient);
+  }
+
+  /**
+   * Get all volunteers
+   *
+   * returns List
+   **/
+  getPendingVolunteers(page) {
+    var{from, to} = getPagingDbData(page, "volunteers");
+
+    return MongoDB.findMany(COLLECTION_NAME,{isApproved: false}, this.MongoClient,from,to);
   }
 
   /**
@@ -99,6 +110,14 @@ class VolunteerService {
         reject(error)
       });
     });
+  }
+
+  countAllVolunteers() {
+    return MongoDB.count(COLLECTION_NAME,{isApproved: true}, this.MongoClient);
+  }
+
+  countPendingVolunteers() {
+    return MongoDB.count(COLLECTION_NAME,{isApproved: false}, this.MongoClient);
   }
 }
 
