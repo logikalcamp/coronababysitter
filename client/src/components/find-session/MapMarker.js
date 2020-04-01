@@ -129,7 +129,7 @@ export default class Marker extends Component {
       return;
     }
 
-    this.setState({isOpen: false});
+    this.toggle();
   };
 
   render() {
