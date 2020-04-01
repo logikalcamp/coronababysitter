@@ -15,6 +15,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import {BASE_URL} from '../constants'
 import Axios from 'axios';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const styles = makeStyles(theme => ({
     root: {
@@ -168,7 +169,9 @@ export const HamalVolunteersPage = (props) => {
     const [volunteersMap, setVolunteersMap] = useState('');
     const [volunteers, setVolunteers] = useState('');
     const [selectedVolunteer,setSelectedVolunteer] = useState(undefined)
-    const [page,setPage] = useState(0)
+    const [pageCount, setPageCount] = useState(0);
+    const [pagesUI, setPagesUI] = useState('');
+    const [page,setPage] = useState(0);
 
     const calculateAge = (birthday) => { // birthday is a date
         var ageDifMs = Date.now() - birthday.getTime();
@@ -177,9 +180,9 @@ export const HamalVolunteersPage = (props) => {
     }
 
     useEffect(() => {
-        Axios.get(BASE_URL+'/api/volunteer/approved/' + page).then(result => {
+        Promise.all([Axios.get(BASE_URL+'/api/volunteer/approved/' + page), Axios.get(BASE_URL+'/api/volunteer/count')]).then(result => {
             if(volunteers) return;
-            var vols = result.data.map(item => <div className={classes.tableRow} onClick={() => setSelectedVolunteer(item)}>
+            var vols = result[0].data.map(item => <div className={classes.tableRow} onClick={() => setSelectedVolunteer(item)}>
                 <div className={classes.imageCell} >
                 <img className={classes.userImage} src={item.picture ? item.picture : window.location.origin + "/images/profilePlaceholder.png"}></img>
                     <div className={classes.userFullName}>
@@ -194,7 +197,20 @@ export const HamalVolunteersPage = (props) => {
             </div>);
 
             setVolunteersMap(vols)
-        })
+
+            var numberOfPages = result[1].data.count / 30;
+            var pagesui = [];
+
+            for(var i; i<numberOfPages;i++) {
+                pagesui.push((<Page>{i++}</Page>))
+            }
+
+            setPagesUI((<Pages>
+                <ChevronLeftIcon></ChevronLeftIcon>
+                    {pagesui}
+                <ChevronRightIcon></ChevronRightIcon>
+            </Pages>));
+        });
     }, [volunteers]);
 
     return (
@@ -351,3 +367,15 @@ const ModalContentCon = styled.div`
         100% { -webkit-transform: translateX(-100%); }
     }
 `;
+
+const Pages = styled.div`
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+`
+
+const Page = styled.div`
+    display:flex;
+    align-items:center;
+    justify-content:center;
+`

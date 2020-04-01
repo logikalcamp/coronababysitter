@@ -31,7 +31,7 @@ class DoctorService {
    * returns List
    **/
   getAllDoctors() {
-    return MongoDB.findMany(COLLECTION_NAME, {filter:{}}, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient);
   }
 
   /**
@@ -90,7 +90,8 @@ class DoctorService {
   loginEmailDoctor(body) {
     return new Promise((resolve, reject) => {
       MongoDB.findOne(COLLECTION_NAME, { email: body.email }, this.MongoClient).then((result) => {
-        if (result == null) reject("Doctor not found.");
+        if (result == null) reject("Doctor not found");
+        else if(!result.isApproved) reject ("Doctor was not approved yet");
         else {
           var emailService = new EmailService();
           var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.

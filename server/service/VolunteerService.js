@@ -35,7 +35,7 @@ class VolunteerService {
   getAllVolunteers(page) {
     var{from, to} = getPagingDbData(page, "volunteers");
 
-    return MongoDB.findMany(COLLECTION_NAME,{filter:{}, from: from, to: to}, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME,{}, this.MongoClient,from.to);
   }
 
   /**
@@ -46,7 +46,7 @@ class VolunteerService {
   getApprovedVolunteers(page) {
     var{from, to} = getPagingDbData(page, "volunteers");
 
-    return MongoDB.findMany(COLLECTION_NAME,{filter:{isApproved: true}, from: from, to: to}, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME,{isApproved: true}, this.MongoClient,from,to);
   }
 
   /**
