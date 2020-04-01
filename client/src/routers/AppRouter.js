@@ -17,6 +17,7 @@ import Policy from '../components/Policy'
 import Login from '../components/Login'
 import HamalHome from '../components/HamalHome';
 import MessageBar from '../utils/MessageBar'
+import {HamalNewRequests} from '../components/hamal/HamalNewRequests'
 import Logout from '../components/Logout'
 import ManageSessions from '../components/hamal/ManageSessions'
 import ManageUsers from '../components/hamal/ManageUsers'
@@ -44,6 +45,7 @@ const AppRouter = () =>(
         <PrivateRoute exact path='/find-session' component={FindSession} />
         
         
+        <Route exact path="/hamal/newrequests" component={HamalNewRequests}/>
         <Route exact path="/hamal/volunteers" component={HamalVolunteersPage}/>
         <Route exact path="/hamal/doctors" component={HamalDoctorsPage}/>
         <Route exact path="/hamal" component={HamalHome}/>

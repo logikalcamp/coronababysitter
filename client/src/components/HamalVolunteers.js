@@ -77,17 +77,6 @@ const styles = makeStyles(theme => ({
         borderRadius:'8px',
         margin:'5px 0px 5px 0px'
     },
-    tableBody: {
-        height: '650px',
-        overflow: 'hidden',
-    },
-    tableContent: {
-        height:'100%',
-        width:'100%',
-        overflow: 'auto',
-        WebkitScrollBar: 'none'
-
-    },
     userImage: {
         width: '45px',
         borderRadius: '50%',
@@ -160,6 +149,9 @@ const styles = makeStyles(theme => ({
     notes: {
         flex: 5,
         marginTop: '10px'
+    },
+    selectedPage: {
+        fontWeight: 'bold'
     }
   }));
 
@@ -179,36 +171,50 @@ export const HamalVolunteersPage = (props) => {
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
 
+    const updateVolunteers = (newPage) => {
+        if(newPage == page) return;
+
+        setPage(newPage);
+        Axios.get(BASE_URL+'/api/volunteer/approved/' + newPage).then((result) => {
+            createVolunteerUI(result.data);
+        });
+    }
+
+    const createVolunteerUI = (volunteersList) => {
+        var vols = volunteersList.map(item => <div className={classes.tableRow} onClick={() => setSelectedVolunteer(item)}>
+            <div className={classes.imageCell} >
+            <img className={classes.userImage} src={item.picture ? item.picture : window.location.origin + "/images/profilePlaceholder.png"}></img>
+                <div className={classes.userFullName}>
+                    {item.firstName + ' ' + item.lastName}
+                </div>
+            </div>
+            <div className={classes.rowCell}>{item.address}</div>
+            <div className={classes.rowCell}>{item.email}</div>
+            <div className={classes.rowCell}>{item.phone}</div>
+            <div className={classes.rowCell}>{item.institute}</div>
+            <div className={classes.rowCell}></div>
+        </div>);
+
+        setVolunteersMap(vols)
+    }
+
     useEffect(() => {
         Promise.all([Axios.get(BASE_URL+'/api/volunteer/approved/' + page), Axios.get(BASE_URL+'/api/volunteer/count')]).then(result => {
             if(volunteers) return;
-            var vols = result[0].data.map(item => <div className={classes.tableRow} onClick={() => setSelectedVolunteer(item)}>
-                <div className={classes.imageCell} >
-                <img className={classes.userImage} src={item.picture ? item.picture : window.location.origin + "/images/profilePlaceholder.png"}></img>
-                    <div className={classes.userFullName}>
-                        {item.firstName + ' ' + item.lastName}
-                    </div>
-                </div>
-                <div className={classes.rowCell}>{item.address}</div>
-                <div className={classes.rowCell}>{item.email}</div>
-                <div className={classes.rowCell}>{item.phone}</div>
-                <div className={classes.rowCell}>{item.institute}</div>
-                <div className={classes.rowCell}></div>
-            </div>);
+            
+            createVolunteerUI(result[0].data);
 
-            setVolunteersMap(vols)
-
-            var numberOfPages = result[1].data.count / 30;
+            setPageCount(result[1].data.count / 30);
             var pagesui = [];
 
-            for(var i; i<numberOfPages;i++) {
-                pagesui.push((<Page>{i++}</Page>))
+            for(var i=0; i < pageCount + 1; i++) {
+                pagesui.unshift((<Page className={page == i ? classes.selectedPage : ''} onClick={() => updateVolunteers(i)}>{i+1}</Page>))
             }
 
             setPagesUI((<Pages>
-                <ChevronLeftIcon></ChevronLeftIcon>
+                <ChevronRightIcon onClick={() => updateVolunteers(Math.max(0, page - 1))}></ChevronRightIcon>
                     {pagesui}
-                <ChevronRightIcon></ChevronRightIcon>
+                <ChevronLeftIcon onClick={() => updateVolunteers(Math.min(pageCount, page + 1))}></ChevronLeftIcon>
             </Pages>));
         });
     }, [volunteers]);
@@ -240,11 +246,12 @@ export const HamalVolunteersPage = (props) => {
                     <div className={classes.titleCell}>מוסד לימודים</div>
                     <div className={classes.titleCell}></div>
                 </div>
-                <div className={classes.tableBody}>
-                    <div className={classes.tableContent}>
+                <TableBody>
+                    <TableContent>
                         {volunteersMap}
-                    </div>
-                </div>
+                    </TableContent>
+                    {pagesUI}
+                </TableBody>
             </div>
             <ModalCon open={selectedVolunteer} onClick={() => setSelectedVolunteer(undefined)} />
             <ModalContentCon open={selectedVolunteer}>
@@ -321,6 +328,35 @@ export const HamalVolunteersPage = (props) => {
     )
 }
 
+const TableBody = styled.div`
+    height: 650px;
+    overflow: hidden;   
+`
+
+const TableContent = styled.div`
+    height:95%;
+    width:100%;
+    overflow-y: scroll;
+    
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: #00C2CB;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+`
+
 const ModalCon = styled.div`
     position: fixed;
     z-index: 1;
@@ -371,11 +407,13 @@ const ModalContentCon = styled.div`
 const Pages = styled.div`
     display:flex;
     align-items:center;
-    justify-content:space-between;
+    justify-content:center;
 `
 
 const Page = styled.div`
     display:flex;
     align-items:center;
     justify-content:center;
+    margin:0px 10px 0px 10px;
+    cursor:pointer;
 `
