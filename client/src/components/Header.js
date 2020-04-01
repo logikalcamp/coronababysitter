@@ -42,7 +42,7 @@ const Header = (props) => {
                     }
                 </div >
                 <HeaderSubCon >
-                    {props.auth.isAuthenticated && <label>{props.auth.user.firstName+" "+props.auth.user.lastName} | </label>}
+                    {props.auth.isAuthenticated && (window.innerWidth >800) && <label>{props.auth.user.firstName+" "+props.auth.user.lastName} | </label>}
                   <Link to={props.auth.isAuthenticated ? "/logout":"/login"}>
                     <label >{props.auth.isAuthenticated ? " התנתקות ":" התחברות "}</label>
                   </Link>
@@ -65,7 +65,6 @@ const Tabs = styled.div`
     margin-right:2rem;
     @media(max-width:500px){
         margin:0;
-        display:none;
     }
 `
 
@@ -131,6 +130,11 @@ const HeaderSubCon = styled.div`
         #lb{
             display:none;
         }
+        a{
+            label{
+                font-size:16px;
+            }
+        }
     }
     img{
         width:2.5rem;
@@ -165,6 +169,6 @@ const SubCon = styled.div`
     justify-content:space-between;
     padding:0 1rem;
     @media(max-width:450px){
-        padding:.5rem 1rem;
+        padding:0 1rem;
     }
 `

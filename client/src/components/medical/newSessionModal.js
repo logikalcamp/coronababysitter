@@ -62,6 +62,9 @@ const Modal = styled.div`
     }
     
     @media(max-width:800px){
+        div{
+            width:80%;
+        }
         width:350px;
         margin-left:-175px;
         h2{
@@ -221,14 +224,14 @@ const NewSession = ({setOpen,id}) =>{
                             }
                         }}/>
                     </div>
-                    <div>
+                    {/* <div>
                         <label>איש קשר</label>
                         <input value={details.contactName} onChange={(e)=>{
                             let d = {...details}
                             d.contactName = e.target.value
                             setState(d)
                         }} />
-                    </div>
+                    </div> */}
                     <div>
                         <label>טלפון איש קשר</label>
                         <input value={details.contact} onChange={(e)=>{
@@ -268,7 +271,7 @@ const NewSession = ({setOpen,id}) =>{
                                 endTime:new Date(moment(eDate,"MM/DD/YYYY HH:mm").format()),
                                 tasks:[],
                                 didHappen:false,
-                                contact:''
+                                contact:details.contact
                             }
                             console.log(data)
                             axios.post(BASE_URL+"/api/session",data)
