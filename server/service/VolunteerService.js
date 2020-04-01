@@ -84,6 +84,7 @@ class VolunteerService {
         if(result) 
           reject("Volunteer already exists");
         else {
+          body.isApproved = false;
           MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
       });
