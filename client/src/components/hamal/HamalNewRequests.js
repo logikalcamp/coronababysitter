@@ -17,142 +17,8 @@ export const HamalNewRequests = (props) => {
     const classes = styles();
     const [urgentOpen, setUrgentOpen] = useState(true);
     const [otherOpen, setOtherOpen] = useState(false);
-    const [urgentRequests, setUrgentRequests] = useState([
-        {
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        }
-    ])
-    const [otherRequests, setOtherRequests] = useState([
-        {
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        },{
-            startTime: new Date(),
-            fullName: 'אסף בנימינוב',
-            phone: '0525516232',
-            requestsCount: 10
-        }
-    ])
+    const [urgentRequests, setUrgentRequests] = useState([])
+    const [otherRequests, setOtherRequests] = useState([])
 
     const [columnDefs] = useState([
         { 
@@ -172,6 +38,47 @@ export const HamalNewRequests = (props) => {
             field: "requestsCount"
         }
       ]);
+
+      const isIn24Hours = (date) => {
+        var timeStamp = Math.round(new Date().getTime() / 1000);
+        var timeStampYesterday = timeStamp + (24 * 3600);
+        var is24 = date >= new Date(timeStampYesterday*1000).getTime();
+        return is24;
+      }
+
+      const getGridObjectFromSession = (session)  => {
+        var gridObject = {
+            startTime: session.startTime,
+            fullName: session.firstName + ' ' + session.lastName,
+            phone: session.phone,
+            requestsCount: session.requests.count,
+            fullSession: session
+        }
+
+        return gridObject;
+      }
+
+      useEffect(() => {
+        if(urgentRequests.length > 0 || otherRequests.length > 0)
+        Axios.get(BASE_API + "/api/session/getUpcomingNotYetApprovedSessions").then((result) => {
+            var urgentRequestsNew = [];
+            var otherRequestsNew = [];
+
+            for(var i =0; i<result.data.length; i++) {
+                var gridObject = getGridObjectFromSession(result.data[i]);
+
+                if(isIn24Hours(resulsts.data[i].startDate)) {
+                    urgentRequestsNew.push(gridObject);
+                }
+                else {
+                    otherRequestsNew.push(gridObject);
+                }
+            }
+
+            setUrgentOpen(urgentRequestsNew);
+            setOtherOpen(otherRequestsNew);
+        })
+      }, [urgentRequests, otherRequests])
 
       const toggleCollapseables = () => {
             setUrgentOpen(!urgentOpen);

@@ -545,7 +545,7 @@ paths:
         "404":
           description: No sessions found
       x-swagger-router-controller: Session
-  /session/getNotYetApprovedSessions:
+  /session/getUpcomingNotYetApprovedSessions:
     get:
       tags:
       - sessions
