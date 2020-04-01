@@ -4,7 +4,7 @@ import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from "./types";
 
 export const loginUser = userData => dispatch => {
     console.log("login",userData)
-    // localStorage.setItem("users",JSON.stringify(userData))
+    localStorage.setItem("users",JSON.stringify(userData))
     // localStorage.setItem("jwtToken", token);
     dispatch(setCurrentUser(userData))
 }
@@ -20,3 +20,4 @@ export const setCurrentUser = (decoded) => {
   export const logout = () =>({
     type:"LOGOUT"
   })
+

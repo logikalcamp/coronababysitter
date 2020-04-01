@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import {Link,NavLink} from 'react-router-dom'
 import {Redirect} from 'react-router-dom'
+import {connect} from 'react-redux'
 
-export const Header = (props) => {
+const Header = (props) => {
     const [auth,setAuth] = useState(false)
     const [redirect,setRedirect] = useState(false)
     const [hasModal,setHasModal] = useState(false)
     const type ="medical"
-
+    console.log(props)
     return(
         <HeaderCon>
             <SubCon>
@@ -19,32 +20,46 @@ export const Header = (props) => {
                             <label id="lb">Sitter Seeker</label>
                         </HeaderSubCon>
                     </Link>
-                    <Tabs >
-                        {
-                            type=="medical" ? 
-                            <React.Fragment>
-                                <NavLink to="/medicalhome" className="NavTab" activeClassName="NavTabActive">אירועים מתואמים</NavLink>
-                                <NavLink to="/optionalvolunteers" className="NavTab" activeClassName="NavTabActive">בקשות תיאום</NavLink> 
-                            </React.Fragment>
-                            :
-                            <React.Fragment>
-                                <NavLink to="/volunteer-homepage" className="NavTab" activeClassName="NavTabActive">ההתנדבויות שלי</NavLink>
-                                <NavLink to="/find-session" className="NavTab" activeClassName="NavTabActive">בקשות לעזרה</NavLink>
-                            </React.Fragment>
-                        }
-                    </Tabs>
+                    {
+                        props.auth.isAuthenticated && 
+                        <Tabs >
+                            {
+                                props.auth.user.type == "medical" &&
+                                <React.Fragment>
+                                    <NavLink to="/medicalhome" className="NavTab" activeClassName="NavTabActive">אירועים מתואמים</NavLink>
+                                    <NavLink to="/optionalvolunteers" className="NavTab" activeClassName="NavTabActive">בקשות תיאום</NavLink> 
+                                </React.Fragment>
+                            }
+                            {
+                                type=="volunteer" && 
+                                <React.Fragment>
+                                    <NavLink to="/volunteer-homepage" className="NavTab" activeClassName="NavTabActive">ההתנדבויות שלי</NavLink>
+                                    <NavLink to="/find-session" className="NavTab" activeClassName="NavTabActive">בקשות לעזרה</NavLink>
+                                </React.Fragment>
+                            }
+                        </Tabs>
+
+                    }
                 </div >
                 <HeaderSubCon >
-                    {auth && <label>שם משתמש |</label>}
-                  <Link to={auth ? "/logout":"/login"}>
-                    <button >{auth ? "התנתקות":"התחברות"}</button>
+                    {props.auth.isAuthenticated && <label>{props.auth.user.firstName+" "+props.auth.user.lastName} | </label>}
+                  <Link to={props.auth.isAuthenticated ? "/logout":"/login"}>
+                    <label >{props.auth.isAuthenticated ? " התנתקות ":" התחברות "}</label>
                   </Link>
                 </HeaderSubCon>
             </SubCon>
-            {redirect && <Redirect to={auth ? "/logout":"/login"}/>}
         </HeaderCon>
     )
 }
+
+
+const ToProps = (state,props) => {
+    return {
+        auth: state.auth
+    }
+}
+export default connect(ToProps)(Header);
+
 const Tabs = styled.div`
     display:flex;
     margin-right:2rem;
@@ -134,6 +149,12 @@ const HeaderSubCon = styled.div`
         font-size:18px;
         outline:none;
         cursor:pointer;
+    }
+    a{
+        cursor:pointer;
+        label{
+            margin-right:.5rem;
+        }
     }
 `
 

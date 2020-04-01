@@ -261,10 +261,6 @@ const NewSession = ({setOpen,id}) =>{
                             let eDate = moment(details.sDate).format("MM/DD/YYYY") + moment(details.eHour).format("HH:mm")
                             let data = {
                                 startTime:new Date(moment(sDate,"MM/DD/YYYY HH:mm").format()),
-                                sHour:'',
-                                sDate:'',
-                                eHour:'',
-                                eDate:'',
                                 requests:[],
                                 doctor_id:id,
                                 "timeRequested": new Date(),

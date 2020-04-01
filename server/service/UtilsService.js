@@ -11,6 +11,7 @@ class UtilsService {
   };
 
   getFacebookPicture(body) {
+    console.log(body)
     return new Promise((resolve, reject) => {
       try {
         request(body.facebookURL, { headers: {'user-agent': 'curl/7.47.0', 'accept-language': 'en-US,en', 'accept': '/' } }, ((error, response, body) => {
