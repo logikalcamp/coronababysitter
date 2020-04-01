@@ -10,12 +10,11 @@ import PinDropIcon from '@material-ui/icons/PinDrop';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import PhoneIcon from '@material-ui/icons/Phone';
 import SchoolIcon from '@material-ui/icons/School';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import MailIcon from '@material-ui/icons/Mail';
-import FacebookIcon from '@material-ui/icons/Facebook';
 import {BASE_URL} from '../constants'
 import Axios from 'axios';
 import ChildCareIcon from '@material-ui/icons/ChildCare';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const styles = makeStyles(theme => ({
     root: {
@@ -170,6 +169,8 @@ export const HamalDoctorsPage = (props) => {
     const [doctors, setDoctors] = useState('');
     const [selectedDoctor,setSelectedDoctor] = useState(undefined)
     const [page,setPage] = useState(0)
+    const [pageCount, setPageCount] = useState(0);
+    const [pagesUI, setPagesUI] = useState('');
 
     const calculateAge = (birthday) => { // birthday is a date
         var ageDifMs = Date.now() - birthday.getTime();
@@ -177,24 +178,50 @@ export const HamalDoctorsPage = (props) => {
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
 
-    useEffect(() => {
-        Axios.get(BASE_URL+'/api/doctor/approved/' + page).then(result => {
-            if(doctors) return;
-            var vols = result.data.map(item => <div className={classes.tableRow} onClick={() => setSelectedDoctor(item)}>
-                <div className={classes.imageCell} >
-                    <img className={classes.userImage} src={item.picture ? item.picture : window.location.origin + "/images/profilePlaceholder.png"}></img>
-                    <div className={classes.userFullName}>
-                        {item.firstName + ' ' + item.lastName}
-                    </div>
-                </div>
-                <div className={classes.rowCell}>{item.address}</div>
-                <div className={classes.rowCell}>{item.email}</div>
-                <div className={classes.rowCell}>{item.phone}</div>
-                <div className={classes.rowCell}>{item.institute}</div>
-                <div className={classes.rowCell}></div>
-            </div>);
+    const updateVolunteers = (newPage) => {
+        if(newPage == page) return;
 
-            setDoctorMap(vols)
+        setPage(newPage);
+        Axios.get(BASE_URL+'/api/doctor/approved/' + newPage).then((result) => {
+            createDoctorsUI(result.data);
+        });
+    }
+
+    const createDoctorsUI = (doctorList) => {
+        var vols = doctorList.map(item => <div className={classes.tableRow} onClick={() => setSelectedDoctor(item)}>
+            <div className={classes.imageCell} >
+                <img className={classes.userImage} src={item.picture ? item.picture : window.location.origin + "/images/profilePlaceholder.png"}></img>
+                <div className={classes.userFullName}>
+                    {item.firstName + ' ' + item.lastName}
+                </div>
+            </div>
+            <div className={classes.rowCell}>{item.address}</div>
+            <div className={classes.rowCell}>{item.email}</div>
+            <div className={classes.rowCell}>{item.phone}</div>
+            <div className={classes.rowCell}>{item.institute}</div>
+            <div className={classes.rowCell}></div>
+        </div>);
+
+        setDoctorMap(vols)
+    }
+
+    useEffect(() => {
+        Promise.all([Axios.get(BASE_URL+'/api/doctor/approved/' + page), Axios.get(BASE_URL+'/api/doctor/count')]).then(result => {
+            if(doctors) return;
+            createDoctorsUI(result[0].data);
+
+            setPageCount(result[1].data.count / 30);
+            var pagesui = [];
+
+            for(var i=0; i < pageCount + 1; i++) {
+                pagesui.unshift((<Page className={page == i ? classes.selectedPage : ''} onClick={() => updateVolunteers(i)}>{i+1}</Page>))
+            }
+
+            setPagesUI((<Pages>
+                <ChevronRightIcon onClick={() => updateVolunteers(Math.max(0, page - 1))}></ChevronRightIcon>
+                    {pagesui}
+                <ChevronLeftIcon onClick={() => updateVolunteers(Math.min(pageCount, page + 1))}></ChevronLeftIcon>
+            </Pages>));
         })
     }, [doctors]);
 
@@ -202,7 +229,7 @@ export const HamalDoctorsPage = (props) => {
         <div className={classes.root}>
             <div className={classes.titleFilter}>
                 <div className={classes.title}>
-                    מאגר המתנדבים
+                    מאגר רופאים
                 </div>
                 <div className={classes.margin}>
                     <TextField id="search-text" label="חפש רופא במאגר"
@@ -225,11 +252,12 @@ export const HamalDoctorsPage = (props) => {
                     <div className={classes.titleCell}>מוסד</div>
                     <div className={classes.titleCell}></div>
                 </div>
-                <div className={classes.tableBody}>
-                    <div className={classes.tableContent}>
+                <TableBody>
+                    <TableContent>
                         {doctorMap}
-                    </div>
-                </div>
+                    </TableContent>
+                    {pagesUI}
+                </TableBody>
             </div>
             <ModalCon open={selectedDoctor} onClick={() => setSelectedDoctor(undefined)} />
             <ModalContentCon open={selectedDoctor}>
@@ -302,6 +330,35 @@ export const HamalDoctorsPage = (props) => {
     )
 }
 
+const TableBody = styled.div`
+    height: 650px;
+    overflow: hidden;   
+`
+
+const TableContent = styled.div`
+    height:95%;
+    width:100%;
+    overflow-y: scroll;
+    
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: #00C2CB;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+`
+
 const ModalCon = styled.div`
     position: fixed;
     z-index: 1;
@@ -348,3 +405,17 @@ const ModalContentCon = styled.div`
         100% { -webkit-transform: translateX(-100%); }
     }
 `;
+
+const Pages = styled.div`
+    display:flex;
+    align-items:center;
+    justify-content:center;
+`
+
+const Page = styled.div`
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0px 10px 0px 10px;
+    cursor:pointer;
+`
