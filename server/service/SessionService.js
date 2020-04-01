@@ -10,7 +10,7 @@ var getLookUp = (tableFrom, local, foreign, as) => {
     }});
 }
 var lookUpForSessions = (arr) => {
-  arr.push(getLookUp("Doctors_temp", "doctor", "_id", "doctor_o"));
+  arr.push(getLookUp("Doctors", "doctor_id", "_id", "doctor_o"));
   arr.push(getLookUp("Volunteers", "requests", "_id", "volunteers_array_o"));
   arr.push(getLookUp("Volunteers", "filledBy", "_id", "chosen_volunteer_o"));
 
@@ -19,7 +19,7 @@ var lookUpForSessions = (arr) => {
 var {Roles} = require("../utils/enums");
 const MongoDB = require("../database/DataBase");
 const Location = require("../utils/location");
-var COLLECTION_NAME = "Sessions_temp";
+var COLLECTION_NAME = "Sessions";
 
 class SessionService {
   
@@ -36,7 +36,7 @@ class SessionService {
   async createSession(body) {
     return new Promise((resolve, reject) => {
       // Check if a session with the same start time already exists for this doctor
-      MongoDB.findOne(COLLECTION_NAME, {"doctor._id" : MongoDB.getMongoObjectId(body.doctor._id),
+      MongoDB.findOne(COLLECTION_NAME, {"doctor._id" : MongoDB.getMongoObjectId(body.doctor_id),
                                              startTime: body.startTime}, this.MongoClient).then((result) => {
         if(result) 
           reject("Session already exists");
@@ -65,7 +65,7 @@ class SessionService {
         
         filter = {
           $match:{
-            "doctor" : MongoDB.getMongoObjectId(userId)
+            "doctor_id" : MongoDB.getMongoObjectId(userId)
           }};
           aggregate.push(filter);
 
@@ -176,8 +176,13 @@ class SessionService {
   }
 
   getDoctorSessions(body, doctorId) {
-    var isFilled = (body.isFilled) ? { $ne: null } : null; // If user wants the filled sessions, get all not empty objects.
-    return MongoDB.findMany(COLLECTION_NAME, { "doctor_id": doctorId, "filledBy": isFilled }, this.MongoClient);
+    var isFilled = (body.isFilled) ? { "$ne": null } : null; // If user wants the filled sessions, get all not empty objects.
+    var filter = {$match:
+          {$and :[{"doctor_id": MongoDB.getMongoObjectId(doctorId)}, {"filledBy": isFilled }]}};
+    var aggregate = [];
+    lookUpForSessions(aggregate);
+    aggregate.push(filter);
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate: aggregate}, this.MongoClient);
   }
 }
 
