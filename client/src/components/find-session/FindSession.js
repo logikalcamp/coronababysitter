@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker,
-} from 'react-google-maps';
+import Axios from 'axios';
+import moment from 'moment';
 
-import GridComp from './Grid';
+import GridComp from '../Grid';
+import {Map} from './Map';
+import {BASE_URL} from '../../constants'
 
 //#region Styles
 const FindSessionComp = styled.div`
@@ -35,6 +33,8 @@ const MapWrapper = styled.div`
 
   flex-basis: ${props => props.isExpanded ? "33.3%" : "66.7%" };
   transition: flex-basis 500ms ease-in-out;
+
+  position: relative;
 `;
 const GridWrapper = styled.div`
   background: #fff;
@@ -94,11 +94,14 @@ const GridExpanderComp = styled.div`
 //#endregion
 
 const FindSessionsGrid = (props) => {
-  const [availableSessions, setAvailableSessions] = useState([]);
   const [columnDefs] = useState([
     { 
       headerName: "תאריך",
-      field: "date"
+      field: "date",
+      valueFormatter: (params) => {
+        const startTime = moment(params.value);
+        return startTime.format("DD-MM-YY");
+      }
     },
     { 
       headerName: "איש קשר",
@@ -106,40 +109,46 @@ const FindSessionsGrid = (props) => {
     },
     {
       headerName: "שעות ההתנדבות",
-      field: "sessionHours"
+      field: "sessionHours",
+      valueGetter: (params) => {
+        let {startTime, endTime} = params.data;
+
+        startTime = moment(startTime);
+        endTime = moment(endTime);
+
+        return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
+      }
     }
   ]);
-
-  useEffect(() => {}, []);
 
   return (
     <GridComp 
       columnDefs={columnDefs}
-      rowData={availableSessions}
+      rowData={props.availableSessions}
+      onRowClicked={props.handleRowClicked}
     />
   )
 };
 
-const Map = withScriptjs(withGoogleMap(props =>
-  <GoogleMap
-    streetView = {false}
-    defaultZoom={11}
-    center={{ lat: 32.344084 , lng: 34.870139 }}
-  >
-    <Marker
-      position={{ lat: 32.344084 , lng: 34.870139 }}
-    />
-    <Marker
-      position={{ lat: 32.334084 , lng: 34.860139 }}
-    />
-  </GoogleMap>
-));
-
 export const FindSession = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [availableSessions, setAvailableSessions] = useState([]);
+  const [mapCenter, setMapCenter] = useState({lat: 32.344084 , lng: 34.870139});
+
+  useEffect(() => {
+    Axios.get(BASE_URL+'/api/session/getavailablesessions/5e7ca72c343daa68c8d7277f').then(result => {
+      setAvailableSessions(result.data);
+    })
+  }, []);
 
   const toggleIsExpanded = () => {
     setIsExpanded(!isExpanded);
+  }
+
+  const handleRowClicked = (event) => {
+    const {lat, lon} = event.data.doctor_o[0];
+
+    setMapCenter({lat: lat, lng: lon});
   }
 
   return (
@@ -151,17 +160,19 @@ export const FindSession = (props) => {
               <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
               ההתנדבויות הבאות שלי
             </GridHeaderComp>
-            <FindSessionsGrid />
+            <FindSessionsGrid 
+              availableSessions={availableSessions}
+              handleRowClicked={handleRowClicked}
+            />
             <GridExpanderComp  onClick={toggleIsExpanded}>{isExpanded ? "-" : "+"}</GridExpanderComp>
           </GridWrapper>
         </TableWrapper>
         <MapWrapper isExpanded={isExpanded}>
-          <Map    
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWjEJbDvBvWtKFaV6Nf_1HCPZnJTmWHDQ&v=3.exp&libraries=geometry,drawing,places&language=iw"
-            loadingElement={<div style={{ height: `100%` }} />}
-            containerElement={<div style={{ height: `100%` }} />}
-            mapElement={<div style={{ height: `100%`, borderRadius: `8px` }} />}
-          />  
+          <Map 
+            ownLocation={{lat: 32.344084 , lng: 34.870139}}
+            mapCenter={mapCenter}
+            availableSessions={availableSessions}
+          />
         </MapWrapper>
       </Wrapper>
     </FindSessionComp>

@@ -33,9 +33,7 @@ export default class GridComp extends Component {
       <div className="grid-wrapper">
         <div className="ag-theme-balham" style={{height: '100%', width: '100%'}}>
           <AgGridReact 
-            columnDefs={this.props.columnDefs}
-            rowData={this.props.rowData}
-            frameworkComponents={this.props.frameworkComponents}
+            {...this.props}
 
             enableRtl={true}
             rowHeight={50}
