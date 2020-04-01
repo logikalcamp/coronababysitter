@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import {BASE_URL} from '../constants'
+import {connect} from 'react-redux'
+import {loginUser} from '../actions/auth'
 
 const styles = makeStyles(theme => ({
     title1: {
@@ -24,7 +26,7 @@ const styles = makeStyles(theme => ({
     }
 }));
 
-const Login = () => {
+const Login = (props) => {
     const classes = styles();
     const history = useHistory();
 
@@ -71,8 +73,19 @@ const Login = () => {
             var response = await axios.post(BASE_URL + `/api/utils/login-user`, {email,code});
 
             if(response.data.valid) {
+                let data = {
+                    userid:'5e80e88ff5ca035f4838f1bc',
+                    isApproved:true,
+                    firstName:'אבירם',
+                    lastName:'רויזמן',
+                    email:'aviram7168@gmail.com',
+                    type:'medical'
+                }
                 if(isDoctorLogin) {
-                    history.push("/doctor-homepage");
+                    console.log("loged in")
+                
+                    props.dispatch(loginUser(data))
+                    // history.push("/medicalhome");
                 }
                 else {
                     history.push("/volunteer-homepage");
@@ -200,7 +213,12 @@ const Login = () => {
     )
 }
 
-export default Login;
+const ToProps = (state,props) => {
+    return {
+        auth: state.auth
+    }
+}
+export default connect(ToProps)(Login);
 
 // const Container = styled.div`
 //     width: 100%;

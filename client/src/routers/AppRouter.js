@@ -31,7 +31,7 @@ const AppRouter = () =>(
         <Route exact path="/Registration/:type" component={Signup}/>
         
         
-        <Route exact path="/medical" component={MedicalDashboard}/>
+        <Route exact path="/medicalhome" component={MedicalDashboard}/>
         <Route exact path="/optionalvolunteers" component={OptionalVolunteers}/>
         {/* <Route exact path="/optionalvolunteers" component={CreateSession}/> */}
 

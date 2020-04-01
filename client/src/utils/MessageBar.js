@@ -28,12 +28,14 @@ const MessageBar = ({message}) => {
             show ? 
             <MessageCon>
                 <div>
-                    <MdCancel style={{color:"#828282"}} onClick={()=>{setShow(false)}}/>
+                    <MdCancel style={{color:"#828282"}} onClick={()=>{
+                        localStorage.setItem('pwa',false)
+                        setShow(false)}}/>
                 </div>
-                <div style={{padding:"0 2rem"}}>   
-                    <h4>{message[0]}</h4>
-                    <div>{message[1]}</div>
-                    <div>{message[2]}</div>
+                <div style={{padding:"0 1rem"}}>   
+                    <h4>{message[0]} :</h4>
+                    <div style={{fontSize:"14px"}}>{message[1]}</div>
+                    <div style={{fontSize:"14px"}}>{message[2]}</div>
                 </div>
             </MessageCon>
             :
