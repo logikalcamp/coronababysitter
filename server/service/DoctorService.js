@@ -31,7 +31,7 @@ class DoctorService {
    * returns List
    **/
   getAllDoctors() {
-    return MongoDB.findMany(COLLECTION_NAME, {filter:{}}, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME, {}, this.MongoClient);
   }
 
   /**

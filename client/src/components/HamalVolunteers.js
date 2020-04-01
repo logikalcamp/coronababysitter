@@ -15,7 +15,6 @@ import MailIcon from '@material-ui/icons/Mail';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import {BASE_URL} from '../constants'
 import Axios from 'axios';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const styles = makeStyles(theme => ({
@@ -199,7 +198,7 @@ export const HamalVolunteersPage = (props) => {
 
             setVolunteersMap(vols)
 
-            var numberOfPages = results[1].data.count / 30;
+            var numberOfPages = result[1].data.count / 30;
             var pagesui = [];
 
             for(var i; i<numberOfPages;i++) {
@@ -210,7 +209,7 @@ export const HamalVolunteersPage = (props) => {
                 <ChevronLeftIcon></ChevronLeftIcon>
                     {pagesui}
                 <ChevronRightIcon></ChevronRightIcon>
-            </Pages>))
+            </Pages>));
         });
     }, [volunteers]);
 
