@@ -1,22 +1,39 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import {Link} from 'react-router-dom'
+import {Link,NavLink} from 'react-router-dom'
 import {Redirect} from 'react-router-dom'
 
 export const Header = (props) => {
     const [auth,setAuth] = useState(false)
     const [redirect,setRedirect] = useState(false)
     const [hasModal,setHasModal] = useState(false)
+    const type ="medical"
 
     return(
         <HeaderCon>
             <SubCon>
-                <Link to="/">
-                    <HeaderSubCon>
-                        <img src={window.location.origin + "/images/newL.png"} alt="nel" />
-                        <label id="lb">Sitter Seeker</label>
-                    </HeaderSubCon>
-                </Link>
+                <div style={{display:"flex"}}>
+                    <Link to="/">
+                        <HeaderSubCon>
+                            <img src={window.location.origin + "/images/newL.png"} alt="nel" />
+                            <label id="lb">Sitter Seeker</label>
+                        </HeaderSubCon>
+                    </Link>
+                    <Tabs >
+                        {
+                            type=="medical" ? 
+                            <React.Fragment>
+                                <NavLink to="/medicalhome" className="NavTab" activeClassName="NavTabActive">אירועים מתואמים</NavLink>
+                                <NavLink to="/optionalvolunteers" className="NavTab" activeClassName="NavTabActive">בקשות תיאום</NavLink> 
+                            </React.Fragment>
+                            :
+                            <React.Fragment>
+                                <NavLink to="/volunteer-homepage" className="NavTab" activeClassName="NavTabActive">ההתנדבויות שלי</NavLink>
+                                <NavLink to="/find-session" className="NavTab" activeClassName="NavTabActive">בקשות לעזרה</NavLink>
+                            </React.Fragment>
+                        }
+                    </Tabs>
+                </div >
                 <HeaderSubCon >
                     {auth && <label>שם משתמש |</label>}
                   <Link to={auth ? "/logout":"/login"}>
@@ -28,6 +45,14 @@ export const Header = (props) => {
         </HeaderCon>
     )
 }
+const Tabs = styled.div`
+    display:flex;
+    margin-right:2rem;
+    @media(max-width:500px){
+        margin:0;
+        display:none;
+    }
+`
 
 const ModalCon = styled.div`
     position: fixed;
@@ -117,5 +142,8 @@ const SubCon = styled.div`
     margin:auto;
     display:flex;
     justify-content:space-between;
-    padding:.5rem 1rem;
+    padding:0 1rem;
+    @media(max-width:450px){
+        padding:.5rem 1rem;
+    }
 `
