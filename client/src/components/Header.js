@@ -19,9 +19,9 @@ export const Header = (props) => {
                 </Link>
                 <HeaderSubCon >
                     {auth && <label>שם משתמש |</label>}
-                    <button onClick={()=>{
-                        setRedirect(true)
-                    }}>{auth ? "התנתקות":"התחברות"}</button>
+                  <Link to={auth ? "/logout":"/login"}>
+                    <button >{auth ? "התנתקות":"התחברות"}</button>
+                  </Link>
                 </HeaderSubCon>
             </SubCon>
             {redirect && <Redirect to={auth ? "/logout":"/login"}/>}

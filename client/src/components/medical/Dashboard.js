@@ -132,6 +132,7 @@ const Button = styled.button`
 const MedicalDashboard = (props) => {
     const [openModal,setOpen] = useState(false)
     console.log(props)
+  
     const id = props.auth.user.userid
     return (
       <React.Fragment>
