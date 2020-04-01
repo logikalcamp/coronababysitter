@@ -10,7 +10,7 @@ var getLookUp = (tableFrom, local, foreign, as) => {
     }});
 }
 var lookUpForSessions = (arr) => {
-  arr.push(getLookUp("Doctors", "doctor_id", "_id", "doctor_o"));
+  arr.push(getLookUp("Doctors_temp", "doctor", "_id", "doctor_o"));
   arr.push(getLookUp("Volunteers", "requests", "_id", "volunteers_array_o"));
   arr.push(getLookUp("Volunteers", "filledBy", "_id", "chosen_volunteer_o"));
 
@@ -19,7 +19,7 @@ var lookUpForSessions = (arr) => {
 var {Roles} = require("../utils/enums");
 const MongoDB = require("../database/DataBase");
 const Location = require("../utils/location");
-var COLLECTION_NAME = "Sessions";
+var COLLECTION_NAME = "Sessions_temp";
 
 class SessionService {
   
@@ -36,7 +36,7 @@ class SessionService {
   async createSession(body) {
     return new Promise((resolve, reject) => {
       // Check if a session with the same start time already exists for this doctor
-      MongoDB.findOne(COLLECTION_NAME, {"doctor_id" : MongoDB.getMongoObjectId(body.doctor_id),
+      MongoDB.findOne(COLLECTION_NAME, {"doctor._id" : MongoDB.getMongoObjectId(body.doctor._id),
                                              startTime: body.startTime}, this.MongoClient).then((result) => {
         if(result) 
           reject("Session already exists");
@@ -65,9 +65,9 @@ class SessionService {
         
         filter = {
           $match:{
-            "doctor_id" : userId
+            "doctor" : MongoDB.getMongoObjectId(userId)
           }};
-        aggregate.push(filter);
+          aggregate.push(filter);
 
 
     }
@@ -76,8 +76,8 @@ class SessionService {
 
       filter = {$match:
         {$or: 
-         [{"filledBy" : userId}, 
-                     {"requests": {$elemMatch: { $eq : userId}}}]}};
+         [{"filledBy" : MongoDB.getMongoObjectId(userId)}, 
+                     {"requests": {$elemMatch: { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
       aggregate.push(filter);
       }
 
@@ -129,7 +129,7 @@ class SessionService {
     var aggregate = [];
     lookUpForSessions(aggregate);
     var filter = {$match: {
-      "filledBy": userId
+      "filledBy": MongoDB.getMongoObjectId(userId)
             }
     };
     aggregate.push(filter);
@@ -143,7 +143,7 @@ class SessionService {
    **/
   getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
     var filter = {$match : {$and: [{"filledBy" : null}, 
-    {"requests": {$elemMatch : { $eq : userId}}}]}};
+    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
     var aggregate = [];
 
     lookUpForSessions(aggregate);

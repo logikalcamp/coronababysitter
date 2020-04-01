@@ -28,31 +28,15 @@ export const UpcomingSessionsGrid = (props) => {
   const [columnDefs] = useState([
     { 
       headerName: "תאריך",
-      field: "date",
-      valueFormatter: (params) => {
-        const startTime = moment(params.data.startTime);
-        return startTime.format("DD-MM-YY");
-      }
+      field: "date"
     },
     { 
       headerName: "איש קשר",
-      field: "contact",
-      valueGetter: (params) => {
-        const {firstName, lastName} = params.data.doctor;
-        return firstName + ' ' + lastName;
-      }
+      field: "contact"
     },
     {
       headerName: "שעות ההתנדבות",
-      field: "sessionHours",
-      valueGetter: (params) => {
-        let {startTime, endTime} = params.data;
-
-        startTime = moment(startTime);
-        endTime = moment(endTime);
-
-        return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
-      }
+      field: "sessionHours"
     },
     { 
       headerName: "",
