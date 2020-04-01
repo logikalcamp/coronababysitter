@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import {Link} from 'react-router-dom'
 import {Redirect} from 'react-router-dom'
 
 export const Header = (props) => {
@@ -10,10 +11,12 @@ export const Header = (props) => {
     return(
         <HeaderCon>
             <SubCon>
-                <HeaderSubCon >
-                    <img src={window.location.origin + "/images/newL.png"} alt="nel" />
-                    <label>Sitter Seeker</label>
-                </HeaderSubCon>
+                <Link to="/">
+                    <HeaderSubCon>
+                        <img src={window.location.origin + "/images/newL.png"} alt="nel" />
+                        <label id="lb">Sitter Seeker</label>
+                    </HeaderSubCon>
+                </Link>
                 <HeaderSubCon >
                     {auth && <label>שם משתמש |</label>}
                     <button onClick={()=>{
@@ -75,10 +78,20 @@ const ModalContentCon = styled.div`
 
 const HeaderCon = styled.div`
     background:#00C2CB;
+    a{
+        text-decoration:none;
+        outline:none;
+        cursor:pointer;
+    }
 `
 const HeaderSubCon = styled.div`
     display:flex;
     align-items:center;
+    @media(max-width:500px){
+        #lb{
+            display:none;
+        }
+    }
     img{
         width:2.5rem;
         height:3rem;

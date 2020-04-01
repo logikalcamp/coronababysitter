@@ -216,6 +216,9 @@ const LoginDetailsContainer = styled.div`
     background-color:white;
     box-shadow: 3px 3px 18px gray;
     border-radius: 8px;
+    @media(max-width:800px){
+        width:350px;
+    }
 `
 
 const InputField = styled.div`
@@ -254,6 +257,9 @@ const Text = styled.input`
     border:1px solid #828282;
     outline-color:#00C2CB ;
     width: 375px;
+    @media(max-width:800px){
+        width:100%;
+    }
 `
 
 const Button = styled.div`
@@ -331,6 +337,9 @@ const ToggleOption = styled.div`
     height: 50px;
     padding: 0px 5px 0px 5px;
     background-color:transparent;
+    @media(max-width:800px){
+
+    }
 `
 
 const ModalBackdrop = styled.div`
@@ -357,4 +366,7 @@ const Modal = styled.div`
     flex-direction: column;
     align-items:center;
     justify-content:space-between;
+    @media(max-width:800px){
+
+}
 `

@@ -1,9 +1,11 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
 import Axios from 'axios';
 import { MdAdd } from "react-icons/md";
+import {connect} from 'react-redux'
+import NewSessionModal from './newSessionModal'
 import GridComp from '../Grid';
 // import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
 // import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
@@ -49,9 +51,10 @@ const HeaderComp = styled.div`
     img {
       margin: 0 0.5rem;
     }
+    
   }
 
-  a {
+  #button {
     align-self: center;
     background-color: #53B493;
     padding: 1.5rem;
@@ -59,7 +62,8 @@ const HeaderComp = styled.div`
     font-size: 18px;
     color: #ffffff;
     text-decoration: none;
-    
+    border:none;
+    outline:none;
     display: flex;
     align-items: center;
   
@@ -67,6 +71,19 @@ const HeaderComp = styled.div`
       margin: 0 0.5rem;
     }
   }
+
+  @media(max-width:800px){
+    padding:0;
+    div{
+      display:flex;
+    }
+    
+    #button {
+      padding: .5rem;
+      font-size: 18px;
+    }
+  }
+
 `;
 
 const HeaderButtonComp = styled.div`
@@ -80,6 +97,9 @@ const DashboardComp = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  @media(max-width:800px){
+    padding:0;
+  }
 `;
 
 const GridWrapper = styled.div`
@@ -128,40 +148,62 @@ const GridHeaderComp = styled.div`
     border-bottom: 1px solid #D1D1D1;
   }
 `;
-const CreateSession = () => {
+
+
+const Optional = (arr) => {
+  let show = []
+  arr.map((x)=>{
+    show.push(<div>{x}</div>)
+  })
+  return show
+}
+
+const array = ["aaa","vvv","bbb","ccc"]
+
+const OptionalVolunteers = (props) => {
+    const [openModal,setOpen] = useState(false)
+    const id = props.auth.user.userid
 
     return (
-        <VolunteerDashboardComp>
-            <div id="Con">
-                <HeaderComp>
-                <div>
-                    <h2>ניהול בקשות פתוחות</h2>
-                </div>
-                <Link to="/newsession">
-                    <MdAdd style={{width:"1.5rem",height:"1.5rem"}}/>
-                    בקשה חדשה
-                </Link>
-                </HeaderComp>
-                <DashboardComp>
-                <GridWrapper primary>
-                    <GridHeaderComp>
-                    <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
-                    יומן פעילויות מתוזמנות
-                    </GridHeaderComp>
-                    {/* <UpcomingSessionsGrid /> */}
-                </GridWrapper>
-                <GridWrapper>
-                    <GridHeaderComp>
-                    <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
-                    בקשות פתוחות
-                    <button>מסך מלא</button>
-                    </GridHeaderComp>
-                    {/* <NotYetApprovedSessionsGrid /> */}
-                </GridWrapper>
-                </DashboardComp>
-            </div>
-        </VolunteerDashboardComp>
+      <React.Fragment>
+          {openModal && <NewSessionModal id={id} setOpen={setOpen}/>}
+          <VolunteerDashboardComp>
+              <div id="Con">
+                  <HeaderComp>
+                  <div>
+                      <h1>ניהול בקשות פתוחות</h1>
+                  </div>
+                  <button onClick={()=>{setOpen(true)}} id="button">
+                      <MdAdd style={{width:"1.5rem",height:"1.5rem"}}/>
+                      בקשה חדשה
+                  </button>
+                  </HeaderComp>
+                  <DashboardComp>
+                  <GridWrapper primary>
+                      <GridHeaderComp>
+                      <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
+                      בקשות פתוחות
+                      </GridHeaderComp>
+                      {/* <UpcomingSessionsGrid /> */}
+                  </GridWrapper>
+                  <GridWrapper>
+                      <GridHeaderComp>
+                      <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
+                      הצעות התנדבות
+                      </GridHeaderComp>
+                      {Optional(array)}
+                  </GridWrapper>
+                  </DashboardComp>
+              </div>
+          </VolunteerDashboardComp>
+        </React.Fragment>
         )
 }
 
-export default CreateSession;
+const ToProps = (state,props) => {
+  return {
+      auth: state.auth
+  }
+}
+
+export default connect(ToProps)(OptionalVolunteers);

@@ -16,8 +16,8 @@ export const Landing = (props) => {
                 </p>
                 <h2>להצטרפות</h2>
                 <div>
-                    <button onClick={()=>props.history.push('/Registration/volunteer')}>אני רוצה להתנדב</button>
-                    <button onClick={()=>props.history.push('/Registration/medical')}>אני צוות רפואי</button>
+                    <img onClick={()=>props.history.push('/Registration/medical')} src={window.location.origin + '/images/1.png'} alt="" />
+                    <img onClick={()=>props.history.push('/Registration/volunteer')} src={window.location.origin + '/images/2.png'} alt="" />
                 </div>
         </LandingCon>
     )
@@ -41,7 +41,7 @@ const LandingCon = styled.div`
         display:flex;
         justify-content:space-around;
         width:80%;
-        margin:3rem auto;
+        margin:1rem auto;
     }
     button{
         background:#00C2CB;
@@ -52,7 +52,28 @@ const LandingCon = styled.div`
         font-weight:bold;
         cursor:pointer;
     }
+    img{
+        height:12rem;
+        width:12rem;
+        cursor:pointer;
+    }
     button:hover{
         background:#23898e;
+    }
+
+    @media(max-width:450px){
+        width:80%;
+  
+        button{
+            margin:0 5px;
+        }
+        img{
+            height:10rem;
+            width:10rem;
+        }
+        div{
+            width:100%;
+            margin:auto;
+        }
     }
 `

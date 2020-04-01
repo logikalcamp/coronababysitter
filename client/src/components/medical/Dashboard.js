@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -6,6 +6,8 @@ import Axios from 'axios';
 import { MdAdd } from "react-icons/md";
 import {connect} from 'react-redux'
 import GridComp from '../Grid';
+
+import NewSessionModal from './newSessionModal'
 import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
 import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
 
@@ -41,13 +43,15 @@ const HeaderComp = styled.div`
     }
   }
 
-  a {
+  #button {
     align-self: center;
     background-color: #53B493;
     padding: 1.5rem;
     border-radius: 8px;
     font-size: 18px;
     color: #ffffff;
+    border:none;
+    outline:none;
     text-decoration: none;
     
     display: flex;
@@ -126,45 +130,49 @@ const Button = styled.button`
 `
 
 const MedicalDashboard = (props) => {
+    const [openModal,setOpen] = useState(false)
     console.log(props)
     const id = props.auth.user.userid
     return (
-        <VolunteerDashboardComp>
-            <Wrapper>
-                <HeaderComp>
-                <div>
-                    <h1>
-                    היי רון, כיף שבאת
-                    <img src={window.location.origin + '/images/icons8_so_so_120px_2.png'} />
-                    </h1>
-                    <h2>אנחנו כאן לעזור לך ולדאוג שהמשפחה שלך תקבל את הטוב ביותר!</h2>
-                </div>
-                <Link to="/newsession">
-                    <MdAdd style={{width:"1.5rem",height:"1.5rem"}}/>
-                    בקשה חדשה
-                </Link>
-                </HeaderComp>
-                <DashboardComp>
-                <GridWrapper primary>
-                    <GridHeaderComp>
-                    <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
-                    יומן פעילויות מתוזמנות
-                    </GridHeaderComp>
-                    <UpcomingSessionsGrid id={id} />
-                </GridWrapper>
-                <GridWrapper>
-                    <GridHeaderComp style={{justifyContent:"space-between"}}>
-                    <div style={{display:"flex"}}>
+      <React.Fragment>
+          {openModal && <NewSessionModal id={id} setOpen={setOpen}/>}
+          <VolunteerDashboardComp>
+              <Wrapper>
+                  <HeaderComp>
+                  <div>
+                      <h1>
+                      היי רון, כיף שבאת
+                      <img src={window.location.origin + '/images/icons8_so_so_120px_2.png'} />
+                      </h1>
+                      <h2>אנחנו כאן לעזור לך ולדאוג שהמשפחה שלך תקבל את הטוב ביותר!</h2>
+                  </div>
+                  <button onClick={()=>{setOpen(true)}} id="button">
+                      <MdAdd style={{width:"1.5rem",height:"1.5rem"}}/>
+                      בקשה חדשה
+                  </button>
+                  </HeaderComp>
+                  <DashboardComp>
+                  <GridWrapper primary>
+                      <GridHeaderComp>
                       <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
-                      בקשות פתוחות
-                    </div>
-                    <Link to="/optionalvolunteers"><Button>למסך מלא</Button></Link>
-                    </GridHeaderComp>
-                    <NotYetApprovedSessionsGrid  id={id}/>
-                </GridWrapper>
-                </DashboardComp>
-              </Wrapper>
-        </VolunteerDashboardComp>
+                      יומן פעילויות מתוזמנות
+                      </GridHeaderComp>
+                      <UpcomingSessionsGrid id={id} />
+                  </GridWrapper>
+                  <GridWrapper>
+                      <GridHeaderComp style={{justifyContent:"space-between"}}>
+                      <div style={{display:"flex"}}>
+                        <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
+                        בקשות פתוחות
+                      </div>
+                      <Link to="/optionalvolunteers"><Button>למסך ניהול בקשות פתוחות</Button></Link>
+                      </GridHeaderComp>
+                      <NotYetApprovedSessionsGrid  id={id}/>
+                  </GridWrapper>
+                  </DashboardComp>
+                </Wrapper>
+          </VolunteerDashboardComp>
+        </React.Fragment>
         )
 }
 

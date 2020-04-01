@@ -5,11 +5,13 @@ var {SessionService} = require("./server/service/SessionService");
 var {DoctorService} = require("./server/service/DoctorService");
 var {HamalService} = require("./server/service/HamalService");
 var {UtilsService} = require("./server/service/UtilsService");
+var {ImageService} = require("./server/service/ImageService");
 var path = require('path');
 var cors = require('cors');
 var bodyParser=require('body-parser');
 var express = require('express')
 var oas3Tools = require('oas3-tools');
+var formidable = require('formidable');
 var serverPort = process.env.PORT || 3001;
 
 var env = process.env.NODE_ENV || 'dev'
