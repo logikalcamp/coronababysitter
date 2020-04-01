@@ -80,7 +80,7 @@ class VolunteerService {
   registerVolunteer(body) {
     return new Promise((resolve, reject) => {
       // Check if ID was already inserted
-      MongoDB.findOne(COLLECTION_NAME, {tz : body.tz}, this.MongoClient).then((result) => {
+      MongoDB.findOne(COLLECTION_NAME, {email : body.email}, this.MongoClient).then((result) => {
         if(result) 
           reject("Volunteer already exists");
         else {
@@ -95,7 +95,7 @@ class VolunteerService {
     return new Promise((resolve, reject) => {
       MongoDB.findOne(COLLECTION_NAME, { email: body.email }, this.MongoClient).then((result) => {
         if (result == null) reject("Volunteer not found");
-        else if(!result.isapproved) reject ("Volunteer was not approved yet");
+        else if(!result.isApproved) reject ("Volunteer was not approved yet");
         else {
           var emailService = new EmailService();
           var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.
@@ -109,7 +109,8 @@ class VolunteerService {
           resolve("Login email sent.")
         }
       }).catch((error) => {
-        reject(error)
+        console.log("Error " + error);
+        reject(error);
       });
     });
   }
