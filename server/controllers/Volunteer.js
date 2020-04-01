@@ -36,8 +36,8 @@ module.exports.getApprovedVolunteers = function getApprovedVolunteers (req, res,
     });
 };
 
-module.exports.getPendingVolunteers = function getPendingVolunteers (req, res, next, page) {
-  req.VolunteerService.getPendingVolunteers(page)
+module.exports.getPendingVolunteers = function getPendingVolunteers (req, res, next) {
+  req.VolunteerService.getPendingVolunteers()
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

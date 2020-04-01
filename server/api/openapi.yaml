@@ -120,20 +120,12 @@ paths:
         "404":
           description: No volunteers found
       x-swagger-router-controller: Volunteer
-  /volunteer/pending/{page}:
+  /volunteer/pending:
     get:
       tags:
       - volunteer
       summary: Get all pending volunteers
       operationId: getPendingVolunteers
-      parameters:
-      - name: page
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
       responses:
         "200":
           description: All Approved volunteers
@@ -305,20 +297,12 @@ paths:
         "404":
           description: No Doctor found
       x-swagger-router-controller: Doctor
-  /doctor/pending/{page}:
+  /doctor/pending:
     get:
       tags:
       - doctor
       summary: Get all pending doctors
       operationId: getPendingDoctors
-      parameters:
-      - name: page
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
       responses:
         "200":
           description: All pending doctors
@@ -551,6 +535,25 @@ paths:
       responses:
         "200":
           description: All approved future seessions for volunteer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
+      x-swagger-router-controller: Session
+  /session/getNotYetApprovedSessions:
+    get:
+      tags:
+      - sessions
+      summary: Get all not yet approved upcoming sessions
+      operationId: getAllUpcomingNotYetApprovedSessions
+      responses:
+        "200":
+          description: All not yet approved future seessions
           content:
             application/json:
               schema:

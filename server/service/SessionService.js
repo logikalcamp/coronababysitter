@@ -161,6 +161,17 @@ class SessionService {
     return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
   }
 
+  getAllUpcomingNotYetApprovedSessions() {
+    var filter = {$match : {$and: [{"filledBy" : null}]}};
+    var aggregate = [];
+
+    lookUpForSessions(aggregate);
+    aggregate.push(filter);
+
+
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
+  }
+
     /**
    * Get all upcoming, not yet approved sessions of a specified volunteer
    * userId String 

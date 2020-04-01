@@ -36,6 +36,17 @@ module.exports.getAllUpcomingNotYetApprovedSessionsByVolunteer = function getAll
     });
 };
 
+module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next) {
+  req.SessionService.getAllUpcomingNotYetApprovedSessions()
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
 module.exports.getAllUpcomingApprovedSessionsByVolunteer = function getAllUpcomingApprovedSessionsByVolunteer (req, res, next, userId) {
   req.SessionService.getAllUpcomingApprovedSessionsByVolunteer(userId)
     .then(function (response) {
