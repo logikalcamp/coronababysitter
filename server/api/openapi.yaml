@@ -120,7 +120,7 @@ paths:
         "404":
           description: No volunteers found
       x-swagger-router-controller: Volunteer
-  /volunteer/pending/{page}:
+  /volunteer/pending:
     get:
       tags:
       - volunteer
@@ -297,7 +297,7 @@ paths:
         "404":
           description: No Doctor found
       x-swagger-router-controller: Doctor
-  /doctor/pending/{page}:
+  /doctor/pending:
     get:
       tags:
       - doctor
