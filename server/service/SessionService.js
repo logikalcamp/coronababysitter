@@ -41,6 +41,14 @@ class SessionService {
         if(result) 
           reject("Session already exists");
         else {
+          body.doctor_id = MongoDB.getMongoObjectId(body.doctor_id);
+
+          if (body.filledBy)
+            body.filledBy = MongoDB.getMongoObjectId(body.filledBy);
+
+          for (var i=0; i < body.requests.length; i++)
+            body.requests[i] = MongoDB.getMongoObjectId(body.requests[i]);
+          
           MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
       });
