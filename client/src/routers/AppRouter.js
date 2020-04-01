@@ -18,6 +18,8 @@ import Login from '../components/Login'
 import HamalHome from '../components/HamalHome';
 import MessageBar from '../utils/MessageBar'
 import Logout from '../components/Logout'
+import ManageSessions from '../components/hamal/ManageSessions'
+import ManageUsers from '../components/hamal/ManageUsers'
 
 const AppRouter = () =>(
     <Router>
@@ -45,6 +47,8 @@ const AppRouter = () =>(
         <Route exact path="/hamal/volunteers" component={HamalVolunteersPage}/>
         <Route exact path="/hamal/doctors" component={HamalDoctorsPage}/>
         <Route exact path="/hamal" component={HamalHome}/>
+        <Route exact path="/pendingsessions" component={ManageSessions}/>
+        <Route exact path="/pendingusers" component={ManageUsers}/>
         
         
         
