@@ -561,6 +561,25 @@ paths:
         "404":
           description: No sessions found
       x-swagger-router-controller: Session
+  /session/getNotYetApprovedSessions:
+    get:
+      tags:
+      - sessions
+      summary: Get all not yet approved upcoming sessions
+      operationId: getAllUpcomingNotYetApprovedSessions
+      responses:
+        "200":
+          description: All not yet approved future seessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
+      x-swagger-router-controller: Session
   /session/getNotYetApprovedSessions/{userId}:
     get:
       tags:

@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Switch, Link, NavLink} from 'react-router-dom';
 import PrivateRoute from '../private-route/PrivateRoute'
-import {Header} from '../components/Header'
+import Header from '../components/Header'
 import {Footer} from '../components/Footer'
 import {Landing} from '../components/Landing'
 import {Signup} from '../components/Signup'
@@ -18,7 +18,7 @@ import Login from '../components/Login'
 import HamalHome from '../components/HamalHome';
 import MessageBar from '../utils/MessageBar'
 import {HamalNewRequests} from '../components/hamal/HamalNewRequests'
-
+import Logout from '../components/Logout'
 
 const AppRouter = () =>(
     <Router>
@@ -26,20 +26,21 @@ const AppRouter = () =>(
       {window.innerWidth < 600 && <MessageBar message={["כדי לקבל את החוויה הטובה ביותר",'באנדרואיד - "הגדרות" -> "הוספה למסך הבית"','באייפון - רק בדפדפן ספארי - "הגדרות" -> "הוסף למסך הבית"']}/> }
       <Switch>          
         <Route exact path="/" component={Landing}/>
+        <Route exact path="/logout" component={Logout}/>
         <Route exact path='/login' component={Login} />
         <Route exact path="/policy" component={Policy}/>
         <Route exact path="/doctor/:id" component={CompleteDoctor}/>
         <Route exact path="/Registration/:type" component={Signup}/>
         
         
-        <Route exact path="/medicalhome" component={MedicalDashboard}/>
-        <Route exact path="/optionalvolunteers" component={OptionalVolunteers}/>
+        <PrivateRoute exact path="/medicalhome" component={MedicalDashboard}/>
+        <PrivateRoute exact path="/optionalvolunteers" component={OptionalVolunteers}/>
         {/* <Route exact path="/optionalvolunteers" component={CreateSession}/> */}
 
         
         {/* <Route exact path="/hamal" component={VolunteersPage}/> */}
-        <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
-        <Route exact path='/find-session' component={FindSession} />
+        <PrivateRoute exact path='/volunteer-homepage' component={VolunteerHomepage} />
+        <PrivateRoute exact path='/find-session' component={FindSession} />
         
         
         <Route exact path="/hamal/newrequests" component={HamalNewRequests}/>

@@ -56,7 +56,6 @@ const Login = (props) => {
 
         try {
             var response = await axios.post(BASE_URL + `/api/${loginApi}/loginemail`, {email});
-            console.log(response)
             setLoginState('code');
         }
         catch (error) {
@@ -82,10 +81,8 @@ const Login = (props) => {
                     type:'medical'
                 }
                 if(isDoctorLogin) {
-                    console.log("loged in")
-                
                     props.dispatch(loginUser(data))
-                    // history.push("/medicalhome");
+                    history.push("/medicalhome");
                 }
                 else {
                     history.push("/volunteer-homepage");
@@ -120,7 +117,7 @@ const Login = (props) => {
         if(code.length == 6 && !isNaN(code)) {
             setIsCodeValid(true);
             setError('');
-            setCode(code);
+            setCode(parseInt(code));
         }
         else {
             setError("הקוד לא תקין");

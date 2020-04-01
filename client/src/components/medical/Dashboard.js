@@ -14,6 +14,11 @@ import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
 const VolunteerDashboardComp = styled.div`
   height: 100%;
   padding:  50px;
+  @media(max-width:450px) {
+    height: 100%;
+    padding: 0 5%;
+    overflow-x: auto;
+  }
 `;
 const Wrapper = styled.div`
   height: 100%;
@@ -59,6 +64,17 @@ const HeaderComp = styled.div`
   
     img {
       margin: 0 0.5rem;
+    }
+  }
+  @media(max-width:450px) {
+    #button{
+      padding:.5rem;
+    }
+    h1{
+      font-size:1.5em
+    }
+    h2{
+      font-size:1em
     }
   }
 `;
