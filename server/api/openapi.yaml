@@ -591,6 +591,26 @@ paths:
         "404":
           description: No sessions found
       x-swagger-router-controller: Session
+  /session/notAssigned:
+    get:
+      tags:
+      - sessions
+      summary: Get all not yet assigned upcoming sessions 
+      operationId: getAllNotAssignedSessions
+      responses:
+        "200":
+          description: gets all not yet assigned future seessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
+      x-swagger-router-controller: Session
+  
   /session/getAvailableSessions/{userId}:
     get:
       tags:

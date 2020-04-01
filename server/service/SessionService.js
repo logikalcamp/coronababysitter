@@ -129,6 +129,21 @@ class SessionService {
   }
 
   /**
+   * returns all sessions that haven't been assigned with a volunteer, yet.
+   */
+  getAllNotAssignedSessions(){
+    var aggregate = [];
+    lookUpForSessions(aggregate);
+    var filter = {$match: {
+      "filledBy": null
+            }
+    };
+    aggregate.push(filter);
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
+  }  
+  
+
+  /**
    * Get all upcoming sessions of a specified volunteer
    * userId String 
    * returns List
