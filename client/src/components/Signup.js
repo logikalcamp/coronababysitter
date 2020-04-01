@@ -7,6 +7,7 @@ import Searchi from './Searchbox'
 import _ from 'lodash'
 import GeoMasking from '../utils/geoMasking'
 import UploadPhoto from '../utils/uploadPhoto'
+import DotLoader from "react-spinners/DotLoader";
 
 const Stepper = ({step,amount}) => {
     let steps = []
@@ -227,9 +228,18 @@ export const Signup = (props) => {
     
         setImageUploading(true);
 
-        var url = await UploadPhoto(file, 'volunteer');
+        try {
+            var url = await UploadPhoto(file, 'volunteer');
         
-        setImg(url ? url : window.location.origin + "/images/profilePlaceholder.png");
+            details.picture = url ? url : window.location.origin + "/images/profilePlaceholder.png";
+
+            setImg(details.picture);
+        }
+        catch(error) {
+            console.log(error);
+        }
+
+        setImageUploading(false);
       }
 
     useEffect(()=>{
@@ -389,6 +399,7 @@ export const Signup = (props) => {
             axios.post(BASE_URL+'/api/utils/facebookimage',{facebookURL:details.facebook})
             .then(res=>{
                 setImg(res.data.pictureURL)
+                details.picture = res.data.pictureURL;
                 console.log(res)})
         }
     }, [details.facebook])
@@ -464,7 +475,11 @@ export const Signup = (props) => {
 
                         {
                             <div style={{alignItems:"center"}}>
-                                <img style={{width:"130px",height:"130px",margin:"auto"}} src={img} alt="profile" />
+                                
+                                {isUploadingImage ? <DotLoader size={50}
+                                                                color={"#00C2CB"}
+                                                                loading={isUploadingImage}/> : 
+                                                    <img style={{width:"130px",height:"130px",margin:"auto"}} src={img} alt="profile" />}
                                 <input type='file' onChange={(e) => onChange(e.target.files[0])}/>
                             </div>
                         }
