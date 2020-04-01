@@ -178,13 +178,13 @@ const Login = (props) => {
                         <div className={classes.title2}>{loginState == 'email' ? 'כיף לראות שחזרת, הזן אימייל להתחברות' : 'עוד מספר שניות תקבל קוד למייל, תזין אותו שם למטה'}</div>
                         {loginState == 'email' && (
                             <Toggle>
-                                <ToggleOption onClick={() => {setIsDoctorLogin(false)}}>
+                                <ToggleOption selected={!isDoctorLogin} onClick={() => {setIsDoctorLogin(false)}}>
                                     מתנדב
                                 </ToggleOption>
-                                <ToggleOption onClick={() => {setIsDoctorLogin(true)}}>
+                                <ToggleOption selected={isDoctorLogin} onClick={() => {setIsDoctorLogin(true)}}>
                                     צוות רפואי
                                 </ToggleOption>
-                                <ToggleHighlight left={isDoctorLogin} className={classes.selected}></ToggleHighlight>
+                                {window.innerWidth > 800 && <ToggleHighlight left={isDoctorLogin} className={classes.selected}></ToggleHighlight>}
                             </Toggle>
                         )}
                     </ContainerTitle>
@@ -358,7 +358,7 @@ const ToggleOption = styled.div`
     padding: 0px 5px 0px 5px;
     background-color:transparent;
     @media(max-width:800px){
-
+        background:${props=>props.selected ? "rgba(0,194,203,0.3)":"transparent"}
     }
 `
 

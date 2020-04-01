@@ -51,7 +51,7 @@ const FooterCon = styled.div`
         display:flex;
     }
     @media(max-width:900px){
-        padding-bottom:3rem;
+        padding-bottom:2.5rem;
         #phonem{
             display:flex;
         }
