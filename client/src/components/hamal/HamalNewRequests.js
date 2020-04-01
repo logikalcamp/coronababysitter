@@ -4,6 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import GridComp from '../Grid';
+import {BASE_URL} from '../../constants'
+import Axios from 'axios';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const styles = makeStyles(theme => ({
     arrowIcon: {
@@ -13,17 +17,31 @@ const styles = makeStyles(theme => ({
     }
 }));
 
+const NotYetApprovedSessionsGridCommands = (props) => {
+    const editClicked = (event) => console.log("Edit");
+    const removeClicked = (event) => console.log("Remove");
+  
+    return (
+        <span>
+            <DeleteIcon onClick={removeClicked} className="grid-command"></DeleteIcon>
+            <EditIcon onClick={editClicked} className="grid-command"></EditIcon>
+        </span>
+    )
+  }
+
 export const HamalNewRequests = (props) => {
     const classes = styles();
     const [urgentOpen, setUrgentOpen] = useState(true);
     const [otherOpen, setOtherOpen] = useState(false);
-    const [urgentRequests, setUrgentRequests] = useState([])
-    const [otherRequests, setOtherRequests] = useState([])
+    const [urgentRequests, setUrgentRequests] = useState(undefined)
+    const [otherRequests, setOtherRequests] = useState(undefined)
 
     const [columnDefs] = useState([
         { 
           headerName: "תאריך ושעה",
-          field: "startTime"
+          field: "startTime",
+          type:'dateColumn',
+
         },
         { 
           headerName: "שם המבקש",
@@ -36,22 +54,28 @@ export const HamalNewRequests = (props) => {
         { 
             headerName: "כמות הצעות",
             field: "requestsCount"
+        },
+        { 
+            headerName: "",
+            field: "commands",
+            width: 70,
+            cellRenderer: "notYetApprovedSessionsGridCommands"
         }
       ]);
 
       const isIn24Hours = (date) => {
         var timeStamp = Math.round(new Date().getTime() / 1000);
-        var timeStampYesterday = timeStamp + (24 * 3600);
-        var is24 = date >= new Date(timeStampYesterday*1000).getTime();
+        var timeStampTomorrow = timeStamp + (24 * 3600);
+        var is24 = date <= new Date(timeStampTomorrow*1000).getTime();
         return is24;
       }
 
       const getGridObjectFromSession = (session)  => {
         var gridObject = {
-            startTime: session.startTime,
-            fullName: session.firstName + ' ' + session.lastName,
-            phone: session.phone,
-            requestsCount: session.requests.count,
+            startTime: new Date(session.startTime),
+            fullName: session.doctor_o[0].firstName + ' ' + session.doctor_o[0].lastName,
+            phone: session.doctor_o[0].phone,
+            requestsCount: session.requests.length,
             fullSession: session
         }
 
@@ -59,15 +83,16 @@ export const HamalNewRequests = (props) => {
       }
 
       useEffect(() => {
-        if(urgentRequests.length > 0 || otherRequests.length > 0)
-        Axios.get(BASE_API + "/api/session/getUpcomingNotYetApprovedSessions").then((result) => {
+        if((urgentRequests && urgentRequests.length > 0) || (otherRequests && otherRequests.length > 0)) return;
+
+        Axios.get(BASE_URL + "/api/session/getUpcomingNotYetApprovedSessions").then((result) => {
             var urgentRequestsNew = [];
             var otherRequestsNew = [];
 
             for(var i =0; i<result.data.length; i++) {
                 var gridObject = getGridObjectFromSession(result.data[i]);
 
-                if(isIn24Hours(resulsts.data[i].startDate)) {
+                if(isIn24Hours(new Date(result.data[i].startTime))) {
                     urgentRequestsNew.push(gridObject);
                 }
                 else {
@@ -75,8 +100,8 @@ export const HamalNewRequests = (props) => {
                 }
             }
 
-            setUrgentOpen(urgentRequestsNew);
-            setOtherOpen(otherRequestsNew);
+            setUrgentRequests(urgentRequestsNew);
+            setOtherRequests(otherRequestsNew);
         })
       }, [urgentRequests, otherRequests])
 
@@ -99,7 +124,9 @@ export const HamalNewRequests = (props) => {
                             {urgentOpen && <KeyboardArrowUpIcon className={classes.arrowIcon} onClick={toggleCollapseables}></KeyboardArrowUpIcon>}
                         </CollapsableHeader>
                         <CollapsableContent open={urgentOpen}>
-                        <GridComp columnDefs={columnDefs} rowData={urgentRequests}/>
+                        <GridComp columnDefs={columnDefs} rowData={urgentRequests} 
+                            frameworkComponents={{
+                                                  notYetApprovedSessionsGridCommands: NotYetApprovedSessionsGridCommands}}/>
                         </CollapsableContent>
                     </Collapsable>
                     <Collapsable>
