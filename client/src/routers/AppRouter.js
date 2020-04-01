@@ -16,10 +16,13 @@ import OptionalVolunteers from '../components/medical/OptionalVolunteers'
 import Policy from '../components/Policy'
 import Login from '../components/Login'
 import HamalHome from '../components/HamalHome';
+import MessageBar from '../utils/MessageBar'
+
 
 const AppRouter = () =>(
     <Router>
       <Header/>
+      {window.innerWidth < 600 && <MessageBar message={["כדי לקבל את החוויה הטובה ביותר",'באנדרואיד - "הגדרות" -> "הוספה למסך הבית"','באייפון - רק בדפדפן ספארי - "הגדרות" -> "הוסף למסך הבית"']}/> }
       <Switch>          
         <Route exact path="/" component={Landing}/>
         <Route exact path='/login' component={Login} />

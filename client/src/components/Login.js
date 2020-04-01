@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import { useHistory } from 'react-router-dom';
+import {Link} from 'react-router-dom'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -53,11 +54,11 @@ const Login = () => {
 
         try {
             var response = await axios.post(BASE_URL + `/api/${loginApi}/loginemail`, {email});
-
+            console.log(response)
             setLoginState('code');
         }
         catch (error) {
-            //console.log(error);
+            console.log(error);
         }
     }
 
@@ -148,63 +149,67 @@ const Login = () => {
     }
 
     return(
-        <Container>
-            <ModalBackdrop open={modalData.open}>
-                <Modal open={modalData.open}>
+        <div style={{height:"100%"}}>
+            <Link to="/" ><Background /></Link>
+            <Container>
+                <ModalBackdrop open={modalData.open}>
+                    <Modal open={modalData.open}>
+                        <ContainerTitle>
+                            <div className={classes.title1}>{modalData.title}</div>
+                            <div className={classes.title2}>{modalData.secondaryTitle}</div>
+                        </ContainerTitle>
+                        <Button onClick={() => modalData.button.action()}>{modalData.button.text}</Button>
+                    </Modal>
+                </ModalBackdrop>
+                <LoginDetailsContainer>
+                    <img className={classes.loginImage} src={window.location.origin + "/images/login.png"}></img>
                     <ContainerTitle>
-                        <div className={classes.title1}>{modalData.title}</div>
-                        <div className={classes.title2}>{modalData.secondaryTitle}</div>
+                        <div className={classes.title1}>{loginState == 'email' ? 'אהלן!' : 'מצוין!'}</div>
+                        <div className={classes.title2}>{loginState == 'email' ? 'כיף לראות שחזרת, הזן אימייל להתחברות' : 'עוד מספר שניות תקבל קוד למייל, תזין אותו שם למטה'}</div>
+                        {loginState == 'email' && (
+                            <Toggle>
+                                <ToggleOption onClick={() => {setIsDoctorLogin(false)}}>
+                                    מתנדב
+                                </ToggleOption>
+                                <ToggleOption onClick={() => {setIsDoctorLogin(true)}}>
+                                    צוות רפואי
+                                </ToggleOption>
+                                <ToggleHighlight left={isDoctorLogin} className={classes.selected}></ToggleHighlight>
+                            </Toggle>
+                        )}
                     </ContainerTitle>
-                    <Button onClick={() => modalData.button.action()}>{modalData.button.text}</Button>
-                </Modal>
-            </ModalBackdrop>
-            <LoginDetailsContainer>
-                <img className={classes.loginImage} src={window.location.origin + "/images/login.png"}></img>
-                <ContainerTitle>
-                    <div className={classes.title1}>{loginState == 'email' ? 'אהלן!' : 'מצוין!'}</div>
-                    <div className={classes.title2}>{loginState == 'email' ? 'כיף לראות שחזרת, הזן אימייל להתחברות' : 'עוד מספר שניות תקבל קוד למייל, תזין אותו שם למטה'}</div>
-                    {loginState == 'email' && (
-                        <Toggle>
-                            <ToggleOption onClick={() => {setIsDoctorLogin(false)}}>
-                                מתנדב
-                            </ToggleOption>
-                            <ToggleOption onClick={() => {setIsDoctorLogin(true)}}>
-                                צוות רפואי
-                            </ToggleOption>
-                            <ToggleHighlight left={isDoctorLogin} className={classes.selected}></ToggleHighlight>
-                        </Toggle>
-                    )}
-                </ContainerTitle>
-                
-                    { loginState == 'email' && (
-                        <InputField>
-                            <InputLabel>אימייל</InputLabel>
-                            <Text className={!isValidEmailFormat && error!='' ? classes.errorText : ''} onChange={(e) => checkEmailFormat(e.target.value)}></Text>
-                            <ErrorLabel>{error}</ErrorLabel>
-                        </InputField>
-                    )}
-                    { loginState == 'code' && (
-                        <InputField>
-                            <InputLabel>קוד אימות</InputLabel>
-                            <Text className={!isCodeValid && error!='' ? classes.errorText : ''} onChange={(e) => checkCodeValid(e.target.value)}></Text>
-                            <ErrorLabel>{error}</ErrorLabel>
-                        </InputField>
-                    )}
-                <Button onClick={() => performAction()}>{loginState == 'email' ? 'שלח' : 'אמת'}</Button>
-            </LoginDetailsContainer>
-        </Container>
+                    
+                        { loginState == 'email' && (
+                            <InputField>
+                                <InputLabel>אימייל</InputLabel>
+                                <Text className={!isValidEmailFormat && error!='' ? classes.errorText : ''} onChange={(e) => checkEmailFormat(e.target.value)}></Text>
+                                <ErrorLabel>{error}</ErrorLabel>
+                            </InputField>
+                        )}
+                        { loginState == 'code' && (
+                            <InputField>
+                                <InputLabel>קוד אימות</InputLabel>
+                                <Text className={!isCodeValid && error!='' ? classes.errorText : ''} onChange={(e) => checkCodeValid(e.target.value)}></Text>
+                                <ErrorLabel>{error}</ErrorLabel>
+                            </InputField>
+                        )}
+                    <Button onClick={() => performAction()}>{loginState == 'email' ? 'שלח' : 'אמת'}</Button>
+                </LoginDetailsContainer>
+            </Container>
+        </div>
     )
 }
 
 export default Login;
 
-const Container = styled.div`
-    width: 100%;
-    height: 100%;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-`
+// const Container = styled.div`
+//     width: 100%;
+//     height: 100%;
+//     display:flex;
+//     z-index:10;
+//     justify-content: center;
+//     align-items: center;
+// `
 
 const LoginDetailsContainer = styled.div`
     width: 410px;
@@ -369,4 +374,27 @@ const Modal = styled.div`
     @media(max-width:800px){
 
 }
+`
+const Background = styled.div`
+    position:fixed;
+    top:0;
+    background:black;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:2;
+    opacity:0.3;
+`
+const Container = styled.div`
+    position:fixed;
+    top:50%;
+    left:50%;
+    margin-left:-205px;
+    margin-top:-265px;
+    z-index:5;
+    background:white;
+    border-radius:20px;
+    @media(max-width:800px){
+        margin-left:-200px;
+    }
 `
