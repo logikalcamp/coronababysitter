@@ -143,7 +143,8 @@ class SessionService {
    **/
   getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
     var filter = {$match : {$and: [{"filledBy" : null}, 
-    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
+    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}},
+    {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
     var aggregate = [];
 
     lookUpForSessions(aggregate);
@@ -154,7 +155,8 @@ class SessionService {
   }
 
   getAllUpcomingNotYetApprovedSessions() {
-    var filter = {$match : {$and: [{"filledBy" : null}]}};
+    var filter = {$match : {$and: [{"filledBy" : null},
+                                   {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
     var aggregate = [];
 
     lookUpForSessions(aggregate);
