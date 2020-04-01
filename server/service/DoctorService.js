@@ -51,9 +51,7 @@ class DoctorService {
    * returns List
    **/
   getPendingDoctors(page) {
-    var{from, to} = getPagingDbData(page, "doctors");
-
-    return MongoDB.findMany(COLLECTION_NAME,{isApproved: false}, this.MongoClient,from,to);
+    return MongoDB.findMany(COLLECTION_NAME,{isApproved: false}, this.MongoClient);
   }
 
   /**

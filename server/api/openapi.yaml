@@ -303,14 +303,6 @@ paths:
       - doctor
       summary: Get all pending doctors
       operationId: getPendingDoctors
-      parameters:
-      - name: page
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
       responses:
         "200":
           description: All pending doctors

@@ -36,8 +36,8 @@ module.exports.getApprovedDoctors = function getApprovedDoctors (req, res, next,
     });
 };
 
-module.exports.getPendingDoctors = function getPendingDoctors (req, res, next,page) {
-  req.DoctorService.getPendingDoctors(page)
+module.exports.getPendingDoctors = function getPendingDoctors (req, res, next) {
+  req.DoctorService.getPendingDoctors()
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
