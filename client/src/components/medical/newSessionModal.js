@@ -106,7 +106,9 @@ const NewSession = ({setOpen,id}) =>{
                 {
                     done ? 
                     <div>
-                        approved
+                        <h2>יש! הבקשה הוזנה למערכת , תוכל.י להתעדכן על הצעות של המתנדבים דרך דף ניהול הבקשות </h2>
+                        <button>לדף ניהול בקשות</button>
+                        <button>ליצירת בקשה חדשה</button>
                     </div>
                     :
                     <React.Fragment>

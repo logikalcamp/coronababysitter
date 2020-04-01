@@ -38,10 +38,12 @@ const AppRouter = () =>(
         
         {/* <Route exact path="/hamal" component={VolunteersPage}/> */}
         <Route exact path='/volunteer-homepage' component={VolunteerHomepage} />
+        <Route exact path='/find-session' component={FindSession} />
+        
+        
         <Route exact path="/hamal/volunteers" component={HamalVolunteersPage}/>
         <Route exact path="/hamal/doctors" component={HamalDoctorsPage}/>
         <Route exact path="/hamal" component={HamalHome}/>
-        <Route exact path='/find-session' component={FindSession} />
         
         
         
