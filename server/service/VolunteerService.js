@@ -54,10 +54,8 @@ class VolunteerService {
    *
    * returns List
    **/
-  getPendingVolunteers(page) {
-    var{from, to} = getPagingDbData(page, "volunteers");
-
-    return MongoDB.findMany(COLLECTION_NAME,{isApproved: false}, this.MongoClient,from,to);
+  getPendingVolunteers() {
+    return MongoDB.findMany(COLLECTION_NAME,{isApproved: false}, this.MongoClient);
   }
 
   /**

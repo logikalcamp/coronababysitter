@@ -126,14 +126,6 @@ paths:
       - volunteer
       summary: Get all pending volunteers
       operationId: getPendingVolunteers
-      parameters:
-      - name: page
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
       responses:
         "200":
           description: All Approved volunteers
