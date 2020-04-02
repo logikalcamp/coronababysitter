@@ -12,7 +12,6 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import SchoolIcon from '@material-ui/icons/School';
 import * as DateUtils from '../../utils/dateUtils';
 import DotLoader from "react-spinners/DotLoader";
-import { request } from 'express';
 
 
 const styles = makeStyles(theme => ({
@@ -72,7 +71,8 @@ export const HamalNewRequests = (props) => {
     const classes = styles();
     const [urgentOpen, setUrgentOpen] = useState(true);
     const [otherOpen, setOtherOpen] = useState(false);
-    const [requests, setRequests] = useState(undefined)
+    const [urgentRequests, setUrgentRequests] = useState(undefined)
+    const [otherRequests, setOtherRequests] = useState(undefined)
 
     const [selectedSession, setSelectedSession] = useState({});
     const [selectedSessionRequests, setSelectedSessionRequests] = useState([])
@@ -108,7 +108,8 @@ export const HamalNewRequests = (props) => {
     const approveSession = (sessionId, volunteerId) => {
         setIsApproving(true);
         Axios.post(BASE_URL + `/api/session/approve/${sessionId}`, {volunteerId:volunteerId}).then(result => {
-          setRequests(undefined);
+          setUrgentRequests(undefined);
+          setOtherRequests(undefined);
           setSelectedSessionRequests([]);
           setIsApproving(false);
         }).catch(error => {
@@ -176,12 +177,9 @@ export const HamalNewRequests = (props) => {
 
         return gridObject;
       }
-
-      var loadingPage = false;
-
+      
       const loadPage = () => {
-        if(loadingPage || ((requests.urgentRequests && requests.urgentRequests.length > 0) || (requests.otherRequests && requests.otherRequests.length > 0))) return;
-        loadingPage = true;
+        if((urgentRequests && urgentRequests.length > 0) || (otherRequests && otherRequests.length > 0)) return;
 
         Axios.get(BASE_URL + "/api/session/getUpcomingNotYetApprovedSessions").then((result) => {
             var urgentRequestsNew = [];
@@ -198,12 +196,12 @@ export const HamalNewRequests = (props) => {
                 }
             }
 
-            setRequests({urgentRequests: urgentRequestsNew, otherRequests: otherRequestsNew});
-            loadingPage = false;
+            setUrgentRequests(urgentRequestsNew);
+            setOtherRequests(otherRequestsNew);
         })
       }
 
-      useEffect(loadPage, [requests])
+      useEffect(loadPage, [urgentRequests, otherRequests])
 
       const toggleCollapseables = () => {
             setUrgentOpen(!urgentOpen);
@@ -213,30 +211,30 @@ export const HamalNewRequests = (props) => {
     return (
         <Container>
             <ContainerHeader>
-                טיפול בבקשה פתוחות {requests.urgentRequests && requests.otherRequests ? `(${requests.urgentRequests.length + requests.otherRequests.lenth})` : ''}
+                טיפול בבקשה פתוחות {urgentRequests && otherRequests ? `(${urgentRequests.length + otherRequests.length})` : ''}
             </ContainerHeader>
             <ContainerContent>
                 <SessionsContent>
                     <Collapsable>
                         <CollapsableHeader>
-                            <Title>בקשות דחופות</Title>
+                            <Title>בקשות דחופות {urgentRequests ? `(${urgentRequests.length})` : ''}</Title>
                             {!urgentOpen && <KeyboardArrowDownIcon className={classes.arrowIcon} onClick={toggleCollapseables}></KeyboardArrowDownIcon>}
                             {urgentOpen && <KeyboardArrowUpIcon className={classes.arrowIcon} onClick={toggleCollapseables}></KeyboardArrowUpIcon>}
                         </CollapsableHeader>
                         <CollapsableContent open={urgentOpen}>
-                        <GridComp columnDefs={columnDefs} rowData={requests.urgentRequests} 
+                        <GridComp columnDefs={columnDefs} rowData={urgentRequests} 
                             frameworkComponents={{
                                                   notYetApprovedSessionsGridCommands: NotYetApprovedSessionsGridCommands}}/>
                         </CollapsableContent>
                     </Collapsable>
                     <Collapsable>
                     <CollapsableHeader>
-                            <Title>בקשות לא דחופות</Title>
+                            <Title>בקשות לא דחופות {otherRequests ? `(${otherRequests.length})` : ''}</Title>
                             {!otherOpen && <KeyboardArrowDownIcon className={classes.arrowIcon} onClick={toggleCollapseables}></KeyboardArrowDownIcon>}
                             {otherOpen && <KeyboardArrowUpIcon className={classes.arrowIcon} onClick={toggleCollapseables}></KeyboardArrowUpIcon>}
                         </CollapsableHeader>
                         <CollapsableContent open={otherOpen}>
-                        <GridComp columnDefs={columnDefs} rowData={requests.otherRequests} frameworkComponents={{
+                        <GridComp columnDefs={columnDefs} rowData={otherRequests}frameworkComponents={{
                                                   notYetApprovedSessionsGridCommands: NotYetApprovedSessionsGridCommands}}/>
                         </CollapsableContent>
                     </Collapsable>
@@ -376,10 +374,12 @@ const CollapsableHeader = styled.div`
     align-items:center;
     height: 30px;
     border-bottom: 1px solid gray;
+    padding-bottom:5px;
 `
 
 const Title = styled.div`
     font-size: 24px;
+    
 `
 
 const CollapsableContent = styled.div`
