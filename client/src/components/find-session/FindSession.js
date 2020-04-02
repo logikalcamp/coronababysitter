@@ -55,7 +55,7 @@ const ModalContentCon = styled.div`
   z-index: 2;
   left: 0;
   top: 0;
-  width: 400px;
+  width: 450px;
   height: 100%;
   background-color: #ffffff;
 
