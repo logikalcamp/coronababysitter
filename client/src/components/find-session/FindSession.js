@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import Axios from 'axios';
 import moment from 'moment';
 
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+
 import GridComp from '../Grid';
 import {Map} from './Map';
 import {BASE_URL} from '../../constants'
@@ -86,8 +89,8 @@ const GridHeaderComp = styled.div`
 const GridExpanderComp = styled.div`
   position: absolute;
   top: 50%;
-  left: -21px;
-  padding: 10px;
+  left: -27px;
+  padding: 10px 5px;
   background: #fff;
   border-radius: 8px;
 `;
@@ -164,7 +167,7 @@ export const FindSession = (props) => {
               availableSessions={availableSessions}
               handleRowClicked={handleRowClicked}
             />
-            <GridExpanderComp  onClick={toggleIsExpanded}>{isExpanded ? "-" : "+"}</GridExpanderComp>
+            <GridExpanderComp  onClick={toggleIsExpanded}>{isExpanded ? <ArrowForwardIosIcon /> :  <ArrowBackIosIcon />}</GridExpanderComp>
           </GridWrapper>
         </TableWrapper>
         <MapWrapper isExpanded={isExpanded}>
