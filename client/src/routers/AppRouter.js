@@ -10,7 +10,7 @@ import { HamalVolunteersPage } from '../components/HamalVolunteers';
 import { HamalDoctorsPage } from '../components/HamalDoctors';
 import CompleteDoctor from '../components/CompleteDoctor'
 import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
-import {FindSession} from '../components/FindSession';
+import {FindSession} from '../components/find-session/FindSession';
 import MedicalDashboard from '../components/medical/Dashboard'
 import OptionalVolunteers from '../components/medical/OptionalVolunteers'
 import Policy from '../components/Policy'
@@ -20,6 +20,8 @@ import MessageBar from '../utils/MessageBar'
 import {HamalNewRequests} from '../components/hamal/HamalNewRequests'
 import Logout from '../components/Logout'
 import ManageSessions from '../components/hamal/ManageSessions'
+import HamalPendingUsers from '../components/hamal/HamalPendingUsers'
+import ViewSessions from '../components/hamal/ViewSessions'
 import ManageUsers from '../components/hamal/ManageUsers'
 
 const AppRouter = () =>(
@@ -45,11 +47,12 @@ const AppRouter = () =>(
         <PrivateRoute exact path='/find-session' component={FindSession} />
         
         
+        <Route exact path="/hamal/pendingusers" component={HamalPendingUsers}/>
         <Route exact path="/hamal/newrequests" component={HamalNewRequests}/>
         <Route exact path="/hamal/volunteers" component={HamalVolunteersPage}/>
         <Route exact path="/hamal/doctors" component={HamalDoctorsPage}/>
         <Route exact path="/hamal" component={HamalHome}/>
-        <Route exact path="/pendingsessions" component={ManageSessions}/>
+        <Route exact path="/pendingsessions" component={ViewSessions}/>
         <Route exact path="/pendingusers" component={ManageUsers}/>
         
         

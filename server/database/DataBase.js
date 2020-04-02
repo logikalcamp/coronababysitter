@@ -150,4 +150,14 @@ exports.count = (collection, filter, db) => {
     });
 }
 
+exports.deleteOne = (collection, query, db) => {
+    return new Promise((resolve,reject) => {
+        db.collection(collection).deleteOne(query, (err, result) => {
+            if(err) reject(err)
+
+            resolve(result);
+        })
+    });
+}
+
 module.exports = exports;

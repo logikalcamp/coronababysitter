@@ -457,6 +457,26 @@ paths:
         "405":
           description: Invalid input
       x-swagger-router-controller: Session
+  /session/delete:
+    post:
+      tags:
+      - session
+      summary: delete session
+      operationId: deleteSession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+      responses:
+        "200":
+          description: session deleted
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Session
   /session/{sessionId}:
     put:
       tags:
@@ -1009,8 +1029,12 @@ components:
           - weekly
           - monthly
         contact:
-          type: string
-          description: A contact's phone number
+          type: object
+          properties:
+            name:
+              type: string
+            phone:
+              type: string
       example:
         doctor:
           profession: profession

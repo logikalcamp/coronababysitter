@@ -19,7 +19,7 @@ const NotYetApprovedSessionsGridCommands = (props) => {
   )
 }
 
-export const NotYetApprovedSessionsGrid = (props) => {
+export const OpenRequestsGrid = (props) => {
   console.log(props)
   const [load,setload] = useState(true)
   const [notYetApprovedSessions, setNotYetApprovedSessions] = useState([]);
@@ -56,6 +56,10 @@ export const NotYetApprovedSessionsGrid = (props) => {
     }
   ]);
   
+
+  const handleClick = (e) => {
+      props.handle(notYetApprovedSessions,e)
+  }
   useEffect(() => {
     Axios.post(BASE_URL+`/api/session/${props.id}`,{isFilled:false}).then(result => {
       console.log(result);
@@ -79,6 +83,7 @@ export const NotYetApprovedSessionsGrid = (props) => {
         <GridComp 
         columnDefs={columnDefs}
         rowData={notYetApprovedSessions}
+        onRowClicked={handleClick}
         frameworkComponents={{
           notYetApprovedSessionsGridCommands: NotYetApprovedSessionsGridCommands
         }}

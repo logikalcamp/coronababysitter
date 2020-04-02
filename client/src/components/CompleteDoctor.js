@@ -140,7 +140,7 @@ const CompleteDoctor = (props) => {
         let b = GeoMasking(lat,lng)
         let d = {...details}
         d["lat"] = b.geometry.coordinates[0]
-        d["long"] = b.geometry.coordinates[1]
+        d["lon"] = b.geometry.coordinates[1]
         d["address"] = address
         let city = address.split(',')
         d["city"] = city[1].replace(" ","")

@@ -31,7 +31,7 @@ const Header = (props) => {
                                 </React.Fragment>
                             }
                             {
-                                type=="volunteer" && 
+                                props.auth.user.type=="volunteer" && 
                                 <React.Fragment>
                                     <NavLink to="/volunteer-homepage" className="NavTab" activeClassName="NavTabActive">ההתנדבויות שלי</NavLink>
                                     <NavLink to="/find-session" className="NavTab" activeClassName="NavTabActive">בקשות לעזרה</NavLink>
