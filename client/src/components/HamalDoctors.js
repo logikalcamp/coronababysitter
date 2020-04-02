@@ -15,6 +15,7 @@ import {BASE_URL} from '../constants'
 import Axios from 'axios';
 import ChildCareIcon from '@material-ui/icons/ChildCare';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import * as DateUtils from '../utils/dateUtils';
 
 const styles = makeStyles(theme => ({
     root: {
@@ -172,12 +173,6 @@ export const HamalDoctorsPage = (props) => {
     const [pageCount, setPageCount] = useState(0);
     const [pagesUI, setPagesUI] = useState('');
 
-    const calculateAge = (birthday) => { // birthday is a date
-        var ageDifMs = Date.now() - birthday.getTime();
-        var ageDate = new Date(ageDifMs); // miliseconds from epoch
-        return Math.abs(ageDate.getUTCFullYear() - 1970);
-    }
-
     const updateVolunteers = (newPage) => {
         if(newPage == page) return;
 
@@ -269,7 +264,7 @@ export const HamalDoctorsPage = (props) => {
                     <div className={classes.volunteerHeader}>
                         <img className={classes.volunteerImage} src={selectedDoctor ? selectedDoctor.picture ? selectedDoctor.picture : window.location.origin + "/images/profilePlaceholder.png" : ''}></img>
                         <div className={classes.modalTitle}>{selectedDoctor ? selectedDoctor.firstName + ' ' + selectedDoctor.lastName : ''}</div>
-                        <div>גיל {calculateAge(selectedDoctor ? new Date(selectedDoctor.birthday) : new Date())}</div>
+                        <div>גיל {DateUtils.calculateAge(selectedDoctor ? new Date(selectedDoctor.birthday) : new Date())}</div>
                     </div>
                     <div className={classes.doctorDetails}>
                       <div className={classes.detailsHeader}>

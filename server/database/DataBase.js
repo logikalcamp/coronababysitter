@@ -130,6 +130,16 @@ exports.findOneAndUpdate = (collection, filter, newValues, db) => {
     })
 }
 
+exports.update = (collection, filterQuery,updateQuery, db) => {
+    return new Promise((resolve, reject) => {
+        db.collection(collection).update(filterQuery, updateQuery,{multi:true}, (err,obj) => {
+            if (err) reject(err);
+
+            resolve(obj)
+        });
+    })
+}
+
 exports.count = (collection, filter, db) => {
     return new Promise((resolve,reject) => {
         db.collection(collection).find(filter).count((err, result) => {

@@ -127,3 +127,4 @@ class VolunteerService {
 }
 
 module.exports.VolunteerService = VolunteerService;
+module.exports.VOL_COLLECTION_NAME = COLLECTION_NAME;

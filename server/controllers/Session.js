@@ -124,3 +124,14 @@ module.exports.getDoctorSessions = function getDoctorSessions (req, res, next, b
       res.status(400).json({'message': response.toString()});
     });
 };
+
+module.exports.approveSession = function approveSession (req, res, next,body,sessionId) {
+  req.SessionService.approveSession(sessionId, body.volunteerId)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};

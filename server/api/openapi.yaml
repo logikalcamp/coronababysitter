@@ -673,6 +673,41 @@ paths:
         "404":
           description: No sessions found.
       x-swagger-router-controller: Session
+  /session/approve/{sessionId}:
+    post:
+      tags:
+      - sessions
+      summary: approve a session to be filled by volunteer
+      operationId: approveSession
+      parameters:
+      - name: sessionId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                volunteerId:
+                  type: string
+      responses:
+        "200":
+          description: Session approved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: Error while approving sessions.
+      x-swagger-router-controller: Session
   /hamal:
     post:
       tags:
