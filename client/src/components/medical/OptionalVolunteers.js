@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -14,7 +14,7 @@ import request from 'request';
 import {FaMapMarkerAlt,FaHeart} from "react-icons/fa";
 import {MdWork} from "react-icons/md";
 import { BASE_URL } from '../../constants';
-
+import _ from 'lodash'
 
 const VolunteerDashboardComp = styled.div`
   height: 100%;
@@ -228,6 +228,8 @@ const OptionalVolunteers = (props) => {
     const [openModal,setOpen] = useState(false)
     const [requests,setRequests] = useState([])
     const [chosen,setChosen] = useState('')
+    const [array,setArr] = useState([])
+    const [load,setload] = useState(true)
     const [even,setEvent] = useState('')
     const id = props.auth.user._id
     
@@ -261,6 +263,10 @@ const OptionalVolunteers = (props) => {
                   Axios.post(BASE_URL+`/api/session/approve/${even._id}`,{volunteerId:data._id})
                   .then(res=>{
                     console.log(res)
+                    if(res.status == 200) {
+                      // let a = _.filter(requests,function(o){return o._id != even._id})
+                      // setRequests(a)
+                    }
                   })
                 }}
                 >קבל הצעה</Butt>
@@ -275,10 +281,20 @@ const OptionalVolunteers = (props) => {
       arr.map((x)=>{
         console.log(x)
         show.push( <Option data={x} pic={x.picture} firstName={x.firstName} /> )
-
+        
       })
       return show
     }
+    useEffect(() => {
+      Axios.post(BASE_URL+`/api/session/${id}`,{isFilled:false}).then(result => {
+        console.log(result);
+        setTimeout(()=>{
+          setload(false)
+  
+        },2000)
+        setArr(result.data)
+      })
+    }, [])
     
 
 
@@ -302,7 +318,7 @@ const OptionalVolunteers = (props) => {
                       <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
                       בקשות פתוחות
                       </GridHeaderComp>
-                      <OpenRequestsGrid handle={handleClick} id={id} />
+                      <OpenRequestsGrid load={load} arr={array} handle={handleClick} id={id} />
                   </GridWrapper>
                   <GridWrapper>
                       <GridHeaderComp style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
