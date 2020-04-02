@@ -12,6 +12,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import SchoolIcon from '@material-ui/icons/School';
 import * as DateUtils from '../../utils/dateUtils';
 import DotLoader from "react-spinners/DotLoader";
+import { request } from 'express';
 
 
 const styles = makeStyles(theme => ({
@@ -71,8 +72,7 @@ export const HamalNewRequests = (props) => {
     const classes = styles();
     const [urgentOpen, setUrgentOpen] = useState(true);
     const [otherOpen, setOtherOpen] = useState(false);
-    const [urgentRequests, setUrgentRequests] = useState(undefined)
-    const [otherRequests, setOtherRequests] = useState(undefined)
+    const [requests, setRequests] = useState(undefined)
 
     const [selectedSession, setSelectedSession] = useState({});
     const [selectedSessionRequests, setSelectedSessionRequests] = useState([])
@@ -108,8 +108,7 @@ export const HamalNewRequests = (props) => {
     const approveSession = (sessionId, volunteerId) => {
         setIsApproving(true);
         Axios.post(BASE_URL + `/api/session/approve/${sessionId}`, {volunteerId:volunteerId}).then(result => {
-          setUrgentRequests(undefined);
-          setOtherRequests(undefined);
+          setRequests(undefined);
           setSelectedSessionRequests([]);
           setIsApproving(false);
         }).catch(error => {
@@ -178,8 +177,11 @@ export const HamalNewRequests = (props) => {
         return gridObject;
       }
 
+      var loadingPage = false;
+
       const loadPage = () => {
-        if((urgentRequests && urgentRequests.length > 0) || (otherRequests && otherRequests.length > 0)) return;
+        if(loadingPage || ((requests.urgentRequests && requests.urgentRequests.length > 0) || (requests.otherRequests && requests.otherRequests.length > 0))) return;
+        loadingPage = true;
 
         Axios.get(BASE_URL + "/api/session/getUpcomingNotYetApprovedSessions").then((result) => {
             var urgentRequestsNew = [];
@@ -196,12 +198,12 @@ export const HamalNewRequests = (props) => {
                 }
             }
 
-            setUrgentRequests(urgentRequestsNew);
-            setOtherRequests(otherRequestsNew);
+            setRequests({urgentRequests: urgentRequestsNew, otherRequests: otherRequestsNew});
+            loadingPage = false;
         })
       }
 
-      useEffect(loadPage, [urgentRequests, otherRequests])
+      useEffect(loadPage, [requests])
 
       const toggleCollapseables = () => {
             setUrgentOpen(!urgentOpen);
@@ -211,7 +213,7 @@ export const HamalNewRequests = (props) => {
     return (
         <Container>
             <ContainerHeader>
-                טיפול בבקשה דחופות
+                טיפול בבקשה פתוחות {requests.urgentRequests && requests.otherRequests ? `(${requests.urgentRequests.length + requests.otherRequests.lenth})` : ''}
             </ContainerHeader>
             <ContainerContent>
                 <SessionsContent>
@@ -222,7 +224,7 @@ export const HamalNewRequests = (props) => {
                             {urgentOpen && <KeyboardArrowUpIcon className={classes.arrowIcon} onClick={toggleCollapseables}></KeyboardArrowUpIcon>}
                         </CollapsableHeader>
                         <CollapsableContent open={urgentOpen}>
-                        <GridComp columnDefs={columnDefs} rowData={urgentRequests} 
+                        <GridComp columnDefs={columnDefs} rowData={requests.urgentRequests} 
                             frameworkComponents={{
                                                   notYetApprovedSessionsGridCommands: NotYetApprovedSessionsGridCommands}}/>
                         </CollapsableContent>
@@ -234,7 +236,8 @@ export const HamalNewRequests = (props) => {
                             {otherOpen && <KeyboardArrowUpIcon className={classes.arrowIcon} onClick={toggleCollapseables}></KeyboardArrowUpIcon>}
                         </CollapsableHeader>
                         <CollapsableContent open={otherOpen}>
-                        <GridComp columnDefs={columnDefs} rowData={otherRequests}/>
+                        <GridComp columnDefs={columnDefs} rowData={requests.otherRequests} frameworkComponents={{
+                                                  notYetApprovedSessionsGridCommands: NotYetApprovedSessionsGridCommands}}/>
                         </CollapsableContent>
                     </Collapsable>
                 </SessionsContent>
