@@ -80,8 +80,8 @@ const Login = (props) => {
                     email:'aviram7168@gmail.com',
                     type:'medical'
                 }
+                props.dispatch(loginUser(data))
                 if(isDoctorLogin) {
-                    props.dispatch(loginUser(data))
                     history.push("/medicalhome");
                 }
                 else {

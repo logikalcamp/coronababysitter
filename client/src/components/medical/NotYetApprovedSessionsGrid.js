@@ -21,6 +21,7 @@ const NotYetApprovedSessionsGridCommands = (props) => {
 
 export const NotYetApprovedSessionsGrid = (props) => {
   console.log(props)
+  const [load,setload] = useState(true)
   const [notYetApprovedSessions, setNotYetApprovedSessions] = useState([]);
   const [columnDefs] = useState([
     { 
@@ -35,8 +36,16 @@ export const NotYetApprovedSessionsGrid = (props) => {
       headerName: "איש קשר",
       field: "contact",
       valueGetter: (params) => {
-        const {firstName, lastName} = params.data.doctor;
+        const {firstName, lastName} = params.data.doctor_o[0];
         return firstName + ' ' + lastName;
+      }
+    },
+    { 
+      headerName: "כמות בקשות",
+      field: "countReq",
+      valueGetter: (params) => {
+        const coun = params.data.requests.length;
+        return coun;
       }
     },
     { 
@@ -49,19 +58,31 @@ export const NotYetApprovedSessionsGrid = (props) => {
   
   useEffect(() => {
     Axios.post(BASE_URL+`/api/session/${props.id}`,{isFilled:false}).then(result => {
-      // setNotYetApprovedSessions(result.data)
       console.log(result);
+      setTimeout(()=>{
+        setload(false)
+
+      },2000)
+      setNotYetApprovedSessions(result.data)
     })
   }, [])
   
   return (
-    <GridComp 
-      columnDefs={columnDefs}
-      rowData={notYetApprovedSessions}
-      frameworkComponents={{
-        notYetApprovedSessionsGridCommands: NotYetApprovedSessionsGridCommands
-      }}
-    />
+    <React.Fragment>
+    {
+      load ? 
+        <div>aa</div>
+        :
+
+        <GridComp 
+        columnDefs={columnDefs}
+        rowData={notYetApprovedSessions}
+        frameworkComponents={{
+          notYetApprovedSessionsGridCommands: NotYetApprovedSessionsGridCommands
+        }}
+      />
+    }
+    </React.Fragment>
   )
 };
 

@@ -274,18 +274,18 @@ const NewSession = ({setOpen,id}) =>{
                                 contact:details.contact
                             }
                             console.log(data)
-                            axios.post(BASE_URL+"/api/session",data)
-                            .then((res)=>{
-                                console.log(res)
-                                if(res.status == 200){
-                                    // alert("yai")
-                                    setDone(true)
-                                }
-                                else{
-                                    // alert("oops")
-                                    setErr("משהו השתבש")
-                                }
-                            })
+                            // axios.post(BASE_URL+"/api/session",data)
+                            // .then((res)=>{
+                            //     console.log(res)
+                            //     if(res.status == 200){
+                            //         // alert("yai")
+                            //         setDone(true)
+                            //     }
+                            //     else{
+                            //         // alert("oops")
+                            //         setErr("משהו השתבש")
+                            //     }
+                            // })
                         }}
                         >צור בקשה</button>
                     </div>

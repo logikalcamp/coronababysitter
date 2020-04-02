@@ -158,7 +158,7 @@ const MedicalDashboard = (props) => {
                   <HeaderComp>
                   <div>
                       <h1>
-                      היי רון, כיף שבאת
+                      היי {props.auth.user.firstName}, כיף שבאת
                       <img src={window.location.origin + '/images/icons8_so_so_120px_2.png'} />
                       </h1>
                       <h2>אנחנו כאן לעזור לך ולדאוג שהמשפחה שלך תקבל את הטוב ביותר!</h2>

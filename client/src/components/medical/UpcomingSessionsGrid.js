@@ -25,6 +25,7 @@ const UpcomingSessionsGridCommands = (props) => {
 
 export const UpcomingSessionsGrid = (props) => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
+  const [load,setload] = useState(true)
   const [columnDefs] = useState([
     { 
       headerName: "תאריך",
@@ -38,7 +39,7 @@ export const UpcomingSessionsGrid = (props) => {
       headerName: "איש קשר",
       field: "contact",
       valueGetter: (params) => {
-        const {firstName, lastName} = params.data.doctor;
+        const {firstName, lastName} = params.data.doctor_o[0];
         return firstName + ' ' + lastName;
       }
     },
@@ -64,18 +65,29 @@ export const UpcomingSessionsGrid = (props) => {
 
   useEffect(() => {
     Axios.post(BASE_URL+`/api/session/${props.id}`,{isFilled:true}).then(result => {
-      // setUpcomingSessions(result.data);
+      setUpcomingSessions(result.data);
+      setTimeout(()=>{
+        setload(false)
+
+      },2000)
       console.log(result);
     })
   }, [])
 
   return (
-    <GridComp 
-        columnDefs={columnDefs}
-        rowData={upcomingSessions}
-        frameworkComponents={{
-          upcomingSessionsGridCommands: UpcomingSessionsGridCommands
-        }}
-    />
+    <React.Fragment>
+      {
+        load ? 
+          <div>aa</div>
+          :
+        <GridComp 
+          columnDefs={columnDefs}
+          rowData={upcomingSessions}
+          frameworkComponents={{
+            upcomingSessionsGridCommands: UpcomingSessionsGridCommands
+          }}
+      />
+      }
+    </React.Fragment>
   )
 };

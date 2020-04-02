@@ -8,7 +8,7 @@ import {connect} from 'react-redux'
 import NewSessionModal from './newSessionModal'
 import GridComp from '../Grid';
 // import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
-// import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
+import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
 
 
 const VolunteerDashboardComp = styled.div`
@@ -184,7 +184,7 @@ const OptionalVolunteers = (props) => {
                       <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
                       בקשות פתוחות
                       </GridHeaderComp>
-                      {/* <UpcomingSessionsGrid /> */}
+                      <NotYetApprovedSessionsGrid id={id} />
                   </GridWrapper>
                   <GridWrapper>
                       <GridHeaderComp>
