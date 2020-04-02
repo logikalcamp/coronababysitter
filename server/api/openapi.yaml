@@ -1009,8 +1009,12 @@ components:
           - weekly
           - monthly
         contact:
-          type: string
-          description: A contact's phone number
+          type: object
+          properties:
+            name:
+              type: string
+            phone:
+              type: string
       example:
         doctor:
           profession: profession

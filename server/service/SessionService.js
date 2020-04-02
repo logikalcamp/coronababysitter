@@ -1,7 +1,5 @@
 'use strict';
 
-var {VolunteerService, VOL_COLLECTION_NAME} = require('./VolunteerService');
-
 var getLookUp = (tableFrom, local, foreign, as) => {
   return ({
     $lookup:{
@@ -50,6 +48,13 @@ class SessionService {
 
           for (var i=0; i < body.requests.length; i++)
             body.requests[i] = MongoDB.getMongoObjectId(body.requests[i]);
+
+          if (body.timeApproved)
+            body.timeApproved = new Date(body.timeApproved);
+            
+          body.timeRequested = new Date(body.timeRequested);
+          body.startTime = new Date(body.startTime);
+          body.endTime = new Date(body.endTime);
           
           MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
@@ -131,21 +136,6 @@ class SessionService {
   }
 
   /**
-   * returns all sessions that haven't been assigned with a volunteer, yet.
-   */
-  getAllNotAssignedSessions(){
-    var aggregate = [];
-    lookUpForSessions(aggregate);
-    var filter = {$match: {
-      "filledBy": null
-            }
-    };
-    aggregate.push(filter);
-    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
-  }  
-  
-
-  /**
    * Get all upcoming sessions of a specified volunteer
    * userId String 
    * returns List
@@ -168,20 +158,7 @@ class SessionService {
    **/
   getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
     var filter = {$match : {$and: [{"filledBy" : null}, 
-    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}},
-    {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
-    var aggregate = [];
-
-    lookUpForSessions(aggregate);
-    aggregate.push(filter);
-
-
-    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
-  }
-
-  getAllUpcomingNotYetApprovedSessions() {
-    var filter = {$match : {$and: [{"filledBy" : null},
-                                   {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
+    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
     var aggregate = [];
 
     lookUpForSessions(aggregate);
@@ -221,46 +198,6 @@ class SessionService {
     lookUpForSessions(aggregate);
     aggregate.push(filter);
     return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate: aggregate}, this.MongoClient);
-  }
-
-  async approveSession(sessionId, volunteerId) {
-    try {
-        var results = await Promise.all([MongoDB.findOne(COLLECTION_NAME, {_id: MongoDB.getMongoObjectId(sessionId), requests: MongoDB.getMongoObjectId(volunteerId)}, this.MongoClient),
-                MongoDB.findByMongoId(VOL_COLLECTION_NAME,volunteerId, this.MongoClient)]);
-
-        if(results[0] && results[1]) {
-          var session = results[0];
-
-          var startDate = new Date(session.startTime);
-          var endDate = new Date(session.endTime);
-
-          startDate.setMinutes(startDate.getMinutes() - 30);
-          endDate.setMinutes(endDate.getMinutes() + 30);
-
-          var filter = {
-            startTime : {
-              $gte: startDate,
-              $lte: endDate
-            },
-            _id:{$ne : MongoDB.getMongoObjectId(sessionId)}
-          }
-
-          var updateQuery = {
-            $pull : { requests : MongoDB.getMongoObjectId(volunteerId)}
-          }
-
-          var removeVolunteerFromSessionsResult =
-             await MongoDB.update(COLLECTION_NAME, filter, updateQuery, this.MongoClient);
-
-          var setFilledByResult = 
-            await MongoDB.findOneAndUpdate(COLLECTION_NAME, {_id:MongoDB.getMongoObjectId(sessionId)}, {filledBy:MongoDB.getMongoObjectId(volunteerId)}, this.MongoClient);
-
-          return {approved:true}
-        }
-    }
-    catch (error) {
-      throw error;
-    }
   }
 }
 
