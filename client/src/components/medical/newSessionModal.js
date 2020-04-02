@@ -84,7 +84,7 @@ const TimeDate = styled.div`
 const numbers = ["0","1","2","3","4","5","6","7","8","9"]
 
 const NewSession = ({setOpen,id}) =>{
-    const [done,setDone] = useState(false)
+    const [done,setDone] = useState(true)
     const [err,setErr] = useState('')
     const [details,setState] = useState({
         startTime:'',
@@ -109,6 +109,7 @@ const NewSession = ({setOpen,id}) =>{
                 {
                     done ? 
                     <div>
+                        <img src={window.location.origin + '/images/giphy.gif'} alt=""/>
                         <h2>יש! הבקשה הוזנה למערכת , תוכל.י להתעדכן על הצעות של המתנדבים דרך דף ניהול הבקשות </h2>
                         <button>לדף ניהול בקשות</button>
                         <button>ליצירת בקשה חדשה</button>
@@ -224,14 +225,14 @@ const NewSession = ({setOpen,id}) =>{
                             }
                         }}/>
                     </div>
-                    {/* <div>
+                    <div>
                         <label>איש קשר</label>
                         <input value={details.contactName} onChange={(e)=>{
                             let d = {...details}
                             d.contactName = e.target.value
                             setState(d)
                         }} />
-                    </div> */}
+                    </div>
                     <div>
                         <label>טלפון איש קשר</label>
                         <input value={details.contact} onChange={(e)=>{
@@ -271,7 +272,10 @@ const NewSession = ({setOpen,id}) =>{
                                 endTime:new Date(moment(eDate,"MM/DD/YYYY HH:mm").format()),
                                 tasks:[],
                                 didHappen:false,
-                                contact:details.contact
+                                contact:{
+                                    phone:details.contact,
+                                    name:details.contactName
+                                }
                             }
                             // console.log(data)
                             axios.post(BASE_URL+"/api/session",data)
