@@ -32,7 +32,7 @@ export default class GridComp extends Component {
     return(
       <div className="grid-wrapper">
         <div className="ag-theme-balham" style={{height: '100%', width: '100%'}}>
-          <AgGridReact 
+          <AgGridReact
             {...this.props}
 
             enableRtl={true}

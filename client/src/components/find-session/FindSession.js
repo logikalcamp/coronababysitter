@@ -1,8 +1,10 @@
+import _ from 'lodash';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
 import moment from 'moment';
 
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
@@ -96,9 +98,26 @@ const GridExpanderComp = styled.div`
 `;
 //#endregion
 
+const FindSessionsGridCommands = (props) => {
+  const prefix = window.location.origin
+  const onClick = (event) => {
+    console.log(event);
+  }
+
+  return (
+    <span className="grid-command">
+      <AddCircleIcon
+        style={{ height: '30px', width: '30px', color: '#53b493' }}
+        onClick={onClick} 
+      />     
+    </span>
+  )
+}
+
 const FindSessionsGrid = (props) => {
   const [columnDefs] = useState([
     { 
+      colId: "date",
       headerName: "תאריך",
       field: "date",
       valueFormatter: (params) => {
@@ -107,10 +126,33 @@ const FindSessionsGrid = (props) => {
       }
     },
     { 
+      colId: "contact",
       headerName: "איש קשר",
       field: "contact"
     },
     {
+      colId: "children",
+      headerName: "ילדים",
+      field: "children",
+      valueGetter: (params) => {
+        return params.data.doctor_o[0].children.length;
+      }
+    },
+    {
+      colId: "address",
+      headerName: "כתובת",
+      field: "address",
+      valueGetter: (params) => {
+        let address = params.data.doctor_o[0].address;
+        address = address.split(',');
+        address = address[0] + ', ' + address[1];
+        address = address.replace(/[0-9]/g, '');
+
+        return address;
+      }
+    },
+    {
+      colId: "sessionHours",
       headerName: "שעות ההתנדבות",
       field: "sessionHours",
       valueGetter: (params) => {
@@ -121,14 +163,32 @@ const FindSessionsGrid = (props) => {
 
         return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
       }
+    },
+    {
+      colId: "commands",
+      headerName: "",
+      field: "commands",
+      width: 70,
+      cellRenderer: "findSessionsGridCommands"
     }
   ]);
 
+  const getColumnDefs = () => {
+    if (props.isExpanded) {
+      return columnDefs;
+    } else {
+      return _.filter(columnDefs, colDef => _.includes(['date', 'contact', 'sessionHours'], colDef.colId));
+    }
+  }
+
   return (
-    <GridComp 
-      columnDefs={columnDefs}
+    <GridComp
+      columnDefs={getColumnDefs()}
       rowData={props.availableSessions}
-      onRowClicked={props.handleRowClicked}
+      frameworkComponents={{
+        findSessionsGridCommands: FindSessionsGridCommands
+      }}
+      onRowDoubleClicked={props.handleDoubleClicked	}
     />
   )
 };
@@ -148,7 +208,7 @@ export const FindSession = (props) => {
     setIsExpanded(!isExpanded);
   }
 
-  const handleRowClicked = (event) => {
+  const handleDoubleClicked	 = (event) => {
     const {lat, lon} = event.data.doctor_o[0];
 
     setMapCenter({lat: lat, lng: lon});
@@ -163,9 +223,10 @@ export const FindSession = (props) => {
               <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
               ההתנדבויות הבאות שלי
             </GridHeaderComp>
-            <FindSessionsGrid 
+            <FindSessionsGrid
+              isExpanded={isExpanded}
               availableSessions={availableSessions}
-              handleRowClicked={handleRowClicked}
+              handleDoubleClicked={handleDoubleClicked}
             />
             <GridExpanderComp  onClick={toggleIsExpanded}>{isExpanded ? <ArrowForwardIosIcon /> :  <ArrowBackIosIcon />}</GridExpanderComp>
           </GridWrapper>
