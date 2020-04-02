@@ -72,7 +72,7 @@ const FindSessionsGridCommands = (props) => {
     <span className="grid-command">
       <AddCircleIcon
         style={{ height: '30px', width: '30px', color: '#53b493' }}
-        onClick={props.onClick} 
+        onClick={(e) => props.onClick(e, props.data)} 
       />     
     </span>
   )
@@ -87,7 +87,6 @@ const ChildrenCellRenderer = (props) => {
   return (
     <React.Fragment>
       {children.splice(0, 5).map(child => {
-        debugger;
         let img = '';
 
         if (child.age > 3) img = 'child';
@@ -174,11 +173,26 @@ export const FindSessionsGrid = (props) => {
     }
   }
 
+  const onCellFocused = (event) => {
+    const colId = _.get(event, 'column.colDef.colId');
+
+    if (colId === 'commands') {
+      event.api.gridOptionsWrapper.gridOptions.suppressRowClickSelection = true;
+    } else {
+      event.api.gridOptionsWrapper.gridOptions.suppressRowClickSelection = false;
+    }
+  }
+
   return (
     <GridWrapper>
       <GridHeaderComp>
         <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
         ההתנדבויות הבאות שלי
+        <img 
+          src={window.location.origin + '/images/icons8_filter_96px.png'}
+          style={{ position: 'absolute', left: 0, cursor: 'pointer' }}
+          onClick={props.openMapFilter}
+        />
       </GridHeaderComp>
       <GridComp
         columnDefs={getColumnDefs()}
@@ -187,7 +201,10 @@ export const FindSessionsGrid = (props) => {
           findSessionsGridCommands: FindSessionsGridCommands,
           childrenCellRenderer: ChildrenCellRenderer
         }}
-        onRowDoubleClicked={props.onDoubleClicked	}
+
+        rowSelection='single'
+        onRowSelected={props.onRowSelected}
+        onCellFocused={onCellFocused}
       />
       <GridExpanderComp  onClick={props.onExpanderClick}>{props.isExpanded ? <ArrowForwardIosIcon /> :  <ArrowBackIosIcon />}</GridExpanderComp>
     </GridWrapper>
