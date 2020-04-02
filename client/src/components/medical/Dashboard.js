@@ -149,7 +149,7 @@ const MedicalDashboard = (props) => {
     const [openModal,setOpen] = useState(false)
     console.log(props)
   
-    const id = props.auth.user.userid
+    const id = props.auth.user._id
     return (
       <React.Fragment>
           {openModal && <NewSessionModal id={id} setOpen={setOpen}/>}

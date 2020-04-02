@@ -5,7 +5,7 @@ const isEmpty = require("is-empty");
 
 const initialState = {
   isAuthenticated: (localStorage.getItem("users") ? true : false),
-  user: JSON.parse(localStorage.getItem("users")) || {userid:"5e80e88ff5ca035f4838f1bc"},
+  user: JSON.parse(localStorage.getItem("users")) || {_id:"5e80e88ff5ca035f4838f1bc"},
   loading: false,
 };
 

@@ -38,6 +38,17 @@ module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNot
 
 module.exports.getAllNotAssignedSessions = function getAllNotAssignedSessions (req, res, next) {
   req.SessionService.getAllNotAssignedSessions()
+  .then(function (response) {
+    utils.writeJson(req,res, response);
+  })
+  .catch(function (response) {
+    // utils.writeJson(req,res, response);
+    res.status(400).json({'message': response.toString()});
+  });
+};
+
+module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next, userId) {
+  req.SessionService.getAllUpcomingNotYetApprovedSessions(userId)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

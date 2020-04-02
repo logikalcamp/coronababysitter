@@ -11,6 +11,10 @@ import GridComp from '../Grid';
 import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
 import {OpenRequestsGrid} from './OpenRequestsGrid'
 import request from 'request';
+import {FaMapMarkerAlt,FaHeart} from "react-icons/fa";
+import {MdWork} from "react-icons/md";
+import { BASE_URL } from '../../constants';
+
 
 const VolunteerDashboardComp = styled.div`
   height: 100%;
@@ -154,24 +158,68 @@ const GridHeaderComp = styled.div`
 const Label = styled.label`
   font-size:14px;
 `
+const OptionCon = styled.div`
+  padding:1rem;
+  border:1px solid #828282;
+  margin:1rem;
+  border-radius:20px;
+  display:flex;
+  flex-direction:row;
+  img{
+    width:50px;
+    height:50px;
+  }
+`
 
-const Option = ({pic,firstName}) => {
-  return (
-    <div>
-      <img src={pic} />
-      {firstName}
-    </div>
-  )
+const Detail = styled.div`
+  font-size:12px;
+  svg{
+    margin-left:3px;
+    color:#828282;
+  }
+`
+const Butt = styled.div`
+    border:1px solid #53B493;
+    color:#53B493;
+    background:white;
+    border-radius:5px;
+    padding:10px;
+    &:hover{
+      background:#e2e2e2;
+      cursor:pointer;
+   } 
+`
+
+
+function calcCrow (lat1, lon1, lat2, lon2){
+  var R = 6371; // km
+  var dLat = toRad(lat2-lat1);
+  var dLon = toRad(lon2-lon1);
+  var lat1 = toRad(lat1);
+  var lat2 = toRad(lat2);
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c;
+  if(d<1){
+    console.log(d)
+    return (d*1000).toFixed(0)
+  }
+  else{
+    return d.toFixed(0);
+  }
 }
 
-const Optional = (arr) => {
-  let show = []
-  arr.map((x)=>{
-    console.log(x)
-    show.push( <Option pic={x.picture} firstName={x.firstName} /> )
-  })
-  return show
+// Converts numeric degrees to radians
+function toRad(Value) 
+{
+    return Value * Math.PI / 180;
 }
+
+
+
+
 
 
 const array = ["aaa","vvv","bbb","ccc"]
@@ -180,13 +228,60 @@ const OptionalVolunteers = (props) => {
     const [openModal,setOpen] = useState(false)
     const [requests,setRequests] = useState([])
     const [chosen,setChosen] = useState('')
-    const id = props.auth.user.userid
-
+    const [even,setEvent] = useState('')
+    const id = props.auth.user._id
+    
     const handleClick = (val,event) => {
-      console.log(val,event)
       setRequests(event.data.volunteers_array_o)
+      setEvent(event.data)
       setChosen(`${moment(event.data.startTime).format("DD/MM")} ${moment(event.data.startTime).format("HH:mm")}`)
+      document.getElementById("options").scrollIntoView()
     }
+    
+    const Option = ({pic,firstName,data}) => {
+      let length = calcCrow(data.lat,data.lon,props.auth.user.lat,props.auth.user.lon)
+      return (
+        <OptionCon>
+          <div>
+            <img src={pic} />
+          </div>
+          <div style={{width:"100%"}}>
+              <div>{data.firstName}, {data.isFemale ? `בת ${moment().diff(moment(data.birthday),"years")}` : `בן ${moment().diff(moment(data.birthday),"years")}`}</div>
+              <Detail><MdWork/>{data.isFemale ? `עובדת/לומדת ב${data.institute}`:`עובד/לומד ב${data.institute}`}</Detail>
+              <div>
+                {data.hobbies.length!=0 && data.hobbies.map((x)=>{return <Detail><FaHeart/> {data.isFemale ? "אוהבת":"אוהב"} {x}</Detail>})}
+              </div>
+              <Detail>
+              <FaMapMarkerAlt/> 
+                מרחק {length} {length>99 ? "מטרים":'ק"מ'}
+              </Detail>
+              <div style={{justifyContent:"flex-end",display:"flex"}}>
+                <Butt
+                onClick={()=>{
+                  Axios.post(BASE_URL+`/api/session/approve/${even._id}`,{volunteerId:data._id})
+                  .then(res=>{
+                    console.log(res)
+                  })
+                }}
+                >קבל הצעה</Butt>
+              </div>
+          </div>
+        </OptionCon>
+      )
+    }
+    
+    const Optional = (arr) => {
+      let show = []
+      arr.map((x)=>{
+        console.log(x)
+        show.push( <Option data={x} pic={x.picture} firstName={x.firstName} /> )
+
+      })
+      return show
+    }
+    
+
+
     return (
       <React.Fragment>
           {openModal && <NewSessionModal id={id} setOpen={setOpen}/>}
@@ -217,12 +312,24 @@ const OptionalVolunteers = (props) => {
                       </div>
                         <Label>{chosen}</Label>
                       </GridHeaderComp>
-                      {
-                        requests.length == 0 ?
-                        <div>Choose some</div> 
-                        :
-                          Optional(requests)
-                        }
+                      <div id="options" style={{height:"100%",overflowY:"auto"}}>
+                        {
+                          requests.length == 0 ?
+                          <div>
+                            {chosen == '' ? 
+                              <div style={{textAlign:"center",marginTop:"2rem"}}>
+                                על מנת לראות הצעות התנדבות יש לבחור בקשה מימין
+                              </div>
+                              :
+                              <div style={{textAlign:"center",marginTop:"2rem"}}>
+                                נראה שעדיין אין הצעות לפגישה זו 
+                              </div>
+                            }
+                          </div> 
+                          :
+                            Optional(requests)
+                          }
+                      </div>
                   </GridWrapper>
                   </DashboardComp>
               </div>

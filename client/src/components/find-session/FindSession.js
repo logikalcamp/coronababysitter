@@ -37,12 +37,61 @@ const MapWrapper = styled.div`
 
   position: relative;
 `;
+const ModalCon = styled.div`
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0, 0.4);
+
+  display:  ${props=> props.open ? "block" : "none"};
+`;
+const ModalContentCon = styled.div`
+  position: fixed;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 400px;
+  height: 100%;
+  background-color: #ffffff;
+
+  transform: translateX(-100%);
+  -webkit-transform: translateX(-100%);
+
+  animation: ${props=> props.open ? "slide-in 0.5s forwards" : "slide-out 0.5s forwards"};
+  -webkit-animation: ${props=> props.open ? "slide-in 0.5s forwards" : "slide-out 0.5s forwards"};
+
+  @keyframes slide-in {
+    100% { transform: translateX(0%); }
+  }
+  
+  @-webkit-keyframes slide-in {
+    100% { -webkit-transform: translateX(0%); }
+  }
+      
+  @keyframes slide-out {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+  }
+  
+  @-webkit-keyframes slide-out {
+    0% { -webkit-transform: translateX(0%); }
+    100% { -webkit-transform: translateX(-100%); }
+  }
+`;
 //#endregion
+
+const SESSION_DETAILS_MODAL = 'SESSION_DETAILS_MODAL';
+const MAP_FILTER_MODAL = 'MAP_FILTER_MODAL';
 
 export const FindSession = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [availableSessions, setAvailableSessions] = useState([]);
   const [mapCenter, setMapCenter] = useState({lat: 32.344084 , lng: 34.870139});
+  const [modalData, setModalData] = useState(undefined);
 
   useEffect(() => {
     Axios.get(BASE_URL+'/api/session/getavailablesessions/5e7ca72c343daa68c8d7277f').then(result => {
@@ -54,15 +103,45 @@ export const FindSession = (props) => {
     setIsExpanded(!isExpanded);
   }
 
-  const handleDoubleClicked	 = (event) => {
+  const handleRowSelected	 = (event) => {
     const {lat, lon} = event.data.doctor_o[0];
 
     setMapCenter({lat: lat, lng: lon});
   }
 
-  const openSessionDetails = (event) => {
-    console.log(event);
+  const openSessionDetails = (event, session) => {
+    setModalData({
+      type: SESSION_DETAILS_MODAL,
+      session
+    });
   }
+
+  const openMapFilter = (event) => {
+    setModalData({
+      type: MAP_FILTER_MODAL
+    });
+  }
+
+  const getModal = () => {
+    let retVal = '';
+
+    if (modalData && modalData.type) {
+      switch(modalData.type) {
+        case SESSION_DETAILS_MODAL:
+          retVal = 'Session Details';
+          break;
+
+        case MAP_FILTER_MODAL:
+          retVal = 'Map Filter';
+          break;
+
+        default:
+          retVal = '';
+      }
+    }
+
+    return retVal;
+  } 
 
   return (
     <FindSessionComp>
@@ -71,8 +150,9 @@ export const FindSession = (props) => {
           <FindSessionsGrid
             isExpanded={isExpanded}
             onExpanderClick={toggleIsExpanded}
-            onDoubleClicked={handleDoubleClicked}
+            onRowSelected={handleRowSelected}
             openSessionDetails={openSessionDetails}
+            openMapFilter={openMapFilter}
 
             availableSessions={availableSessions}
           />
@@ -86,6 +166,10 @@ export const FindSession = (props) => {
             availableSessions={availableSessions}
           />
         </MapWrapper>
+        <ModalCon open={modalData && modalData.type !== ''} onClick={() => setModalData(undefined)}/>
+        <ModalContentCon open={modalData && modalData.type !== ''}>
+          {getModal()}
+        </ModalContentCon>
       </Wrapper>
     </FindSessionComp>
   )
