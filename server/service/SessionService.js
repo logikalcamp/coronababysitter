@@ -1,7 +1,5 @@
 'use strict';
 
-var {VolunteerService, VOL_COLLECTION_NAME} = require('./VolunteerService');
-
 var getLookUp = (tableFrom, local, foreign, as) => {
   return ({
     $lookup:{
@@ -50,6 +48,13 @@ class SessionService {
 
           for (var i=0; i < body.requests.length; i++)
             body.requests[i] = MongoDB.getMongoObjectId(body.requests[i]);
+
+          if (body.timeApproved)
+            body.timeApproved = new Date(body.timeApproved);
+            
+          body.timeRequested = new Date(body.timeRequested);
+          body.startTime = new Date(body.startTime);
+          body.endTime = new Date(body.endTime);
           
           MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
@@ -131,21 +136,6 @@ class SessionService {
   }
 
   /**
-   * returns all sessions that haven't been assigned with a volunteer, yet.
-   */
-  getAllNotAssignedSessions(){
-    var aggregate = [];
-    lookUpForSessions(aggregate);
-    var filter = {$match: {
-      "filledBy": null
-            }
-    };
-    aggregate.push(filter);
-    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
-  }  
-  
-
-  /**
    * Get all upcoming sessions of a specified volunteer
    * userId String 
    * returns List
@@ -168,20 +158,7 @@ class SessionService {
    **/
   getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
     var filter = {$match : {$and: [{"filledBy" : null}, 
-    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}},
-    {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
-    var aggregate = [];
-
-    lookUpForSessions(aggregate);
-    aggregate.push(filter);
-
-
-    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
-  }
-
-  getAllUpcomingNotYetApprovedSessions() {
-    var filter = {$match : {$and: [{"filledBy" : null},
-                                   {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
+    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
     var aggregate = [];
 
     lookUpForSessions(aggregate);
@@ -263,7 +240,7 @@ class SessionService {
     }
   }
 
-  async deleteSession(sessionId) {
+  deleteSession(sessionId) {
     return MongoDB.deleteOne(COLLECTION_NAME,{_id:MongoDB.getMongoObjectId(sessionId)}, this.MongoClient);
   }
 }

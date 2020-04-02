@@ -8,8 +8,9 @@ import {connect} from 'react-redux'
 import NewSessionModal from './newSessionModal'
 import GridComp from '../Grid';
 // import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
-// import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
-
+import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
+import {OpenRequestsGrid} from './OpenRequestsGrid'
+import request from 'request';
 
 const VolunteerDashboardComp = styled.div`
   height: 100%;
@@ -150,20 +151,42 @@ const GridHeaderComp = styled.div`
 `;
 
 
+const Label = styled.label`
+  font-size:14px;
+`
+
+const Option = ({pic,firstName}) => {
+  return (
+    <div>
+      <img src={pic} />
+      {firstName}
+    </div>
+  )
+}
+
 const Optional = (arr) => {
   let show = []
   arr.map((x)=>{
-    show.push(<div>{x}</div>)
+    console.log(x)
+    show.push( <Option pic={x.picture} firstName={x.firstName} /> )
   })
   return show
 }
+
 
 const array = ["aaa","vvv","bbb","ccc"]
 
 const OptionalVolunteers = (props) => {
     const [openModal,setOpen] = useState(false)
+    const [requests,setRequests] = useState([])
+    const [chosen,setChosen] = useState('')
     const id = props.auth.user.userid
 
+    const handleClick = (val,event) => {
+      console.log(val,event)
+      setRequests(event.data.volunteers_array_o)
+      setChosen(`${moment(event.data.startTime).format("DD/MM")} ${moment(event.data.startTime).format("HH:mm")}`)
+    }
     return (
       <React.Fragment>
           {openModal && <NewSessionModal id={id} setOpen={setOpen}/>}
@@ -180,18 +203,26 @@ const OptionalVolunteers = (props) => {
                   </HeaderComp>
                   <DashboardComp>
                   <GridWrapper primary>
-                      <GridHeaderComp>
+                      <GridHeaderComp >
                       <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
                       בקשות פתוחות
                       </GridHeaderComp>
-                      {/* <UpcomingSessionsGrid /> */}
+                      <OpenRequestsGrid handle={handleClick} id={id} />
                   </GridWrapper>
                   <GridWrapper>
-                      <GridHeaderComp>
-                      <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
-                      הצעות התנדבות
+                      <GridHeaderComp style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                      <div style={{display:"flex"}}>
+                        <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
+                        הצעות התנדבות 
+                      </div>
+                        <Label>{chosen}</Label>
                       </GridHeaderComp>
-                      {Optional(array)}
+                      {
+                        requests.length == 0 ?
+                        <div>Choose some</div> 
+                        :
+                          Optional(requests)
+                        }
                   </GridWrapper>
                   </DashboardComp>
               </div>

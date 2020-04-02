@@ -21,6 +21,8 @@ import {HamalNewRequests} from '../components/hamal/HamalNewRequests'
 import Logout from '../components/Logout'
 import ManageSessions from '../components/hamal/ManageSessions'
 import HamalPendingUsers from '../components/hamal/HamalPendingUsers'
+import ViewSessions from '../components/hamal/ViewSessions'
+import ManageUsers from '../components/hamal/ManageUsers'
 
 const AppRouter = () =>(
     <Router>
@@ -50,7 +52,10 @@ const AppRouter = () =>(
         <Route exact path="/hamal/volunteers" component={HamalVolunteersPage}/>
         <Route exact path="/hamal/doctors" component={HamalDoctorsPage}/>
         <Route exact path="/hamal" component={HamalHome}/>
-        <Route exact path="/pendingsessions" component={ManageSessions}/>
+        <Route exact path="/pendingsessions" component={ViewSessions}/>
+        <Route exact path="/pendingusers" component={ManageUsers}/>
+        
+        
         
         {/* <Route exact path="/hamal" component={HamalVolunteersPage}/> */}
         {/* 
