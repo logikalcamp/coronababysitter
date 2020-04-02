@@ -10,7 +10,7 @@ import { HamalVolunteersPage } from '../components/HamalVolunteers';
 import { HamalDoctorsPage } from '../components/HamalDoctors';
 import CompleteDoctor from '../components/CompleteDoctor'
 import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
-import {FindSession} from '../components/FindSession';
+import {FindSession} from '../components/find-session/FindSession';
 import MedicalDashboard from '../components/medical/Dashboard'
 import OptionalVolunteers from '../components/medical/OptionalVolunteers'
 import Policy from '../components/Policy'
