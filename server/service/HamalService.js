@@ -31,7 +31,12 @@ class HamalService {
             try {
               var user = result;
               var userCollectionLowerCase = userCollection.toLowerCase()
-              MongoDB.findOneAndUpdate(userCollection, { '_id': MongoDB.getMongoObjectId(userId) }, { "isApproved": body.isApproved }, this.MongoClient)
+              if(body.isApproved) {
+                MongoDB.findOneAndUpdate(userCollection, { '_id': MongoDB.getMongoObjectId(userId) }, { "isApproved": body.isApproved }, this.MongoClient)
+              } else {
+                MongoDB.findOneAndUpdate(userCollection, { '_id': MongoDB.getMongoObjectId(userId) }, { "isApproved": body.isApproved, "isRejected" : true }, this.MongoClient)
+              }
+              
               MongoDB.findOneAndUpdate(COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(hamalUser._id.toString()) }, { "$push": { userCollectionLowerCase: user }}, this.MongoClient)
 
               var emailInfo;
