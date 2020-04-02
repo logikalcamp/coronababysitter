@@ -12,6 +12,9 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import SchoolIcon from '@material-ui/icons/School';
 import * as DateUtils from '../../utils/dateUtils';
 import DotLoader from "react-spinners/DotLoader";
+import { Collapsable, CollapsableContent, CollapsableHeader, Title } from '../Utils'
+import moment from 'moment'
+import 'moment/locale/he'
 
 const styles = makeStyles(theme => ({
     arrowIcon: {
@@ -225,15 +228,17 @@ export const HamalNewRequests = (props) => {
       }
 
       const getGridObjectFromSession = (session)  => {
-        var gridObject = {
-            startTime: new Date(session.startTime),
-            fullName: session.doctor_o[0].firstName + ' ' + session.doctor_o[0].lastName,
-            phone: session.doctor_o[0].phone,
-            requestsCount: session.requests.length,
-            fullSession: session
-        }
+            moment.locale("he")
+            var startTimeText = moment(new Date(session.startTime)).format("LLL");
+            var gridObject = {
+                startTime: startTimeText,
+                fullName: session.doctor_o[0].firstName + ' ' + session.doctor_o[0].lastName,
+                phone: session.doctor_o[0].phone,
+                requestsCount: session.requests.length,
+                fullSession: session
+            }
 
-        return gridObject;
+            return gridObject;
       }
       
       const loadPage = () => {
@@ -483,84 +488,3 @@ const SessionsContent = styled.div`
     width: 70%;
 `
 
-const Collapsable = styled.div`
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background-color:white;
-    border-radius: 8px;
-    box-shadow: 5px 5px 5px gray;
-    height: auto;
-    clear:both;
-    padding: 20px 10px 20px 10px;
-    margin-bottom: 20px;
-    flex-direction:column;
-`
-
-const CollapsableHeader = styled.div`
-    width: 100%;
-    display:flex;
-    justify-content: space-between;
-    align-items:center;
-    height: 30px;
-    border-bottom: 1px solid gray;
-    padding-bottom:5px;
-`
-
-const Title = styled.div`
-    font-size: 24px;
-    
-`
-
-const CollapsableContent = styled.div`
-    height:100%;
-    width: 100%;
-    clear:both;
-
-    animation: ${props => props.open ? "toggle-down 0.5s forwards" : "toggle-up 0.5s forwards"};
-    -webkit-animation: ${props=> props.open ? "toggle-down 0.5s forwards" : "toggle-up 0.5s forwards"};
-
-    @keyframes toggle-up {
-        0% {height: 500px; }
-        100% { height: 0px; }
-    }
-    
-    @-webkit-keyframes toggle-up {
-        0% {height: 500px; }
-        100% { height: 0px; }
-    }
-        
-    @keyframes toggle-down {
-        0% {height: 0px; }
-        100% { height: 500px; }
-    }
-    
-    @-webkit-keyframes toggle-down {
-        0% {height: 0px; }
-        100% { height: 500px; }
-    }
-
-    & .grid-wrapper {
-        height: 100%;
-      }
-
-    .ag-body-viewport {
-        &::-webkit-scrollbar {
-            width: 5px;
-        }
-        /* Track */
-        &::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-    
-        /* Handle */
-        &::-webkit-scrollbar-thumb {
-            background: #00C2CB;
-        }
-    
-        /* Handle on hover */
-        &::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-    }
-`

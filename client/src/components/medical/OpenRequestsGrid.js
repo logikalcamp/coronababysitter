@@ -21,8 +21,12 @@ const NotYetApprovedSessionsGridCommands = (props) => {
 
 export const OpenRequestsGrid = (props) => {
   console.log(props)
-  const [load,setload] = useState(true)
-  const [notYetApprovedSessions, setNotYetApprovedSessions] = useState([]);
+
+  const [notYetApprovedSessions, setNotYetApprovedSessions] = useState(props.arr);
+  
+  useEffect(() => {
+    setNotYetApprovedSessions(props.arr)
+  }, [props])
   const [columnDefs] = useState([
     { 
       headerName: "תאריך ושעה",
@@ -60,21 +64,12 @@ export const OpenRequestsGrid = (props) => {
   const handleClick = (e) => {
       props.handle(notYetApprovedSessions,e)
   }
-  useEffect(() => {
-    Axios.post(BASE_URL+`/api/session/${props.id}`,{isFilled:false}).then(result => {
-      console.log(result);
-      setTimeout(()=>{
-        setload(false)
-
-      },2000)
-      setNotYetApprovedSessions(result.data)
-    })
-  }, [])
+  
   
   return (
     <React.Fragment>
     {
-      load ? 
+      props.load ? 
       <div style={{textAlign:"center"}}>
         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
       </div>

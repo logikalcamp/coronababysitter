@@ -23,8 +23,10 @@ import Logout from '../components/Logout'
 import {HamalPendingUsers} from '../components/hamal/HamalPendingUsers'
 // import ViewSessions from '../components/hamal/ViewSessions'
 // import ManageUsers from '../components/hamal/ManageUsers'
+import ErrorPage from '../components/ErrorPage'
+import {connect} from 'react-redux'
 
-const AppRouter = () =>(
+const AppRouter = (props) =>(
     <Router>
       <Header/>
       {window.innerWidth < 600 && <MessageBar message={["כדי לקבל את החוויה הטובה ביותר",'באנדרואיד - "הגדרות" -> "הוספה למסך הבית"','באייפון - רק בדפדפן ספארי - "הגדרות" -> "הוסף למסך הבית"']}/> }
@@ -36,35 +38,38 @@ const AppRouter = () =>(
         <Route exact path="/doctor/:id" component={CompleteDoctor}/>
         <Route exact path="/Registration/:type" component={Signup}/>
         
-        
-        <PrivateRoute exact path="/medicalhome" component={MedicalDashboard}/>
-        <PrivateRoute exact path="/optionalvolunteers" component={OptionalVolunteers}/>
-        {/* <Route exact path="/optionalvolunteers" component={CreateSession}/> */}
-
-        
-        {/* <Route exact path="/hamal" component={VolunteersPage}/> */}
-        <PrivateRoute exact path='/volunteer-homepage' component={VolunteerHomepage} />
-        <PrivateRoute exact path='/find-session' component={FindSession} />
-        
+        {
+          props.auth.user.type == "medical" &&
+          <PrivateRoute exact path="/medicalhome" component={MedicalDashboard}/>
+        }
+        {
+          props.auth.user.type == "medical" &&
+          <PrivateRoute exact path="/optionalvolunteers" component={OptionalVolunteers}/>
+        }
+        {
+          props.auth.user.type =="volunteer" &&
+          <PrivateRoute exact path='/volunteer-homepage' component={VolunteerHomepage} />
+        }
+        {
+          props.auth.user.type =="volunteer" &&
+          <PrivateRoute exact path='/find-session' component={FindSession} />
+        }
         
         <Route exact path="/hamal/pendingusers" component={HamalPendingUsers}/>
         <Route exact path="/hamal/newrequests" component={HamalNewRequests}/>
         <Route exact path="/hamal/volunteers" component={HamalVolunteersPage}/>
         <Route exact path="/hamal/doctors" component={HamalDoctorsPage}/>
         <Route exact path="/hamal" component={HamalHome}/>
-        {/* <Route exact path="/pendingsessions" component={ViewSessions}/>
-        <Route exact path="/pendingusers" component={ManageUsers}/> */}
         
-        
-        
-        {/* <Route exact path="/hamal" component={HamalVolunteersPage}/> */}
-        {/* 
-        <PrivateRoute exact path="/meeting/:id" component={Meeting} />
-        <PrivateRoute exact path="/summary/:id" component={Summary} />
-        */}
+        <Route path="/" component={ErrorPage} />
       </Switch>
       <Footer/>
     </Router>
 );
 
-export default AppRouter;
+const ToProps = (state,props) => {
+  return {
+      auth: state.auth
+  }
+}
+export default connect(ToProps)(AppRouter);

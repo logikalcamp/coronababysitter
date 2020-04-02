@@ -25,8 +25,8 @@ module.exports.getAllSessionsByUser = function getAllSessionsByUser (req, res, n
     });
 };
 
-module.exports.getAllUpcomingNotYetApprovedSessionsByVolunteer = function getAllUpcomingNotYetApprovedSessionsByVolunteer (req, res, next, userId) {
-  req.SessionService.getAllUpcomingNotYetApprovedSessionsByVolunteer(userId)
+module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next) {
+  req.SessionService.getAllUpcomingNotYetApprovedSessions()
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
@@ -34,6 +34,17 @@ module.exports.getAllUpcomingNotYetApprovedSessionsByVolunteer = function getAll
       // utils.writeJson(req,res, response);
       res.status(400).json({'message': response.toString()});
     });
+};
+
+module.exports.getAllNotAssignedSessions = function getAllNotAssignedSessions (req, res, next) {
+  req.SessionService.getAllNotAssignedSessions()
+  .then(function (response) {
+    utils.writeJson(req,res, response);
+  })
+  .catch(function (response) {
+    // utils.writeJson(req,res, response);
+    res.status(400).json({'message': response.toString()});
+  });
 };
 
 module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next, userId) {
@@ -47,8 +58,8 @@ module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNot
     });
 };
 
-module.exports.getAllNotAssignedSessions = function getAllNotAssignedSessions (req, res, next) {
-  req.SessionService.getAllNotAssignedSessions()
+module.exports.getAllUpcomingApprovedSessionsByVolunteer = function getAllUpcomingApprovedSessionsByVolunteer (req, res, next, userId) {
+  req.SessionService.getAllUpcomingApprovedSessionsByVolunteer(userId)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
@@ -58,8 +69,8 @@ module.exports.getAllNotAssignedSessions = function getAllNotAssignedSessions (r
     });
 };
 
-module.exports.getAllUpcomingApprovedSessionsByVolunteer = function getAllUpcomingApprovedSessionsByVolunteer (req, res, next, userId) {
-  req.SessionService.getAllUpcomingApprovedSessionsByVolunteer(userId)
+module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next) {
+  req.SessionService.getAllUpcomingNotYetApprovedSessions()
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
