@@ -262,7 +262,13 @@ class SessionService {
       throw error;
     }
   }
+
+  async deleteSession(sessionId) {
+    return MongoDB.deleteOne(COLLECTION_NAME,{_id:MongoDB.getMongoObjectId(sessionId)}, this.MongoClient);
+  }
 }
+
+
 
 module.exports.SessionService = SessionService;
 

@@ -135,3 +135,14 @@ module.exports.approveSession = function approveSession (req, res, next,body,ses
       res.status(400).json({'message': response.toString()});
     });
 };
+
+module.exports.deleteSession = function deleteSession (req, res, next,body) {
+  req.SessionService.deleteSession(body.sessionId)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
