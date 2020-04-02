@@ -3,12 +3,19 @@ import Axios from 'axios';
 import moment from 'moment';
 import {BASE_URL} from '../../constants'
 import GridComp from '../Grid';
+import _ from 'lodash'
 
 
 const NotYetApprovedSessionsGridCommands = (props) => {
   const prefix = window.location.origin
-  const onClick = (event) => console.log(event);
-
+  const onClick = (event) => {
+    Axios.post(BASE_URL+'/api/session/delete',{sessionId:props.data._id})
+    .then(res=>{
+      if(res.status==200){
+        props.onClick(props.data._id)
+      }
+    })
+  };
   return (
     <span className="grid-command">
       <img
@@ -23,7 +30,10 @@ export const OpenRequestsGrid = (props) => {
   console.log(props)
 
   const [notYetApprovedSessions, setNotYetApprovedSessions] = useState(props.arr);
-  
+  const DeleteSession = (val) =>{
+    let a = _.filter(notYetApprovedSessions,function(o){return o._id != val})
+    setNotYetApprovedSessions(a)
+  }
   useEffect(() => {
     setNotYetApprovedSessions(props.arr)
   }, [props])
@@ -56,7 +66,10 @@ export const OpenRequestsGrid = (props) => {
       headerName: "",
       field: "commands",
       width: 70,
-      cellRenderer: "notYetApprovedSessionsGridCommands"
+      cellRenderer: "notYetApprovedSessionsGridCommands",
+      cellRendererParams: {
+        onClick: DeleteSession
+      }
     }
   ]);
   
