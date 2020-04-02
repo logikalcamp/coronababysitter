@@ -101,12 +101,13 @@ class SessionService {
     return new Promise((resolve, reject) => {
       var X = 25;
       var user;
-      MongoDB.findOne("Volunteers", {"_id" : MongoDB.getMongoObjectId(userId)}, this.MongoClient).then((result1) => {
+      var id = MongoDB.getMongoObjectId(userId);
+      MongoDB.findOne("Volunteers", {"_id" : id}, this.MongoClient).then((result1) => {
         user = result1;
         var sessions = [];
         var aggregate = [];
         lookUpForSessions(aggregate);
-        var filter = {$match : {filledBy: null}};
+        var filter = {$match : {filledBy: null, requests : {$nin : [id]}}};
         aggregate.push(filter);  
         MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate: aggregate}, this.MongoClient).then((result2) => {
           sessions = result2;
