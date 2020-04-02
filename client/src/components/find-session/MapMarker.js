@@ -90,7 +90,7 @@ const InfoWindow = React.forwardRef((props, ref) => {
         <div><ScheduleIcon />{endTime.format("H:mm") + ' - ' + startTime.format("H:mm")}</div>
         <div><EventIcon />{startTime.format("DD-MM-YY")}</div>
       </DateTimeComp>
-      <ApplyComp onClick={() => console.log('Apply to session')}>
+      <ApplyComp onClick={props.openSessionDetails}>
         הציעו עזרה
         <AddCircleIcon />
       </ApplyComp>

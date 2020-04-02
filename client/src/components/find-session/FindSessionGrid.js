@@ -68,16 +68,11 @@ const GridExpanderComp = styled.div`
 //#endregion
 
 const FindSessionsGridCommands = (props) => {
-  const prefix = window.location.origin
-  const onClick = (event) => {
-    console.log(event);
-  }
-  
   return (
     <span className="grid-command">
       <AddCircleIcon
         style={{ height: '30px', width: '30px', color: '#53b493' }}
-        onClick={onClick} 
+        onClick={props.onClick} 
       />     
     </span>
   )
@@ -164,7 +159,10 @@ export const FindSessionsGrid = (props) => {
       headerName: "",
       field: "commands",
       width: 70,
-      cellRenderer: "findSessionsGridCommands"
+      cellRenderer: "findSessionsGridCommands",
+      cellRendererParams: {
+        onClick: props.openSessionDetails
+      }
     }
   ]);
 

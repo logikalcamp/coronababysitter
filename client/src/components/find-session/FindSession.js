@@ -60,6 +60,10 @@ export const FindSession = (props) => {
     setMapCenter({lat: lat, lng: lon});
   }
 
+  const openSessionDetails = (event) => {
+    console.log(event);
+  }
+
   return (
     <FindSessionComp>
       <Wrapper>
@@ -68,6 +72,7 @@ export const FindSession = (props) => {
             isExpanded={isExpanded}
             onExpanderClick={toggleIsExpanded}
             onDoubleClicked={handleDoubleClicked}
+            openSessionDetails={openSessionDetails}
 
             availableSessions={availableSessions}
           />
@@ -76,6 +81,8 @@ export const FindSession = (props) => {
           <Map 
             ownLocation={{lat: 32.344084 , lng: 34.870139}}
             mapCenter={mapCenter}
+            openSessionDetails={openSessionDetails}
+
             availableSessions={availableSessions}
           />
         </MapWrapper>

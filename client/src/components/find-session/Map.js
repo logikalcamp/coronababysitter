@@ -28,14 +28,15 @@ export const Map = (props) => {
         center={props.mapCenter}
         defaultZoom={15}
         onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps, props.ownLocation)}
-        onClick={({event}) => console.log(event)}
       >
         {props.availableSessions.map(session => 
           <Marker
             key={session._id}
             lat={_.get(session.doctor_o[0], 'lat')}
             lng={_.get(session.doctor_o[0], 'lon')}
+            
             session={session}
+            openSessionDetails={props.openSessionDetails}
           />)}
       </GoogleMapReact>
     </MapWrapper>
