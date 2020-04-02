@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { useState, useEffect } from 'react';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
 import Axios from 'axios';
 
@@ -88,14 +89,16 @@ const ModalContentCon = styled.div`
 const SESSION_DETAILS_MODAL = 'SESSION_DETAILS_MODAL';
 const MAP_FILTER_MODAL = 'MAP_FILTER_MODAL';
 
-export const FindSession = (props) => {
+const FindSession = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [availableSessions, setAvailableSessions] = useState([]);
   const [mapCenter, setMapCenter] = useState({lat: 32.344084 , lng: 34.870139});
   const [modalData, setModalData] = useState(undefined);
 
   useEffect(() => {
-    Axios.get(BASE_URL+'/api/session/getavailablesessions/5e7ca72c343daa68c8d7277f').then(result => {
+    const volunteerId = props.auth.user._id;
+    
+    Axios.get(BASE_URL+'/api/session/getavailablesessions/' + volunteerId).then(result => {
       setAvailableSessions(result.data);
     })
   }, []);
@@ -111,10 +114,23 @@ export const FindSession = (props) => {
   }
 
   const openSessionDetails = (event, session) => {
-    setModalData({
+    debugger;
+    
+    let newSession = _.cloneDeep(session);
+    newSession.requests.push(props.auth.user._id);
+
+    Axios.put(BASE_URL+'/api/session/' + session._id, newSession)
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+    /*setModalData({
       type: SESSION_DETAILS_MODAL,
       session
-    });
+    });*/
   }
 
   const openMapFilter = (event) => {
@@ -142,7 +158,7 @@ export const FindSession = (props) => {
     }
 
     return retVal;
-  } 
+  }
 
   return (
     <FindSessionComp>
@@ -175,3 +191,10 @@ export const FindSession = (props) => {
     </FindSessionComp>
   )
 }
+
+const ToProps = (state,props) => {
+  return {
+      auth: state.auth
+  }
+}
+export default connect(ToProps)(FindSession);
