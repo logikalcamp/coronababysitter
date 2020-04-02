@@ -1,5 +1,7 @@
 'use strict';
 
+var {VolunteerService, VOL_COLLECTION_NAME} = require('./VolunteerService');
+
 var getLookUp = (tableFrom, local, foreign, as) => {
   return ({
     $lookup:{
@@ -36,11 +38,19 @@ class SessionService {
   async createSession(body) {
     return new Promise((resolve, reject) => {
       // Check if a session with the same start time already exists for this doctor
-      MongoDB.findOne(COLLECTION_NAME, {"doctor_id" : MongoDB.getMongoObjectId(body.doctor_id),
+      MongoDB.findOne(COLLECTION_NAME, {"doctor._id" : MongoDB.getMongoObjectId(body.doctor_id),
                                              startTime: body.startTime}, this.MongoClient).then((result) => {
         if(result) 
           reject("Session already exists");
         else {
+          body.doctor_id = MongoDB.getMongoObjectId(body.doctor_id);
+
+          if (body.filledBy)
+            body.filledBy = MongoDB.getMongoObjectId(body.filledBy);
+
+          for (var i=0; i < body.requests.length; i++)
+            body.requests[i] = MongoDB.getMongoObjectId(body.requests[i]);
+          
           MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
       });
@@ -65,9 +75,9 @@ class SessionService {
         
         filter = {
           $match:{
-            "doctor_id" : userId
+            "doctor_id" : MongoDB.getMongoObjectId(userId)
           }};
-        aggregate.push(filter);
+          aggregate.push(filter);
 
 
     }
@@ -76,8 +86,8 @@ class SessionService {
 
       filter = {$match:
         {$or: 
-         [{"filledBy" : userId}, 
-                     {"requests": {$elemMatch: { $eq : userId}}}]}};
+         [{"filledBy" : MongoDB.getMongoObjectId(userId)}, 
+                     {"requests": {$elemMatch: { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
       aggregate.push(filter);
       }
 
@@ -121,6 +131,21 @@ class SessionService {
   }
 
   /**
+   * returns all sessions that haven't been assigned with a volunteer, yet.
+   */
+  getAllNotAssignedSessions(){
+    var aggregate = [];
+    lookUpForSessions(aggregate);
+    var filter = {$match: {
+      "filledBy": null
+            }
+    };
+    aggregate.push(filter);
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
+  }  
+  
+
+  /**
    * Get all upcoming sessions of a specified volunteer
    * userId String 
    * returns List
@@ -129,7 +154,7 @@ class SessionService {
     var aggregate = [];
     lookUpForSessions(aggregate);
     var filter = {$match: {
-      "filledBy": userId
+      "filledBy": MongoDB.getMongoObjectId(userId)
             }
     };
     aggregate.push(filter);
@@ -143,7 +168,20 @@ class SessionService {
    **/
   getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
     var filter = {$match : {$and: [{"filledBy" : null}, 
-    {"requests": {$elemMatch : { $eq : userId}}}]}};
+    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}},
+    {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
+    var aggregate = [];
+
+    lookUpForSessions(aggregate);
+    aggregate.push(filter);
+
+
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
+  }
+
+  getAllUpcomingNotYetApprovedSessions() {
+    var filter = {$match : {$and: [{"filledBy" : null},
+                                   {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
     var aggregate = [];
 
     lookUpForSessions(aggregate);
@@ -176,8 +214,53 @@ class SessionService {
   }
 
   getDoctorSessions(body, doctorId) {
-    var isFilled = (body.isFilled) ? { $ne: null } : null; // If user wants the filled sessions, get all not empty objects.
-    return MongoDB.findMany(COLLECTION_NAME, { "doctor_id": doctorId, "filledBy": isFilled }, this.MongoClient);
+    var isFilled = (body.isFilled) ? { "$ne": null } : null; // If user wants the filled sessions, get all not empty objects.
+    var filter = {$match:
+          {$and :[{"doctor_id": MongoDB.getMongoObjectId(doctorId)}, {"filledBy": isFilled }]}};
+    var aggregate = [];
+    lookUpForSessions(aggregate);
+    aggregate.push(filter);
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate: aggregate}, this.MongoClient);
+  }
+
+  async approveSession(sessionId, volunteerId) {
+    try {
+        var results = await Promise.all([MongoDB.findOne(COLLECTION_NAME, {_id: MongoDB.getMongoObjectId(sessionId), requests: MongoDB.getMongoObjectId(volunteerId)}, this.MongoClient),
+                MongoDB.findByMongoId(VOL_COLLECTION_NAME,volunteerId, this.MongoClient)]);
+
+        if(results[0] && results[1]) {
+          var session = results[0];
+
+          var startDate = new Date(session.startTime);
+          var endDate = new Date(session.endTime);
+
+          startDate.setMinutes(startDate.getMinutes() - 30);
+          endDate.setMinutes(endDate.getMinutes() + 30);
+
+          var filter = {
+            startTime : {
+              $gte: startDate,
+              $lte: endDate
+            },
+            _id:{$ne : MongoDB.getMongoObjectId(sessionId)}
+          }
+
+          var updateQuery = {
+            $pull : { requests : MongoDB.getMongoObjectId(volunteerId)}
+          }
+
+          var removeVolunteerFromSessionsResult =
+             await MongoDB.update(COLLECTION_NAME, filter, updateQuery, this.MongoClient);
+
+          var setFilledByResult = 
+            await MongoDB.findOneAndUpdate(COLLECTION_NAME, {_id:MongoDB.getMongoObjectId(sessionId)}, {filledBy:MongoDB.getMongoObjectId(volunteerId)}, this.MongoClient);
+
+          return {approved:true}
+        }
+    }
+    catch (error) {
+      throw error;
+    }
   }
 }
 

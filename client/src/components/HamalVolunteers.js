@@ -15,6 +15,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import {BASE_URL} from '../constants'
 import Axios from 'axios';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const styles = makeStyles(theme => ({
     root: {
@@ -75,17 +76,6 @@ const styles = makeStyles(theme => ({
         background:'#FFFFFF 0% 0% no-repeat padding-box',
         borderRadius:'8px',
         margin:'5px 0px 5px 0px'
-    },
-    tableBody: {
-        height: '650px',
-        overflow: 'hidden',
-    },
-    tableContent: {
-        height:'100%',
-        width:'100%',
-        overflow: 'auto',
-        WebkitScrollBar: 'none'
-
     },
     userImage: {
         width: '45px',
@@ -159,6 +149,9 @@ const styles = makeStyles(theme => ({
     notes: {
         flex: 5,
         marginTop: '10px'
+    },
+    selectedPage: {
+        fontWeight: 'bold'
     }
   }));
 
@@ -168,7 +161,9 @@ export const HamalVolunteersPage = (props) => {
     const [volunteersMap, setVolunteersMap] = useState('');
     const [volunteers, setVolunteers] = useState('');
     const [selectedVolunteer,setSelectedVolunteer] = useState(undefined)
-    const [page,setPage] = useState(0)
+    const [pageCount, setPageCount] = useState(0);
+    const [pagesUI, setPagesUI] = useState('');
+    const [page,setPage] = useState(0);
 
     const calculateAge = (birthday) => { // birthday is a date
         var ageDifMs = Date.now() - birthday.getTime();
@@ -176,25 +171,52 @@ export const HamalVolunteersPage = (props) => {
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
 
-    useEffect(() => {
-        Axios.get(BASE_URL+'/api/volunteer/approved/' + page).then(result => {
-            if(volunteers) return;
-            var vols = result.data.map(item => <div className={classes.tableRow} onClick={() => setSelectedVolunteer(item)}>
-                <div className={classes.imageCell} >
-                <img className={classes.userImage} src={item.picture ? item.picture : window.location.origin + "/images/profilePlaceholder.png"}></img>
-                    <div className={classes.userFullName}>
-                        {item.firstName + ' ' + item.lastName}
-                    </div>
-                </div>
-                <div className={classes.rowCell}>{item.address}</div>
-                <div className={classes.rowCell}>{item.email}</div>
-                <div className={classes.rowCell}>{item.phone}</div>
-                <div className={classes.rowCell}>{item.institute}</div>
-                <div className={classes.rowCell}></div>
-            </div>);
+    const updateVolunteers = (newPage) => {
+        if(newPage == page) return;
 
-            setVolunteersMap(vols)
-        })
+        setPage(newPage);
+        Axios.get(BASE_URL+'/api/volunteer/approved/' + newPage).then((result) => {
+            createVolunteerUI(result.data);
+        });
+    }
+
+    const createVolunteerUI = (volunteersList) => {
+        var vols = volunteersList.map(item => <div className={classes.tableRow} onClick={() => setSelectedVolunteer(item)}>
+            <div className={classes.imageCell} >
+            <img className={classes.userImage} src={item.picture ? item.picture : window.location.origin + "/images/profilePlaceholder.png"}></img>
+                <div className={classes.userFullName}>
+                    {item.firstName + ' ' + item.lastName}
+                </div>
+            </div>
+            <div className={classes.rowCell}>{item.address}</div>
+            <div className={classes.rowCell}>{item.email}</div>
+            <div className={classes.rowCell}>{item.phone}</div>
+            <div className={classes.rowCell}>{item.institute}</div>
+            <div className={classes.rowCell}></div>
+        </div>);
+
+        setVolunteersMap(vols)
+    }
+
+    useEffect(() => {
+        Promise.all([Axios.get(BASE_URL+'/api/volunteer/approved/' + page), Axios.get(BASE_URL+'/api/volunteer/count')]).then(result => {
+            if(volunteers) return;
+            
+            createVolunteerUI(result[0].data);
+
+            setPageCount(result[1].data.count / 30);
+            var pagesui = [];
+
+            for(var i=0; i < pageCount + 1; i++) {
+                pagesui.unshift((<Page className={page == i ? classes.selectedPage : ''} onClick={() => updateVolunteers(i)}>{i+1}</Page>))
+            }
+
+            setPagesUI((<Pages>
+                <ChevronRightIcon onClick={() => updateVolunteers(Math.max(0, page - 1))}></ChevronRightIcon>
+                    {pagesui}
+                <ChevronLeftIcon onClick={() => updateVolunteers(Math.min(pageCount, page + 1))}></ChevronLeftIcon>
+            </Pages>));
+        });
     }, [volunteers]);
 
     return (
@@ -224,11 +246,12 @@ export const HamalVolunteersPage = (props) => {
                     <div className={classes.titleCell}>מוסד לימודים</div>
                     <div className={classes.titleCell}></div>
                 </div>
-                <div className={classes.tableBody}>
-                    <div className={classes.tableContent}>
+                <TableBody>
+                    <TableContent>
                         {volunteersMap}
-                    </div>
-                </div>
+                    </TableContent>
+                    {pagesUI}
+                </TableBody>
             </div>
             <ModalCon open={selectedVolunteer} onClick={() => setSelectedVolunteer(undefined)} />
             <ModalContentCon open={selectedVolunteer}>
@@ -305,6 +328,35 @@ export const HamalVolunteersPage = (props) => {
     )
 }
 
+const TableBody = styled.div`
+    height: 650px;
+    overflow: hidden;   
+`
+
+const TableContent = styled.div`
+    height:95%;
+    width:100%;
+    overflow-y: scroll;
+    
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: #00C2CB;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+`
+
 const ModalCon = styled.div`
     position: fixed;
     z-index: 1;
@@ -351,3 +403,17 @@ const ModalContentCon = styled.div`
         100% { -webkit-transform: translateX(-100%); }
     }
 `;
+
+const Pages = styled.div`
+    display:flex;
+    align-items:center;
+    justify-content:center;
+`
+
+const Page = styled.div`
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0px 10px 0px 10px;
+    cursor:pointer;
+`

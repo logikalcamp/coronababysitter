@@ -37,6 +37,7 @@ const FooterCon = styled.div`
     justify-content:space-around; */
     background:#ffffff;
     padding:.5rem 1rem;
+    
     border-top:1px solid #828282;
     img{
         width:28px;
@@ -50,6 +51,7 @@ const FooterCon = styled.div`
         display:flex;
     }
     @media(max-width:900px){
+        padding-bottom:2.5rem;
         #phonem{
             display:flex;
         }

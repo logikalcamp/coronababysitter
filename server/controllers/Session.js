@@ -36,6 +36,28 @@ module.exports.getAllUpcomingNotYetApprovedSessionsByVolunteer = function getAll
     });
 };
 
+module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next) {
+  req.SessionService.getAllUpcomingNotYetApprovedSessions()
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.getAllNotAssignedSessions = function getAllNotAssignedSessions (req, res, next) {
+  req.SessionService.getAllNotAssignedSessions()
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
 module.exports.getAllUpcomingApprovedSessionsByVolunteer = function getAllUpcomingApprovedSessionsByVolunteer (req, res, next, userId) {
   req.SessionService.getAllUpcomingApprovedSessionsByVolunteer(userId)
     .then(function (response) {
@@ -94,6 +116,17 @@ module.exports.countUrgentPendingSessions = function countUrgentPendingSessions 
 
 module.exports.getDoctorSessions = function getDoctorSessions (req, res, next, body, doctorId) {
   req.SessionService.getDoctorSessions(body, doctorId)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.approveSession = function approveSession (req, res, next,body,sessionId) {
+  req.SessionService.approveSession(sessionId, body.volunteerId)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

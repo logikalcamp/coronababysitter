@@ -59,3 +59,29 @@
 .gm-fullscreen-control{
   display: none !important;
 }
+
+.NavTab {
+  font-size: 18px;
+  color:white;
+  padding:1rem;
+  background:transparent;
+  
+}
+
+.NavTabActive {
+  font-size: 18px;
+  color:white;
+  padding:1rem;
+  background:#67cbd0;
+}
+@media(max-width:450px){
+ 
+  .NavTab{
+    font-size: 14px;
+    padding:1rem .5rem;
+  }
+  .NavTabActive{
+    font-size: 14px;
+    padding:1rem .5rem;
+  }
+}

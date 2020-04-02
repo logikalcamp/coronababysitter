@@ -4,8 +4,8 @@ import {BASE_URL} from '../constants'
 const isEmpty = require("is-empty");
 
 const initialState = {
-  isAuthenticated: (localStorage.getItem("userdata") ? true : false),
-  user: JSON.parse(localStorage.getItem("userdata")) || {userid:"5e7a2cae7a5f5811f8d069c7"},
+  isAuthenticated: (localStorage.getItem("users") ? true : false),
+  user: JSON.parse(localStorage.getItem("users")) || {userid:"5e80e88ff5ca035f4838f1bc"},
   loading: false,
 };
 
@@ -17,6 +17,9 @@ export default function(state = initialState, action) {
         ...state
       }
     case "LOGOUT":
+      console.log("damn")
+      
+      localStorage.removeItem('users')
       return {
         initialState
       }

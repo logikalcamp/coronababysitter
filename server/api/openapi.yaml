@@ -120,20 +120,12 @@ paths:
         "404":
           description: No volunteers found
       x-swagger-router-controller: Volunteer
-  /volunteer/pending/{page}:
+  /volunteer/pending:
     get:
       tags:
       - volunteer
       summary: Get all pending volunteers
       operationId: getPendingVolunteers
-      parameters:
-      - name: page
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
       responses:
         "200":
           description: All Approved volunteers
@@ -305,20 +297,12 @@ paths:
         "404":
           description: No Doctor found
       x-swagger-router-controller: Doctor
-  /doctor/pending/{page}:
+  /doctor/pending:
     get:
       tags:
       - doctor
       summary: Get all pending doctors
       operationId: getPendingDoctors
-      parameters:
-      - name: page
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
       responses:
         "200":
           description: All pending doctors
@@ -561,6 +545,25 @@ paths:
         "404":
           description: No sessions found
       x-swagger-router-controller: Session
+  /session/getUpcomingNotYetApprovedSessions:
+    get:
+      tags:
+      - sessions
+      summary: Get all not yet approved upcoming sessions
+      operationId: getAllUpcomingNotYetApprovedSessions
+      responses:
+        "200":
+          description: All not yet approved future seessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
+      x-swagger-router-controller: Session
   /session/getNotYetApprovedSessions/{userId}:
     get:
       tags:
@@ -588,6 +591,26 @@ paths:
         "404":
           description: No sessions found
       x-swagger-router-controller: Session
+  /session/notAssigned:
+    get:
+      tags:
+      - sessions
+      summary: Get all not yet assigned upcoming sessions 
+      operationId: getAllNotAssignedSessions
+      responses:
+        "200":
+          description: gets all not yet assigned future seessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
+      x-swagger-router-controller: Session
+  
   /session/getAvailableSessions/{userId}:
     get:
       tags:
@@ -649,6 +672,41 @@ paths:
                 x-content-type: application/json
         "404":
           description: No sessions found.
+      x-swagger-router-controller: Session
+  /session/approve/{sessionId}:
+    post:
+      tags:
+      - sessions
+      summary: approve a session to be filled by volunteer
+      operationId: approveSession
+      parameters:
+      - name: sessionId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                volunteerId:
+                  type: string
+      responses:
+        "200":
+          description: Session approved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: Error while approving sessions.
       x-swagger-router-controller: Session
   /hamal:
     post:
