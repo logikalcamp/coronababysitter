@@ -71,7 +71,9 @@ export const NotYetApprovedSessionsGrid = (props) => {
     <React.Fragment>
     {
       load ? 
-        <div>aa</div>
+      <div style={{textAlign:"center"}}>
+        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+      </div>
         :
 
         <GridComp 
