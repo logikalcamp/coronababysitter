@@ -14,12 +14,42 @@ const Header = (props) => {
         <HeaderCon>
             <SubCon>
                 <div style={{display:"flex"}}>
-                    <Link to="/">
+                {props.auth.isAuthenticated 
+                ?
+                (
+                    props.auth.user.type == "medical" ? 
+                    <Link to="/medicalhome">
                         <HeaderSubCon>
                             <img src={window.location.origin + "/images/newL.png"} alt="nel" />
                             <label id="lb">Sitter Seeker</label>
                         </HeaderSubCon>
                     </Link>
+                    :
+                    (
+                        props.auth.user.type == "volunteer" ?
+                        <Link to="/volunteer-homepage">
+                            <HeaderSubCon>
+                                <img src={window.location.origin + "/images/newL.png"} alt="nel" />
+                                <label id="lb">Sitter Seeker</label>
+                            </HeaderSubCon>
+                        </Link>
+                        :
+                        <Link to="/hamalhome">
+                            <HeaderSubCon>
+                                <img src={window.location.origin + "/images/newL.png"} alt="nel" />
+                                <label id="lb">Sitter Seeker</label>
+                            </HeaderSubCon>
+                        </Link>
+                    )
+                )
+                :
+                <Link to="/">
+                    <HeaderSubCon>
+                        <img src={window.location.origin + "/images/newL.png"} alt="nel" />
+                        <label id="lb">Sitter Seeker</label>
+                    </HeaderSubCon>
+                </Link>
+                }
                     {
                         props.auth.isAuthenticated && 
                         <Tabs >

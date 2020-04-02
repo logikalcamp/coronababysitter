@@ -2,23 +2,33 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import moment from 'moment';
 import {BASE_URL} from '../../constants'
-
+import _ from 'lodash'
 import GridComp from '../Grid';
 
 const UpcomingSessionsGridCommands = (props) => {
   const prefix = window.location.origin
-  const onClick = (event) => console.log(event);
-
+  const onClick = (event) => {
+    Axios.post(BASE_URL+'/api/session/delete',{sessionId:props.data._id})
+    .then(res=>{
+      if(res.status==200){
+        props.onClick(props.data._id)
+      }
+    })
+  };
+  // console.log(props.data.contact.slice(1,10))
+  // let phone = props.data.contact.phone.splice(1,10)
+  let phone = props.data.contact.slice(1,10)
   return (
     <span className="grid-command">
       <img
         src={prefix + '/images/icons8_event_declined_96px.png'}
         onClick={onClick} 
       />
-      <img 
-        src={prefix + '/images/icons8_phone_96px_1.png'}
-        onClick={onClick}
-      />     
+      <a href={`tel:+972${phone}`}>
+        <img 
+          src={prefix + '/images/icons8_phone_96px_1.png'}
+        />     
+      </a>
     </span>
   )
 }
@@ -26,6 +36,10 @@ const UpcomingSessionsGridCommands = (props) => {
 export const UpcomingSessionsGrid = (props) => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [load,setload] = useState(true)
+  const DeleteSession = (val) =>{
+    let a = _.filter(upcomingSessions,function(o){return o._id != val})
+    setUpcomingSessions(a)
+  }
   const [columnDefs] = useState([
     { 
       headerName: "תאריך",
@@ -59,7 +73,10 @@ export const UpcomingSessionsGrid = (props) => {
       headerName: "",
       field: "commands",
       width: 95,
-      cellRenderer: "upcomingSessionsGridCommands"
+      cellRenderer: "upcomingSessionsGridCommands",
+      cellRendererParams: {
+        onClick: DeleteSession
+      }
     }
   ]);
 

@@ -3,12 +3,19 @@ import Axios from 'axios';
 import moment from 'moment';
 import {BASE_URL} from '../../constants'
 import GridComp from '../Grid';
+import _ from 'lodash'
 
 
 const NotYetApprovedSessionsGridCommands = (props) => {
   const prefix = window.location.origin
-  const onClick = (event) => console.log(event);
-
+  const onClick = (event) => {
+    Axios.post(BASE_URL+'/api/session/delete',{sessionId:props.data._id})
+    .then(res=>{
+      if(res.status==200){
+        props.onClick(props.data._id)
+      }
+    })
+  };
   return (
     <span className="grid-command">
       <img
@@ -21,8 +28,15 @@ const NotYetApprovedSessionsGridCommands = (props) => {
 
 export const OpenRequestsGrid = (props) => {
   console.log(props)
-  const [load,setload] = useState(true)
-  const [notYetApprovedSessions, setNotYetApprovedSessions] = useState([]);
+
+  const [notYetApprovedSessions, setNotYetApprovedSessions] = useState(props.arr);
+  const DeleteSession = (val) =>{
+    let a = _.filter(notYetApprovedSessions,function(o){return o._id != val})
+    setNotYetApprovedSessions(a)
+  }
+  useEffect(() => {
+    setNotYetApprovedSessions(props.arr)
+  }, [props])
   const [columnDefs] = useState([
     { 
       headerName: "תאריך ושעה",
@@ -52,7 +66,10 @@ export const OpenRequestsGrid = (props) => {
       headerName: "",
       field: "commands",
       width: 70,
-      cellRenderer: "notYetApprovedSessionsGridCommands"
+      cellRenderer: "notYetApprovedSessionsGridCommands",
+      cellRendererParams: {
+        onClick: DeleteSession
+      }
     }
   ]);
   
@@ -60,21 +77,12 @@ export const OpenRequestsGrid = (props) => {
   const handleClick = (e) => {
       props.handle(notYetApprovedSessions,e)
   }
-  useEffect(() => {
-    Axios.post(BASE_URL+`/api/session/${props.id}`,{isFilled:false}).then(result => {
-      console.log(result);
-      setTimeout(()=>{
-        setload(false)
-
-      },2000)
-      setNotYetApprovedSessions(result.data)
-    })
-  }, [])
+  
   
   return (
     <React.Fragment>
     {
-      load ? 
+      props.load ? 
       <div style={{textAlign:"center"}}>
         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
       </div>
