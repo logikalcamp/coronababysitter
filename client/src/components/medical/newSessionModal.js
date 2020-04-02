@@ -4,6 +4,7 @@ import axios from 'axios'
 import {BASE_URL} from '../../constants'
 import {MdCancel} from "react-icons/md";
 import moment from 'moment'
+import {Link} from 'react-router-dom'
 
 const Background = styled.div`
     position:fixed;
@@ -73,6 +74,16 @@ const Modal = styled.div`
         }
     }
 `
+const DoneModal = styled.div`
+    widht:100% !important;
+    margin:auto;
+    text-align:center;
+    button{
+        margin:5px 0;
+        width:100%;
+    }
+`
+
 const TimeDate = styled.div`
     display:flex !important;
     width:100% !important;
@@ -101,6 +112,7 @@ const NewSession = ({setOpen,id}) =>{
         didHappen:false,
         contact:''
     })
+    console.log(window.location)
     return(
         <React.Fragment>
             <Background onClick={()=>{setOpen(false)}}></Background>
@@ -108,12 +120,40 @@ const NewSession = ({setOpen,id}) =>{
                 <Back><MdCancel style={{width:"3rem",height:"3rem",color:"#e7e7e7"}} onClick={()=>{setOpen(false)}}/></Back>
                 {
                     done ? 
-                    <div>
-                        <img src={window.location.origin + '/images/giphy.gif'} alt=""/>
+                    <DoneModal style={{width:"100%"}}>
                         <h2>יש! הבקשה הוזנה למערכת , תוכל.י להתעדכן על הצעות של המתנדבים דרך דף ניהול הבקשות </h2>
-                        <button>לדף ניהול בקשות</button>
-                        <button>ליצירת בקשה חדשה</button>
-                    </div>
+                        <div>
+                            {
+                                window.location.pathname == "/medicalhome" ? 
+                                <button onClick={()=>{
+                                setOpen(false)
+                                setDone(false)}}>לדף ניהול בקשות</button>
+                                :
+                                <Link to="/medicalhome">
+                                    <button >לדף ניהול בקשות</button>
+                                </Link>
+                            }
+                            
+                            <button onClick={()=>{
+                                setDone(false)
+                                setState({
+                                    startTime:'',
+                                    sHour:'',
+                                    sDate:'',
+                                    eHour:'',
+                                    eDate:'',
+                                    requests:[],
+                                    doctor_id:id,
+                                    "timeRequested": new Date(),
+                                    recurring:"once",
+                                    endTime:'',
+                                    tasks:[],
+                                    didHappen:false,
+                                    contact:''
+                                })
+                            }}>ליצירת בקשה חדשה</button>
+                        </div>
+                    </DoneModal>
                     :
                     <React.Fragment>
                     <h2>הזנת פגישה </h2>

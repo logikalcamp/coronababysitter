@@ -54,8 +54,8 @@ const HamalHome = () => {
         if(pendingUsers && pendingUsers.length > 0) return;
 
         try {
-            var results = await Promise.all([axios.get(BASE_URL + '/api/volunteer/pending/' + page),
-                                             axios.get(BASE_URL + '/api/doctor/pending/' + page),
+            var results = await Promise.all([axios.get(BASE_URL + '/api/volunteer/pending'),
+                                             axios.get(BASE_URL + '/api/doctor/pending'),
                                              axios.get(BASE_URL+'/api/volunteer/countpending'),
                                              axios.get(BASE_URL+'/api/volunteer/count'),
                                              axios.get(BASE_URL+'/api/doctor/count'),

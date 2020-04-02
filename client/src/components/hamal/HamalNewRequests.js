@@ -12,7 +12,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import SchoolIcon from '@material-ui/icons/School';
 import * as DateUtils from '../../utils/dateUtils';
 import DotLoader from "react-spinners/DotLoader";
-import { Collapsable, CollapsableContent, CollapsableHeader, Title } from '../Utils'
+import { Collapsable, CollapsableContent, CollapsableHeader, Title, Button, ModalBackdrop, Modal, ContainerTitle } from '../Utils'
 import moment from 'moment'
 import 'moment/locale/he'
 
@@ -327,57 +327,6 @@ export const HamalNewRequests = (props) => {
     );
 };
 
-const ModalBackdrop = styled.div`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.35);
-    top: 0;
-    left: 0;
-    display:${props=>props.open ? "flex":"none"};
-    justify-content: center;
-    align-items: center;
-    z-index:1000;
-`
-
-const Modal = styled.div`
-    width: 550px;
-    background-color:white;
-    height: 150px;
-    border-radius: 10px;
-    box-shadow: 5px 5px 5px gray;
-    padding: 15px;
-    display:${props=>props.open ? "flex":"none"};
-    flex-direction: column;
-    align-items:center;
-    justify-content:space-between;
-    @media(max-width:800px){
-
-}
-`
-
-const Button = styled.div`
-    width: 100px;
-    height: 35px;
-    background-color: ${props => props.backgroundColor ? props.backgroundColor : '#00C2CB'};
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:${props => props.color ? props.color : 'whitesmoke'};;
-    border-radius: 10px;
-    font-size: 20px;
-    font-weight: 400;
-    cursor:pointer;
-    margin-left: 10px;
-`
-
-const ContainerTitle = styled.div`
-    margin-bottom: 30px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-`
 
 const ButtonsContainer = styled.div`
     display:flex;

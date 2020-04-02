@@ -11,7 +11,7 @@ import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import * as DateUtils from '../../utils/dateUtils';
 import DotLoader from "react-spinners/DotLoader";
-import { Collapsable, CollapsableContent, CollapsableHeader, Title, Button } from '../Utils'
+import { Collapsable, CollapsableContent, CollapsableHeader, Title, Button, ModalBackdrop, Modal, ContainerTitle } from '../Utils'
 import InfoIcon from '@material-ui/icons/Info';
 import PinDropIcon from '@material-ui/icons/PinDrop';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
@@ -51,6 +51,14 @@ const styles = makeStyles(theme => ({
         flex: 5,
         marginTop: '10px'
     },
+    title1: {
+        fontSize: '28px',
+        marginBottom: '20px'
+    },
+    title2: {
+        fontSize: '20px',
+        textAlign: 'center'
+    },
 }));
 
 const actionCallbacks = {}
@@ -74,7 +82,7 @@ const InformAction = (actionName, ...params) => {
 
 const pendingUsersGridCommands = (props) => {
     const approveClicked = (event) => InformAction("ApproveClicked",props.data.user);
-    const blockClicked = (event) => InformAction("BlockClicked",props.data.user);
+    const blockClicked = (event) => InformAction("RejectClicked",props.data.user);
     const infoClicked = (event) => InformAction("InfoClicked",props.data.user);
   
     return (
@@ -95,6 +103,14 @@ export const HamalPendingUsers = (props) => {
     const [doctorsOpen, setDoctorsOpen] = useState(false);
     const [volunteersOpen, setVolunteersOpen] = useState(true);
     const [selectedUser, setSelectedUser] = useState(undefined);
+
+    const [isModalLoading, setIsModalLoading] = useState(false)
+    const [modalData, setModalData] = useState({
+        open: false,
+        title: 'כותרת ראשית',
+        secondaryTitle: 'כותרת משנית',
+        buttons: [{text: '', action: () => {}}]
+    })
 
     const [columnDefs] = useState([
         { 
@@ -127,11 +143,101 @@ export const HamalPendingUsers = (props) => {
         setVolunteersOpen(!volunteersOpen);
     }
 
+    const toggleModal = (open, title= '', secondaryTitle= '', buttons = []) => {
+        setModalData({open, title,secondaryTitle, buttons});
+    }
+
     const onInfoClicked = (user) => {
         setSelectedUser(user);
     }
 
+    const onApproveClicked = (user) => {
+        var modalData = {
+            open: true,
+            title: 'האם אתה בטוח שברצונך לאשר משתמש זה?',
+            secondaryTitle: `${user.firstName} ${user.lastName} - ${user.role == 'volunteer' ? 'מתנדב' : 'צוות רפואי'}`,
+            buttons: [
+                {
+                    text: 'כן',
+                    action: () => {
+                        setIsModalLoading(true);
+                        modalData.title = 'מתבצעת אישור'
+                        modalData.secondaryTitle = 'אנא המתן'
+                        setModalData(modalData)
+                        approveOrRejectUser(user,true).then(result => {
+                            setIsModalLoading(false);
+                            setDoctorsPending(undefined);
+                            setVolunteersPending(undefined);
+                            setSelectedUser(undefined);
+                            toggleModal(false);
+                        }).catch((error) => {
+                            setIsModalLoading(false);
+                            toggleModal(false);
+                        });
+                    },
+                    backgroundColor:'red'
+                },
+                {
+                    text: 'לא',
+                    action: () => {
+                        toggleModal(false)
+                    }
+                }
+            ]
+        }
+
+        setModalData(modalData);
+    }
+
+    const onRejectClicked = (user) => {
+        var modalData = {
+            open: true,
+            title: 'האם אתה בטוח שברצונך לדחות משתמש זה?',
+            secondaryTitle: `${user.firstName} ${user.lastName} - ${user.role == 'volunteer' ? 'מתנדב' : 'צוות רפואי'}`,
+            buttons: [
+                {
+                    text: 'כן',
+                    action: () => {
+                        setIsModalLoading(true);
+                        modalData.title = 'מתבצעת דחייה'
+                        modalData.secondaryTitle = 'אנא המתן'
+                        setModalData(modalData)
+                        approveOrRejectUser(user,false).then(result => {
+                            setIsModalLoading(false);
+                            setDoctorsPending(undefined);
+                            setVolunteersPending(undefined);
+                            setSelectedUser(undefined);
+                            toggleModal(false);
+                        }).catch((error) => {
+                            setIsModalLoading(false);
+                            toggleModal(false);
+                        });
+                    },
+                    backgroundColor:'red'
+                },
+                {
+                    text: 'לא',
+                    action: () => {
+                        toggleModal(false)
+                    }
+                }
+            ]
+        }
+
+        setModalData(modalData);
+    }
+
+    const approveOrRejectUser = (user, isApproved) => {
+        return Axios.post(BASE_URL + `/api/hamal/approve-reject/${user._id}`, {
+            isApproved,
+            hamalUserId: '5e7a7e289505a02de8a513a6',
+            role: user.role
+        });
+    }
+
     registerForAction("InfoClicked", "f1",onInfoClicked);
+    registerForAction("ApproveClicked", "f1",onApproveClicked);
+    registerForAction("RejectClicked", "f1",onRejectClicked);
 
     const loadPage = () => {
         if((doctorsPending && doctorsPending.length > 0) || (volunteersPending && volunteersPending.length > 0)) return;
@@ -141,13 +247,13 @@ export const HamalPendingUsers = (props) => {
             var volunteersPendingNew = [];
 
             for(var i =0; i < results[0].data.length; i++) {
-                results[0].data[i].type="volunteer";
+                results[0].data[i].role="volunteer";
                 var gridObject = getGridObjectFromSession(results[0].data[i]);
                 volunteersPendingNew.push(gridObject);
             }
 
             for(var i =0; i < results[1].data.length; i++) {
-                results[1].data[i].type="doctor";
+                results[1].data[i].role="doctor";
                 var gridObject = getGridObjectFromSession(results[1].data[i]);
                 doctorsPendingNew.push(gridObject);
             }
@@ -173,14 +279,27 @@ export const HamalPendingUsers = (props) => {
 
     return (
         <Container>
+            <ModalBackdrop open={modalData.open}>
+                <Modal open={modalData.open}>
+                    <ContainerTitle>
+                        <div className={classes.title1}>{modalData.title}</div>
+                        <div className={classes.title2}>{modalData.secondaryTitle}</div>
+                    </ContainerTitle>
+                    {!isModalLoading && <ButtonsContainer>
+                                            {modalData.buttons[0] && <Button color={modalData.buttons[0].color} backgroundColor={modalData.buttons[0].backgroundColor} onClick={() => modalData.buttons[0].action()}>{modalData.buttons[0].text}</Button>}
+                                            {modalData.buttons[1] && <Button color={modalData.buttons[1].color} backgroundColor={modalData.buttons[1].backgroundColor} onClick={() => modalData.buttons[1].action()}>{modalData.buttons[1].text}</Button>}
+                                        </ButtonsContainer>}
+                    {isModalLoading && <DotLoader size={70} color={"#00C2CB"}></DotLoader>}
+                </Modal>
+            </ModalBackdrop>
             <ContainerHeader>
-                משתמשים הממתינים לאישור
+                משתמשים הממתינים לאישור {doctorsPending && volunteersPending ? `(${doctorsPending.length + volunteersPending.length})` : ''}
             </ContainerHeader>
             <ContainerContent>
                 <UsersContent>
                     <Collapsable>
                         <CollapsableHeader>
-                            <Title>רופאים</Title>
+                            <Title>רופאים {doctorsPending ? `(${doctorsPending.length})` : ''}</Title>
                             {!doctorsOpen && <KeyboardArrowDownIcon className={classes.arrowIcon} onClick={toggleCollapsables}></KeyboardArrowDownIcon>}
                             {doctorsOpen && <KeyboardArrowUpIcon className={classes.arrowIcon} onClick={toggleCollapsables}></KeyboardArrowUpIcon>}
                         </CollapsableHeader>
@@ -192,7 +311,7 @@ export const HamalPendingUsers = (props) => {
                     </Collapsable>
                     <Collapsable>
                         <CollapsableHeader>
-                            <Title>מתנדבים</Title>
+                            <Title>מתנדבים {volunteersPending ? `(${volunteersPending.length})` : ''}</Title>
                             {!volunteersOpen && <KeyboardArrowDownIcon className={classes.arrowIcon} onClick={toggleCollapsables}></KeyboardArrowDownIcon>}
                             {volunteersOpen && <KeyboardArrowUpIcon className={classes.arrowIcon} onClick={toggleCollapsables}></KeyboardArrowUpIcon>}
                         </CollapsableHeader>
@@ -203,7 +322,7 @@ export const HamalPendingUsers = (props) => {
                         </CollapsableContent>
                     </Collapsable>
                 </UsersContent>
-                {selectedUser && selectedUser.type == 'volunteer' && <SelectedUserContent>
+                {selectedUser && selectedUser.role == 'volunteer' && <SelectedUserContent>
                     <SelectedUserHeader>
                         <UserImage src={selectedUser ? selectedUser.picture ? selectedUser.picture : window.location.origin + "/images/profilePlaceholder.png" : ''}/>
                         <SelectedUserTitle>{selectedUser ? selectedUser.firstName + ' ' + selectedUser.lastName : ''}</SelectedUserTitle>
@@ -212,7 +331,7 @@ export const HamalPendingUsers = (props) => {
                     <UserDetails>
                         <DetailsHeader>
                             <SelectedUserTitle>פרטים כלליים</SelectedUserTitle>
-                            <IconText className={classes.blockUser}>
+                            <IconText className={classes.blockUser} onClick={() => onRejectClicked(selectedUser)}>
                                 <BlockIcon className={classes.marginLeft}/>
                                 דחה משתמש
                             </IconText>
@@ -266,7 +385,7 @@ export const HamalPendingUsers = (props) => {
                         </div>
                     </div>
                     <ButtonsContainer>
-                        <Button>אשר</Button>
+                        <Button onClick={() => onApproveClicked(selectedUser)}>אשר</Button>
                     </ButtonsContainer>
                     </UserDetails>
                 </SelectedUserContent>}
@@ -343,6 +462,7 @@ const SelectedUserHeader = styled.div`
 const UserImage = styled.img`
     width: 150px;
     height: 150px;
+    border-radius:50%;
 `
 
 const UserDetails = styled.div`

@@ -96,3 +96,40 @@ export const Button = styled.div`
     cursor:pointer;
     margin-left: 10px;
 `
+
+export const ModalBackdrop = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.35);
+    top: 0;
+    left: 0;
+    display:${props=>props.open ? "flex":"none"};
+    justify-content: center;
+    align-items: center;
+    z-index:1000;
+`
+
+export const Modal = styled.div`
+    width: 550px;
+    background-color:white;
+    height: 150px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px gray;
+    padding: 15px;
+    display:${props=>props.open ? "flex":"none"};
+    flex-direction: column;
+    align-items:center;
+    justify-content:space-between;
+    @media(max-width:800px){
+
+}
+`
+
+export const ContainerTitle = styled.div`
+    margin-bottom: 30px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+`
