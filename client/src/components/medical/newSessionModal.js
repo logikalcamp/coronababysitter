@@ -260,8 +260,8 @@ const NewSession = ({setOpen,id}) =>{
                     <div>
                         <button
                         onClick={()=>{
-                            let sDate = moment(details.sDate).format("MM/DD/YYYY") + moment(details.sHour).format("HH:mm")
-                            let eDate = moment(details.sDate).format("MM/DD/YYYY") + moment(details.eHour).format("HH:mm")
+                            let sDate = moment(details.sDate).format("MM/DD/YYYY") + moment(details.sHour,"HH:mm").format("HH:mm")
+                            let eDate = moment(details.sDate).format("MM/DD/YYYY") + moment(details.eHour,"HH:mm").format("HH:mm")
                             let data = {
                                 startTime:new Date(moment(sDate,"MM/DD/YYYY HH:mm").format()),
                                 requests:[],
@@ -273,19 +273,19 @@ const NewSession = ({setOpen,id}) =>{
                                 didHappen:false,
                                 contact:details.contact
                             }
-                            console.log(data)
-                            // axios.post(BASE_URL+"/api/session",data)
-                            // .then((res)=>{
-                            //     console.log(res)
-                            //     if(res.status == 200){
-                            //         // alert("yai")
-                            //         setDone(true)
-                            //     }
-                            //     else{
-                            //         // alert("oops")
-                            //         setErr("משהו השתבש")
-                            //     }
-                            // })
+                            // console.log(data)
+                            axios.post(BASE_URL+"/api/session",data)
+                            .then((res)=>{
+                                console.log(res)
+                                if(res.status == 200){
+                                    // alert("yai")
+                                    setDone(true)
+                                }
+                                else{
+                                    // alert("oops")
+                                    setErr("משהו השתבש")
+                                }
+                            })
                         }}
                         >צור בקשה</button>
                     </div>

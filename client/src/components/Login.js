@@ -72,13 +72,12 @@ const Login = (props) => {
             var response = await axios.post(BASE_URL + `/api/utils/login-user`, {email,code});
 
             if(response.data.valid) {
-                let data = {
-                    userid:'5e80e88ff5ca035f4838f1bc',
-                    isApproved:true,
-                    firstName:'אבירם',
-                    lastName:'רויזמן',
-                    email:'aviram7168@gmail.com',
-                    type:'medical'
+                let data = response.data.user
+                if(isDoctorLogin) {
+                    data.type = "medical"
+                }
+                else{
+                    data.type = "volunteer"
                 }
                 props.dispatch(loginUser(data))
                 if(isDoctorLogin) {
