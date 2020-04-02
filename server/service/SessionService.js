@@ -1,5 +1,7 @@
 'use strict';
 
+const {VOL_COLLECTION_NAME} = require('./VolunteerService')
+
 var getLookUp = (tableFrom, local, foreign, as) => {
   return ({
     $lookup:{
@@ -158,7 +160,20 @@ class SessionService {
    **/
   getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
     var filter = {$match : {$and: [{"filledBy" : null}, 
-    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
+    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}},
+    {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
+    var aggregate = [];
+
+    lookUpForSessions(aggregate);
+    aggregate.push(filter);
+
+
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
+  }
+
+  getAllUpcomingNotYetApprovedSessions() {
+    var filter = {$match : {$and: [{"filledBy" : null},
+                                   {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
     var aggregate = [];
 
     lookUpForSessions(aggregate);
@@ -244,8 +259,6 @@ class SessionService {
     return MongoDB.deleteOne(COLLECTION_NAME,{_id:MongoDB.getMongoObjectId(sessionId)}, this.MongoClient);
   }
 }
-
-
 
 module.exports.SessionService = SessionService;
 

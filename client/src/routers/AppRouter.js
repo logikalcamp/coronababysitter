@@ -19,8 +19,7 @@ import HamalHome from '../components/HamalHome';
 import MessageBar from '../utils/MessageBar'
 import {HamalNewRequests} from '../components/hamal/HamalNewRequests'
 import Logout from '../components/Logout'
-import ManageSessions from '../components/hamal/ManageSessions'
-import HamalPendingUsers from '../components/hamal/HamalPendingUsers'
+import {HamalPendingUsers} from '../components/hamal/HamalPendingUsers'
 import ViewSessions from '../components/hamal/ViewSessions'
 import ManageUsers from '../components/hamal/ManageUsers'
 

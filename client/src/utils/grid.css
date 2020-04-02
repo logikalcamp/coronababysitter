@@ -33,3 +33,18 @@
 .grid-command {
   cursor: pointer;
 }
+
+.grid-command-red {
+  cursor: pointer;
+  color: red;
+}
+
+.grid-command-green {
+  cursor: pointer;
+  color: green;
+}
+
+.grid-command-theme {
+  cursor: pointer;
+  color: #00C2CB;
+}
