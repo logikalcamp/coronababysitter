@@ -5,6 +5,7 @@ import Axios from 'axios';
 
 import {FindSessionsGrid} from './FindSessionGrid';
 import {Map} from './Map';
+import {SessionDetailsModal} from './SessionDetailsModal';
 
 import {BASE_URL} from '../../constants'
 
@@ -132,7 +133,7 @@ export const FindSession = (props) => {
           break;
 
         case MAP_FILTER_MODAL:
-          retVal = 'Map Filter';
+          retVal = <SessionDetailsModal />;
           break;
 
         default:
