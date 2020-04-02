@@ -216,15 +216,6 @@ const ToProps = (state,props) => {
 }
 export default connect(ToProps)(Login);
 
-// const Container = styled.div`
-//     width: 100%;
-//     height: 100%;
-//     display:flex;
-//     z-index:10;
-//     justify-content: center;
-//     align-items: center;
-// `
-
 const LoginDetailsContainer = styled.div`
     width: 410px;
     height: 530px;

@@ -13,7 +13,6 @@ import SchoolIcon from '@material-ui/icons/School';
 import * as DateUtils from '../../utils/dateUtils';
 import DotLoader from "react-spinners/DotLoader";
 
-
 const styles = makeStyles(theme => ({
     arrowIcon: {
         width: '40px',
@@ -33,7 +32,15 @@ const styles = makeStyles(theme => ({
     },
     loader: {
         margin:'auto'
-    }
+    },
+    title1: {
+        fontSize: '28px',
+        marginBottom: '20px'
+    },
+    title2: {
+        fontSize: '20px',
+        textAlign: 'center'
+    },
 }));
 
 const actionCallbacks = {}
@@ -57,7 +64,7 @@ const InformAction = (actionName, ...params) => {
 
 const NotYetApprovedSessionsGridCommands = (props) => {
     const editClicked = (event) => InformAction("EditSession",props.data.fullSession);
-    const removeClicked = (event) => console.log("Remove");
+    const removeClicked = (event) => InformAction("DeleteSession",props.data.fullSession);
   
     return (
         <span>
@@ -77,6 +84,18 @@ export const HamalNewRequests = (props) => {
     const [selectedSession, setSelectedSession] = useState({});
     const [selectedSessionRequests, setSelectedSessionRequests] = useState([])
     const [isApproving, setIsApproving] = useState(false)
+    const [isModalLoading, setIsModalLoading] = useState(false)
+
+    const [modalData, setModalData] = useState({
+        open: false,
+        title: 'כותרת ראשית',
+        secondaryTitle: 'כותרת משנית',
+        buttons: [{text: '', action: () => {}}]
+    })
+
+    const toggleModal = (open, title= '', secondaryTitle= '', buttons = []) => {
+        setModalData({open, title,secondaryTitle, buttons});
+    }
 
     const [columnDefs] = useState([
         { 
@@ -117,7 +136,45 @@ export const HamalNewRequests = (props) => {
         })
     }
 
-    const editUrgentRequest = (session) => {
+    const deleteSession = (session) => {
+        var modalData = {
+            open: true,
+            title: 'האם אתה בטוח שברצונך למחוק חלון זמן זה?',
+            secondayTitle: '',
+            buttons: [
+                {
+                    text: 'כן',
+                    action: () => {
+                        setIsModalLoading(true);
+                        modalData.title = 'מתבצעת מחיקה'
+                        modalData.secondaryTitle = 'אנא המתן'
+                        setModalData(modalData)
+                        Axios.post(BASE_URL +"/api/session/delete", {sessionId: session._id}).then(result => {
+                            setIsModalLoading(false);
+                            setUrgentRequests(undefined);
+                            setOtherRequests(undefined);
+                            setSelectedSessionRequests([]);
+                            toggleModal(false);
+                        }).catch((error) => {
+                            setIsModalLoading(false);
+                            toggleModal(false);
+                        });
+                    },
+                    backgroundColor:'red'
+                },
+                {
+                    text: 'לא',
+                    action: () => {
+                        toggleModal(false)
+                    }
+                }
+            ]
+        }
+
+        setModalData(modalData);
+    }
+
+    const editSession = (session) => {
         setSelectedSession(session);
 
         if(!session.requests || session.requests.length == 0) {
@@ -157,7 +214,8 @@ export const HamalNewRequests = (props) => {
         }
     }
 
-    registerForAction("EditSession", "f1", editUrgentRequest);
+    registerForAction("EditSession", "f1", editSession);
+    registerForAction("DeleteSession", "f1", deleteSession);
 
       const isIn24Hours = (date) => {
         var timeStamp = Math.round(new Date().getTime() / 1000);
@@ -210,6 +268,19 @@ export const HamalNewRequests = (props) => {
 
     return (
         <Container>
+            <ModalBackdrop open={modalData.open}>
+                    <Modal open={modalData.open}>
+                        <ContainerTitle>
+                            <div className={classes.title1}>{modalData.title}</div>
+                            <div className={classes.title2}>{modalData.secondaryTitle}</div>
+                        </ContainerTitle>
+                        {!isModalLoading && <ButtonsContainer>
+                                                {modalData.buttons[0] && <Button color={modalData.buttons[0].color} backgroundColor={modalData.buttons[0].backgroundColor} onClick={() => modalData.buttons[0].action()}>{modalData.buttons[0].text}</Button>}
+                                                {modalData.buttons[1] && <Button color={modalData.buttons[1].color} backgroundColor={modalData.buttons[1].backgroundColor} onClick={() => modalData.buttons[1].action()}>{modalData.buttons[1].text}</Button>}
+                                            </ButtonsContainer>}
+                        {isModalLoading && <DotLoader size={70} color={"#00C2CB"}></DotLoader>}
+                    </Modal>
+                </ModalBackdrop>
             <ContainerHeader>
                 טיפול בבקשה פתוחות {urgentRequests && otherRequests ? `(${urgentRequests.length + otherRequests.length})` : ''}
             </ContainerHeader>
@@ -243,14 +314,73 @@ export const HamalNewRequests = (props) => {
                     <RequestsTitle>הצעות להתנדבות</RequestsTitle>
                     <RequestBoxContainer>
                                 {!isApproving && selectedSessionRequests}
-                                {isApproving && <div className={classes.loader}><DotLoader size={70} 
-                                                           color={"#00C2CB"}></DotLoader></div>}
+                                {isApproving && <div className={classes.loader}><DotLoader size={70} color={"#00C2CB"}></DotLoader></div>}
                     </RequestBoxContainer>
                 </RequestsContent>
             </ContainerContent>
         </Container>
     );
 };
+
+const ModalBackdrop = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.35);
+    top: 0;
+    left: 0;
+    display:${props=>props.open ? "flex":"none"};
+    justify-content: center;
+    align-items: center;
+    z-index:1000;
+`
+
+const Modal = styled.div`
+    width: 550px;
+    background-color:white;
+    height: 150px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px gray;
+    padding: 15px;
+    display:${props=>props.open ? "flex":"none"};
+    flex-direction: column;
+    align-items:center;
+    justify-content:space-between;
+    @media(max-width:800px){
+
+}
+`
+
+const Button = styled.div`
+    width: 100px;
+    height: 35px;
+    background-color: ${props => props.backgroundColor ? props.backgroundColor : '#00C2CB'};
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:${props => props.color ? props.color : 'whitesmoke'};;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 400;
+    cursor:pointer;
+    margin-left: 10px;
+`
+
+const ContainerTitle = styled.div`
+    margin-bottom: 30px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+`
+
+const ButtonsContainer = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
+    width: 100%;
+`
 
 const AcceptButton = styled.div`
     background-color:#00C2CB;
