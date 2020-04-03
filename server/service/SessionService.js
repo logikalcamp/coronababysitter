@@ -124,8 +124,8 @@ class SessionService {
             if(element){
               console.log(Location.getDistance(user.lat, user.lon, element.doctor_o[0].lat, element.doctor_o[0].lon));
 
-              console.log(user.lat + "   "+ user.lon + "    " + element.doctor_o[0].lat +"   " + element.doctor_o[0].lon);
-              if(Location.getDistance(user.lat, user.lon, element.doctor_o[0].lat, element.doctor_o[0].lon) < X){
+              console.log(user.pos.lat + "   "+ user.pos.lng + "    " + element.doctor_o[0].pos.lat +"   " + element.doctor_o[0].pos.lng);
+              if(Location.getDistance(user.pos.lat, user.pos.lng, element.doctor_o[0].pos.lat, element.doctor_o[0].pos.lng) < X){
                 available.push(element);
               }
             }
