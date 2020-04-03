@@ -5,17 +5,12 @@ const isEmpty = require("is-empty");
 
 const initialState = {
   isAuthenticated: (localStorage.getItem("users") ? true : false),
-  user: JSON.parse(localStorage.getItem("users")) || {userid:"5e80e88ff5ca035f4838f1bc"},
+  user: JSON.parse(localStorage.getItem("users")) || {_id:"5e80e88ff5ca035f4838f1bc"},
   loading: false,
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case "INTEGRATE_MONDAY":
-      
-      return{
-        ...state
-      }
     case "LOGOUT":
       console.log("damn")
       
@@ -25,8 +20,8 @@ export default function(state = initialState, action) {
       }
     case SET_CURRENT_USER:
       console.log("setCurrentUserReducer")
-      axios.post(BASE_URL+'/api/login',{data:action.payload})
-      .then(res=>console.log(res))
+      // axios.post(BASE_URL+'/api/login',{data:action.payload})
+      // .then(res=>console.log(res))
       return {
         ...state,
         isAuthenticated: !isEmpty(action.payload),

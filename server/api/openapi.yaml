@@ -457,12 +457,32 @@ paths:
         "405":
           description: Invalid input
       x-swagger-router-controller: Session
-  /session/{sessionId}:
-    put:
+  /session/delete:
+    post:
       tags:
       - session
-      summary: Update a session
-      operationId: updateSession
+      summary: delete session
+      operationId: deleteSession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+      responses:
+        "200":
+          description: session deleted
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Session
+  /session/addrequest/{sessionId}:
+    post:
+      tags:
+      - session
+      summary: Add a new request from a volunteer to the session
+      operationId: addRequestToSession
       parameters:
       - name: sessionId
         in: path
@@ -475,12 +495,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Session'
+              type: object
+              properties:
+                volunteerId:
+                  type: string
       responses:
         "200":
-          description: Session created
+          description: Request added created
         "404":
-          description: Session not found
+          description: Not found
         "405":
           description: Invalid input
       x-swagger-router-controller: Session
@@ -521,7 +544,7 @@ paths:
   /session/getUpcomingSessions/{userId}:
     get:
       tags:
-      - sessions
+      - session
       summary: Get all approved upcoming sessions for volunteer
       operationId: getAllUpcomingApprovedSessionsByVolunteer
       parameters:
@@ -548,7 +571,7 @@ paths:
   /session/getUpcomingNotYetApprovedSessions:
     get:
       tags:
-      - sessions
+      - session
       summary: Get all not yet approved upcoming sessions
       operationId: getAllUpcomingNotYetApprovedSessions
       responses:
@@ -567,7 +590,7 @@ paths:
   /session/getNotYetApprovedSessions/{userId}:
     get:
       tags:
-      - sessions
+      - session
       summary: Get all not yet approved upcoming sessions for volunteer
       operationId: getAllUpcomingNotYetApprovedSessionsByVolunteer
       parameters:
@@ -594,7 +617,7 @@ paths:
   /session/notAssigned:
     get:
       tags:
-      - sessions
+      - session
       summary: Get all not yet assigned upcoming sessions 
       operationId: getAllNotAssignedSessions
       responses:
@@ -614,7 +637,7 @@ paths:
   /session/getAvailableSessions/{userId}:
     get:
       tags:
-      - sessions
+      - session
       summary: Get all not yet approved upcoming sessions for volunteer
       operationId: getAvailableSessions
       parameters:
@@ -641,7 +664,7 @@ paths:
   /session/{doctorId}:
     post:
       tags:
-      - sessions
+      - session
       summary: Get all sessions by a doctor's ID, add isFilled true/false.
       operationId: getDoctorSessions
       parameters:
@@ -676,7 +699,7 @@ paths:
   /session/approve/{sessionId}:
     post:
       tags:
-      - sessions
+      - session
       summary: approve a session to be filled by volunteer
       operationId: approveSession
       parameters:

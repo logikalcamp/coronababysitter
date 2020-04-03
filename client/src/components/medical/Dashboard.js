@@ -149,7 +149,7 @@ const MedicalDashboard = (props) => {
     const [openModal,setOpen] = useState(false)
     console.log(props)
   
-    const id = props.auth.user.userid
+    const id = props.auth.user._id
     return (
       <React.Fragment>
           {openModal && <NewSessionModal id={id} setOpen={setOpen}/>}
@@ -158,7 +158,7 @@ const MedicalDashboard = (props) => {
                   <HeaderComp>
                   <div>
                       <h1>
-                      היי רון, כיף שבאת
+                      היי {props.auth.user.firstName}, כיף שבאת
                       <img src={window.location.origin + '/images/icons8_so_so_120px_2.png'} />
                       </h1>
                       <h2>אנחנו כאן לעזור לך ולדאוג שהמשפחה שלך תקבל את הטוב ביותר!</h2>

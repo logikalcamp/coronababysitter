@@ -12,7 +12,9 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import SchoolIcon from '@material-ui/icons/School';
 import * as DateUtils from '../../utils/dateUtils';
 import DotLoader from "react-spinners/DotLoader";
-
+import { Collapsable, CollapsableContent, CollapsableHeader, Title, Button, ModalBackdrop, Modal, ContainerTitle } from '../Utils'
+import moment from 'moment'
+import 'moment/locale/he'
 
 const styles = makeStyles(theme => ({
     arrowIcon: {
@@ -33,7 +35,15 @@ const styles = makeStyles(theme => ({
     },
     loader: {
         margin:'auto'
-    }
+    },
+    title1: {
+        fontSize: '28px',
+        marginBottom: '20px'
+    },
+    title2: {
+        fontSize: '20px',
+        textAlign: 'center'
+    },
 }));
 
 const actionCallbacks = {}
@@ -57,7 +67,7 @@ const InformAction = (actionName, ...params) => {
 
 const NotYetApprovedSessionsGridCommands = (props) => {
     const editClicked = (event) => InformAction("EditSession",props.data.fullSession);
-    const removeClicked = (event) => console.log("Remove");
+    const removeClicked = (event) => InformAction("DeleteSession",props.data.fullSession);
   
     return (
         <span>
@@ -77,6 +87,18 @@ export const HamalNewRequests = (props) => {
     const [selectedSession, setSelectedSession] = useState({});
     const [selectedSessionRequests, setSelectedSessionRequests] = useState([])
     const [isApproving, setIsApproving] = useState(false)
+    const [isModalLoading, setIsModalLoading] = useState(false)
+
+    const [modalData, setModalData] = useState({
+        open: false,
+        title: 'כותרת ראשית',
+        secondaryTitle: 'כותרת משנית',
+        buttons: [{text: '', action: () => {}}]
+    })
+
+    const toggleModal = (open, title= '', secondaryTitle= '', buttons = []) => {
+        setModalData({open, title,secondaryTitle, buttons});
+    }
 
     const [columnDefs] = useState([
         { 
@@ -117,7 +139,45 @@ export const HamalNewRequests = (props) => {
         })
     }
 
-    const editUrgentRequest = (session) => {
+    const deleteSession = (session) => {
+        var modalData = {
+            open: true,
+            title: 'האם אתה בטוח שברצונך למחוק חלון זמן זה?',
+            secondayTitle: '',
+            buttons: [
+                {
+                    text: 'כן',
+                    action: () => {
+                        setIsModalLoading(true);
+                        modalData.title = 'מתבצעת מחיקה'
+                        modalData.secondaryTitle = 'אנא המתן'
+                        setModalData(modalData)
+                        Axios.post(BASE_URL +"/api/session/delete", {sessionId: session._id}).then(result => {
+                            setIsModalLoading(false);
+                            setUrgentRequests(undefined);
+                            setOtherRequests(undefined);
+                            setSelectedSessionRequests([]);
+                            toggleModal(false);
+                        }).catch((error) => {
+                            setIsModalLoading(false);
+                            toggleModal(false);
+                        });
+                    },
+                    backgroundColor:'red'
+                },
+                {
+                    text: 'לא',
+                    action: () => {
+                        toggleModal(false)
+                    }
+                }
+            ]
+        }
+
+        setModalData(modalData);
+    }
+
+    const editSession = (session) => {
         setSelectedSession(session);
 
         if(!session.requests || session.requests.length == 0) {
@@ -157,7 +217,8 @@ export const HamalNewRequests = (props) => {
         }
     }
 
-    registerForAction("EditSession", "f1", editUrgentRequest);
+    registerForAction("EditSession", "f1", editSession);
+    registerForAction("DeleteSession", "f1", deleteSession);
 
       const isIn24Hours = (date) => {
         var timeStamp = Math.round(new Date().getTime() / 1000);
@@ -167,15 +228,17 @@ export const HamalNewRequests = (props) => {
       }
 
       const getGridObjectFromSession = (session)  => {
-        var gridObject = {
-            startTime: new Date(session.startTime),
-            fullName: session.doctor_o[0].firstName + ' ' + session.doctor_o[0].lastName,
-            phone: session.doctor_o[0].phone,
-            requestsCount: session.requests.length,
-            fullSession: session
-        }
+            moment.locale("he")
+            var startTimeText = moment(new Date(session.startTime)).format("LLL");
+            var gridObject = {
+                startTime: startTimeText,
+                fullName: session.doctor_o[0].firstName + ' ' + session.doctor_o[0].lastName,
+                phone: session.doctor_o[0].phone,
+                requestsCount: session.requests.length,
+                fullSession: session
+            }
 
-        return gridObject;
+            return gridObject;
       }
       
       const loadPage = () => {
@@ -210,6 +273,19 @@ export const HamalNewRequests = (props) => {
 
     return (
         <Container>
+            <ModalBackdrop open={modalData.open}>
+                    <Modal open={modalData.open}>
+                        <ContainerTitle>
+                            <div className={classes.title1}>{modalData.title}</div>
+                            <div className={classes.title2}>{modalData.secondaryTitle}</div>
+                        </ContainerTitle>
+                        {!isModalLoading && <ButtonsContainer>
+                                                {modalData.buttons[0] && <Button color={modalData.buttons[0].color} backgroundColor={modalData.buttons[0].backgroundColor} onClick={() => modalData.buttons[0].action()}>{modalData.buttons[0].text}</Button>}
+                                                {modalData.buttons[1] && <Button color={modalData.buttons[1].color} backgroundColor={modalData.buttons[1].backgroundColor} onClick={() => modalData.buttons[1].action()}>{modalData.buttons[1].text}</Button>}
+                                            </ButtonsContainer>}
+                        {isModalLoading && <DotLoader size={70} color={"#00C2CB"}></DotLoader>}
+                    </Modal>
+                </ModalBackdrop>
             <ContainerHeader>
                 טיפול בבקשה פתוחות {urgentRequests && otherRequests ? `(${urgentRequests.length + otherRequests.length})` : ''}
             </ContainerHeader>
@@ -243,14 +319,22 @@ export const HamalNewRequests = (props) => {
                     <RequestsTitle>הצעות להתנדבות</RequestsTitle>
                     <RequestBoxContainer>
                                 {!isApproving && selectedSessionRequests}
-                                {isApproving && <div className={classes.loader}><DotLoader size={70} 
-                                                           color={"#00C2CB"}></DotLoader></div>}
+                                {isApproving && <div className={classes.loader}><DotLoader size={70} color={"#00C2CB"}></DotLoader></div>}
                     </RequestBoxContainer>
                 </RequestsContent>
             </ContainerContent>
         </Container>
     );
 };
+
+
+const ButtonsContainer = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
+    width: 100%;
+`
 
 const AcceptButton = styled.div`
     background-color:#00C2CB;
@@ -353,84 +437,3 @@ const SessionsContent = styled.div`
     width: 70%;
 `
 
-const Collapsable = styled.div`
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background-color:white;
-    border-radius: 8px;
-    box-shadow: 5px 5px 5px gray;
-    height: auto;
-    clear:both;
-    padding: 20px 10px 20px 10px;
-    margin-bottom: 20px;
-    flex-direction:column;
-`
-
-const CollapsableHeader = styled.div`
-    width: 100%;
-    display:flex;
-    justify-content: space-between;
-    align-items:center;
-    height: 30px;
-    border-bottom: 1px solid gray;
-    padding-bottom:5px;
-`
-
-const Title = styled.div`
-    font-size: 24px;
-    
-`
-
-const CollapsableContent = styled.div`
-    height:100%;
-    width: 100%;
-    clear:both;
-
-    animation: ${props => props.open ? "toggle-down 0.5s forwards" : "toggle-up 0.5s forwards"};
-    -webkit-animation: ${props=> props.open ? "toggle-down 0.5s forwards" : "toggle-up 0.5s forwards"};
-
-    @keyframes toggle-up {
-        0% {height: 500px; }
-        100% { height: 0px; }
-    }
-    
-    @-webkit-keyframes toggle-up {
-        0% {height: 500px; }
-        100% { height: 0px; }
-    }
-        
-    @keyframes toggle-down {
-        0% {height: 0px; }
-        100% { height: 500px; }
-    }
-    
-    @-webkit-keyframes toggle-down {
-        0% {height: 0px; }
-        100% { height: 500px; }
-    }
-
-    & .grid-wrapper {
-        height: 100%;
-      }
-
-    .ag-body-viewport {
-        &::-webkit-scrollbar {
-            width: 5px;
-        }
-        /* Track */
-        &::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-    
-        /* Handle */
-        &::-webkit-scrollbar-thumb {
-            background: #00C2CB;
-        }
-    
-        /* Handle on hover */
-        &::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-    }
-`

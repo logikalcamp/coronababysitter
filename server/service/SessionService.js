@@ -1,5 +1,7 @@
 'use strict';
 
+const {VOL_COLLECTION_NAME} = require('./VolunteerService')
+
 var getLookUp = (tableFrom, local, foreign, as) => {
   return ({
     $lookup:{
@@ -62,8 +64,6 @@ class SessionService {
     });
   }
 
-
-  
   /**
    * Get all sessions of a specified user (and role)
    *
@@ -108,28 +108,31 @@ class SessionService {
     return new Promise((resolve, reject) => {
       var X = 25;
       var user;
-      MongoDB.findOne("Volunteers", {"_id" : MongoDB.getMongoObjectId(userId)}, this.MongoClient).then((result1) => {
+      var id = MongoDB.getMongoObjectId(userId);
+      MongoDB.findOne("Volunteers", {"_id" : id}, this.MongoClient).then((result1) => {
         user = result1;
         var sessions = [];
         var aggregate = [];
         lookUpForSessions(aggregate);
-        var filter = {$match : {filledBy: null}};
+        var filter = {$match : {filledBy: null, requests : {$nin : [id]}}};
         aggregate.push(filter);  
         MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate: aggregate}, this.MongoClient).then((result2) => {
           sessions = result2;
           var available = [];
-        /*  sessions.forEach((element) => {
+          console.log(sessions);
+          sessions.forEach((element) => {
             if(element){
-              console.log(element);
-              console.log(user.lat + "   "+ user.lon + "    " + element.doctor_o.lat +"   " + element.doctor_o.long);
-              if(Location.getDistance(user.lat, user.lon, (element.doctor_o).pop.lat, (element.doctor_o).pop.lon) < X){
+              console.log(Location.getDistance(user.lat, user.lon, element.doctor_o[0].lat, element.doctor_o[0].lon));
+
+              console.log(user.lat + "   "+ user.lon + "    " + element.doctor_o[0].lat +"   " + element.doctor_o[0].lon);
+              if(Location.getDistance(user.lat, user.lon, element.doctor_o[0].lat, element.doctor_o[0].lon) < X){
                 available.push(element);
               }
             }
           
           });
-         */
-         resolve(sessions);
+         
+         resolve(available);
         });
     });
   });
@@ -158,7 +161,20 @@ class SessionService {
    **/
   getAllUpcomingNotYetApprovedSessionsByVolunteer(userId) {
     var filter = {$match : {$and: [{"filledBy" : null}, 
-    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}}]}};
+    {"requests": {$elemMatch : { $eq : MongoDB.getMongoObjectId(userId)}}},
+    {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
+    var aggregate = [];
+
+    lookUpForSessions(aggregate);
+    aggregate.push(filter);
+
+
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
+  }
+
+  getAllUpcomingNotYetApprovedSessions() {
+    var filter = {$match : {$and: [{"filledBy" : null},
+                                   {"startTime" : {$gte : new Date(new Date().setHours(0,0,0))}}]}};
     var aggregate = [];
 
     lookUpForSessions(aggregate);
@@ -177,16 +193,21 @@ class SessionService {
     return MongoDB.count(COLLECTION_NAME, {filledBy:{$exists:true, $ne:null}}, this.MongoClient);
   }
 
-  /**
-   * Update a session
-   *
-   * body Session  (optional)
-   * sessionId String 
-   * no response value expected for this operation
-   **/
-  updateSession(body,sessionId) {
-    return new Promise(function(resolve, reject) {
-      resolve();
+  addRequestToSession(sessionId, volunteerId) {
+    return new Promise((resolve, reject) => {
+      var sessionId_oi = MongoDB.getMongoObjectId(sessionId);
+      var volunteerId_oi = MongoDB.getMongoObjectId(volunteerId);
+
+      if(!sessionId_oi || !volunteerId_oi) reject ("Ids are not in correct format");
+      console.log(sessionId_oi, volunteerId_oi);
+      Promise.all([MongoDB.findOne(COLLECTION_NAME, {_id : sessionId_oi}, this.MongoClient), MongoDB.findOne(VOL_COLLECTION_NAME, {_id : volunteerId_oi}, this.MongoClient)]).then(results => {
+        console.log(results)
+        if(!results[0] || !results[1]) reject("Error")
+
+        MongoDB.update(COLLECTION_NAME, {_id : sessionId_oi}, {
+          $push : {requests : volunteerId_oi}
+        }, this.MongoClient).then(resolve).catch(console.log)
+      }).catch(reject);
     });
   }
 
@@ -198,6 +219,50 @@ class SessionService {
     lookUpForSessions(aggregate);
     aggregate.push(filter);
     return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate: aggregate}, this.MongoClient);
+  }
+
+  async approveSession(sessionId, volunteerId) {
+    try {
+        var results = await Promise.all([MongoDB.findOne(COLLECTION_NAME, {_id: MongoDB.getMongoObjectId(sessionId), requests: MongoDB.getMongoObjectId(volunteerId)}, this.MongoClient),
+                MongoDB.findByMongoId(VOL_COLLECTION_NAME,volunteerId, this.MongoClient)]);
+
+        if(results[0] && results[1]) {
+          var session = results[0];
+
+          var startDate = new Date(session.startTime);
+          var endDate = new Date(session.endTime);
+
+          startDate.setMinutes(startDate.getMinutes() - 30);
+          endDate.setMinutes(endDate.getMinutes() + 30);
+
+          var filter = {
+            startTime : {
+              $gte: startDate,
+              $lte: endDate
+            },
+            _id:{$ne : MongoDB.getMongoObjectId(sessionId)}
+          }
+
+          var updateQuery = {
+            $pull : { requests : MongoDB.getMongoObjectId(volunteerId)}
+          }
+
+          var removeVolunteerFromSessionsResult =
+             await MongoDB.update(COLLECTION_NAME, filter, updateQuery, this.MongoClient);
+
+          var setFilledByResult = 
+            await MongoDB.findOneAndUpdate(COLLECTION_NAME, {_id:MongoDB.getMongoObjectId(sessionId)}, {filledBy:MongoDB.getMongoObjectId(volunteerId)}, this.MongoClient);
+
+          return {approved:true}
+        }
+    }
+    catch (error) {
+      throw error;
+    }
+  }
+
+  deleteSession(sessionId) {
+    return MongoDB.deleteOne(COLLECTION_NAME,{_id:MongoDB.getMongoObjectId(sessionId)}, this.MongoClient);
   }
 }
 

@@ -55,7 +55,7 @@ class VolunteerService {
    * returns List
    **/
   getPendingVolunteers() {
-    return MongoDB.findMany(COLLECTION_NAME,{isApproved: false}, this.MongoClient);
+    return MongoDB.findMany(COLLECTION_NAME,{isApproved: false, isRejected: {$eq:null}}, this.MongoClient);
   }
 
     

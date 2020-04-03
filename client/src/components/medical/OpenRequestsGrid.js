@@ -5,6 +5,7 @@ import {BASE_URL} from '../../constants'
 import GridComp from '../Grid';
 import _ from 'lodash'
 
+
 const NotYetApprovedSessionsGridCommands = (props) => {
   const prefix = window.location.origin
   const onClick = (event) => {
@@ -15,7 +16,6 @@ const NotYetApprovedSessionsGridCommands = (props) => {
       }
     })
   };
-
   return (
     <span className="grid-command">
       <img
@@ -26,14 +26,17 @@ const NotYetApprovedSessionsGridCommands = (props) => {
   )
 }
 
-export const NotYetApprovedSessionsGrid = (props) => {
+export const OpenRequestsGrid = (props) => {
   console.log(props)
-  const [load,setload] = useState(true)
-  const [notYetApprovedSessions, setNotYetApprovedSessions] = useState([]);
+
+  const [notYetApprovedSessions, setNotYetApprovedSessions] = useState(props.arr);
   const DeleteSession = (val) =>{
     let a = _.filter(notYetApprovedSessions,function(o){return o._id != val})
     setNotYetApprovedSessions(a)
   }
+  useEffect(() => {
+    setNotYetApprovedSessions(props.arr)
+  }, [props])
   const [columnDefs] = useState([
     { 
       headerName: "תאריך ושעה",
@@ -70,21 +73,16 @@ export const NotYetApprovedSessionsGrid = (props) => {
     }
   ]);
   
-  useEffect(() => {
-    Axios.post(BASE_URL+`/api/session/${props.id}`,{isFilled:false}).then(result => {
-      console.log(result);
-      setTimeout(()=>{
-        setload(false)
 
-      },2000)
-      setNotYetApprovedSessions(result.data)
-    })
-  }, [])
+  const handleClick = (e) => {
+      props.handle(notYetApprovedSessions,e)
+  }
+  
   
   return (
     <React.Fragment>
     {
-      load ? 
+      props.load ? 
       <div style={{textAlign:"center"}}>
         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
       </div>
@@ -93,6 +91,7 @@ export const NotYetApprovedSessionsGrid = (props) => {
         <GridComp 
         columnDefs={columnDefs}
         rowData={notYetApprovedSessions}
+        onRowClicked={handleClick}
         frameworkComponents={{
           notYetApprovedSessionsGridCommands: NotYetApprovedSessionsGridCommands
         }}

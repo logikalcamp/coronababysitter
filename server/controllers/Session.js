@@ -25,17 +25,6 @@ module.exports.getAllSessionsByUser = function getAllSessionsByUser (req, res, n
     });
 };
 
-module.exports.getAllUpcomingNotYetApprovedSessionsByVolunteer = function getAllUpcomingNotYetApprovedSessionsByVolunteer (req, res, next, userId) {
-  req.SessionService.getAllUpcomingNotYetApprovedSessionsByVolunteer(userId)
-    .then(function (response) {
-      utils.writeJson(req,res, response);
-    })
-    .catch(function (response) {
-      // utils.writeJson(req,res, response);
-      res.status(400).json({'message': response.toString()});
-    });
-};
-
 module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next) {
   req.SessionService.getAllUpcomingNotYetApprovedSessions()
     .then(function (response) {
@@ -49,6 +38,17 @@ module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNot
 
 module.exports.getAllNotAssignedSessions = function getAllNotAssignedSessions (req, res, next) {
   req.SessionService.getAllNotAssignedSessions()
+  .then(function (response) {
+    utils.writeJson(req,res, response);
+  })
+  .catch(function (response) {
+    // utils.writeJson(req,res, response);
+    res.status(400).json({'message': response.toString()});
+  });
+};
+
+module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next, userId) {
+  req.SessionService.getAllUpcomingNotYetApprovedSessions(userId)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
@@ -69,6 +69,17 @@ module.exports.getAllUpcomingApprovedSessionsByVolunteer = function getAllUpcomi
     });
 };
 
+module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next) {
+  req.SessionService.getAllUpcomingNotYetApprovedSessions()
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
 module.exports.getAvailableSessions = function getAvailableSessions (req, res, next, userId) {
   req.SessionService.getAvailableSessions(userId)
     .then(function (response) {
@@ -80,8 +91,8 @@ module.exports.getAvailableSessions = function getAvailableSessions (req, res, n
     });
 };
 
-module.exports.updateSession = function updateSession (req, res, next, body, sessionId) {
-  req.SessionService.updateSession(body, sessionId)
+module.exports.addRequestToSession = function addRequestToSession (req, res, next, body, sessionId) {
+  req.SessionService.addRequestToSession(sessionId, body.volunteerId)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
@@ -127,6 +138,17 @@ module.exports.getDoctorSessions = function getDoctorSessions (req, res, next, b
 
 module.exports.approveSession = function approveSession (req, res, next,body,sessionId) {
   req.SessionService.approveSession(sessionId, body.volunteerId)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+module.exports.deleteSession = function deleteSession (req, res, next,body) {
+  req.SessionService.deleteSession(body.sessionId)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
