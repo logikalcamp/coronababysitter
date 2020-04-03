@@ -179,8 +179,8 @@ const CompleteDoctor = (props) => {
     return (
         
         <React.Fragment>
-        {error ? 
-            <div>
+        {error  ? 
+            <div style={{display:"flex",height:"100%",margin:"auto"}}>
                 היי , קרתה שגיאה והלינק התחברות שגוי , אנא פנה/י לחמ"ל לבדיקה חוזרת 
                 050222222222222
             </div>
@@ -188,8 +188,11 @@ const CompleteDoctor = (props) => {
             <React.Fragment>
                 {
                     loader ? 
-                    <div>loading</div>
+                    <div style={{textAlign:"center",margin:"auto"}}>
+                        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                    </div>
                     :
+                    <div style={{height:"100%",width:"100%"}}>
                     <SignupCon amount={children}>
                         <h2>השלמת התחברות</h2>
                         <h1> היי {details.firstName} , כיף שחזרת !</h1>
@@ -226,16 +229,26 @@ const CompleteDoctor = (props) => {
                                     let data ={...details}
                                     delete data._id
                                     delete data.isApproved
+                                    console.log(data)
                                     // data.id = id
                                     console.log(data)
                                     axios.put(BASE_URL+`/api/doctor/create/${id}`,data)
                                     .then(res=>{
                                         console.log(res)
+                                        if(res.status == 200){
+                                            alert("תודה על ההרשמה")
+                                            window.location.href = "/login"
+                                        }
+                                        else{
+                                            
+                                        }
                                     })
                                 }}>סיים</Butt>
                             </div>
+                            
                         </SignupForm>
                     </SignupCon>
+                    </div>
                 }
             </React.Fragment>
             }
@@ -273,12 +286,12 @@ const Modal = styled.div`
 `
 
 const SignupCon = styled.div`
-    max-width:1366px;
-    padding:1rem;
-    height:${props=>props.amount >= 3 ? "unset":"100%"};
-    width:100%;
-
-    margin:auto;
+    max-width: 1366px;
+    padding: 1rem;
+    margin: auto;
+    overflow-y: auto;
+    height: 100%;
+    padding-bottom: 0;
     section{
         /* height:31rem; */
     }
@@ -315,6 +328,7 @@ const SignupForm = styled.div`
     margin:auto;
     display:flex;
     flex-direction:column;
+    margin-bottom: 2rem;
     div{
         display:flex;
         flex-direction:column;

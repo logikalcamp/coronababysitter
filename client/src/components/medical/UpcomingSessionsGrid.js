@@ -15,9 +15,8 @@ const UpcomingSessionsGridCommands = (props) => {
       }
     })
   };
-  // console.log(props.data.contact.slice(1,10))
-  // let phone = props.data.contact.phone.splice(1,10)
-  let phone = props.data.contact.slice(1,10)
+  let phone = props.data.contact.phone.slice(1,10)
+  // let phone = props.data.contact.slice(1,10)
   return (
     <span className="grid-command">
       <img
@@ -50,11 +49,11 @@ export const UpcomingSessionsGrid = (props) => {
       }
     },
     { 
-      headerName: "איש קשר",
+      headerName: "איש קשר זמין",
       field: "contact",
       valueGetter: (params) => {
-        const {firstName, lastName} = params.data.doctor_o[0];
-        return firstName + ' ' + lastName;
+        const contact = params.data.contact.name;
+        return contact;
       }
     },
     {
@@ -69,6 +68,23 @@ export const UpcomingSessionsGrid = (props) => {
         return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
       }
     },
+    { 
+      headerName: "איש קשר זמין",
+      field: "contact",
+      valueGetter: (params) => {
+        const contact = params.data.contact.name;
+        return contact;
+      }
+    },
+    { 
+      headerName: "מתנדב",
+      field: "volunteer",
+      valueGetter: (params) => {
+        const {firstName,lastName} = params.data.chosen_volunteer_o[0];
+        return firstName + ' ' +lastName;
+      }
+    },
+    
     { 
       headerName: "",
       field: "commands",
@@ -86,7 +102,7 @@ export const UpcomingSessionsGrid = (props) => {
       setTimeout(()=>{
         setload(false)
 
-      },2000)
+      },4000)
       console.log(result);
     })
   }, [])
