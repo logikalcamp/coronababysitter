@@ -113,7 +113,7 @@ module.exports.countMatchedSessions = function countMatchedSessions (req, res, n
     });
 };
 
-module.exports.countUrgentPendingSessions = function countUrgentPendingSessions (req, res, next, body) {
+module.exports.countUrgentPendingSessions = function countUrgentPendingSessions (req, res, next) {
   utils.writeJson(req,res,{count: 0});
   // req.SessionService.countUrgentSessions(body)
   //   .then(function (response) {
