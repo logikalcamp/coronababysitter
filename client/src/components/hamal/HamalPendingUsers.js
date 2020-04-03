@@ -247,7 +247,7 @@ export const HamalPendingUsers = (props) => {
             var volunteersPendingNew = [];
 
             for(var i =0; i < results[0].data.length; i++) {
-                results[0].data[i].role="volunteer";
+                results[0].data[i].role ="volunteer";
                 var gridObject = getGridObjectFromSession(results[0].data[i]);
                 volunteersPendingNew.push(gridObject);
             }
@@ -327,72 +327,6 @@ export const HamalPendingUsers = (props) => {
                         <UserImage src={selectedUser ? selectedUser.picture ? selectedUser.picture : window.location.origin + "/images/profilePlaceholder.png" : ''}/>
                         <SelectedUserTitle>{selectedUser ? selectedUser.firstName + ' ' + selectedUser.lastName : ''}</SelectedUserTitle>
                         <div>גיל {DateUtils.calculateAge(selectedUser ? new Date(selectedUser.birthday) : new Date())}</div>
-                    </SelectedUserHeader>
-                    <UserDetails>
-                        <DetailsHeader>
-                            <SelectedUserTitle>פרטים כלליים</SelectedUserTitle>
-                            <IconText className={classes.blockUser} onClick={() => onRejectClicked(selectedUser)}>
-                                <BlockIcon className={classes.marginLeft}/>
-                                דחה משתמש
-                            </IconText>
-                        </DetailsHeader>
-                        <IconText>
-                            <PinDropIcon className={classes.marginLeft + ' ' + 'theme-color'}/>
-                            <div>{selectedUser ? selectedUser.address : ''}</div>
-                        </IconText>
-                        <IconText>
-                            <MailIcon className={classes.marginLeft + ' ' + 'theme-color'}/>
-                            <div>{selectedUser ? selectedUser.email : ''}</div>
-                        </IconText>
-                        <IconText>
-                            <AssignmentIndIcon className={classes.marginLeft + ' ' + 'theme-color'}/>
-                            <div>{selectedUser ? selectedUser.tz : ''}</div>
-                        </IconText>
-                        <IconText>
-                            <PhoneIcon className={classes.marginLeft + ' ' + 'theme-color'}/>
-                            <div>{selectedUser ? selectedUser.phone : ''}</div>
-                        </IconText>
-                        <IconText>
-                            <FacebookIcon className={classes.marginLeft + ' ' + 'theme-color'}/>
-                            <div>{selectedUser ? selectedUser.facebook : ''}</div>
-                        </IconText>
-                        <div>
-                          <IconText>
-                            <SchoolIcon className={classes.marginLeft + ' ' + 'theme-color'}/>
-                            <div>{selectedUser ? selectedUser.institute : ''}</div>
-                        </IconText>
-                      </div>
-                      <div className={classes.hobbies}>
-                        <IconText>
-                            <FavoriteIcon className={classes.smallIcon + ' ' + 'red-color'}/>
-                            <div>{selectedUser ? selectedUser.hobbies[0] : ' '}</div>
-                        </IconText>
-                        <IconText>
-                            <FavoriteIcon className={classes.smallIcon + ' ' + 'red-color'}/>
-                            <div>{selectedUser ? selectedUser.hobbies[1] : ' '}</div>
-                        </IconText>
-                        <IconText>
-                            <FavoriteIcon className={classes.smallIcon + ' ' + 'red-color'}/>
-                            <div>{selectedUser ? selectedUser.hobbies[2] : ' '}</div>
-                        </IconText>
-                    </div>
-                    <div className={classes.notes}>
-                        <SelectedUserTitle>
-                            הערות
-                        </SelectedUserTitle>
-                        <div>
-                            <div>{selectedUser ? selectedUser.notes : ' '}</div>
-                        </div>
-                    </div>
-                    <ButtonsContainer>
-                        <Button onClick={() => onApproveClicked(selectedUser)}>אשר</Button>
-                    </ButtonsContainer>
-                    </UserDetails>
-                </SelectedUserContent>}
-                {selectedUser && selectedUser.role == 'doctor' && <SelectedUserContent>
-                    <SelectedUserHeader>
-                        <UserImage src={selectedUser ? selectedUser.picture ? selectedUser.picture : window.location.origin + "/images/profilePlaceholder.png" : ''}/>
-                        <SelectedUserTitle>{selectedUser ? selectedUser.firstName + ' ' + selectedUser.lastName : ''}</SelectedUserTitle>
                     </SelectedUserHeader>
                     <UserDetails>
                         <DetailsHeader>
