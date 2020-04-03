@@ -95,7 +95,7 @@ const TimeDate = styled.div`
 const numbers = ["0","1","2","3","4","5","6","7","8","9"]
 
 const NewSession = ({setOpen,id}) =>{
-    const [done,setDone] = useState(true)
+    const [done,setDone] = useState(false)
     const [err,setErr] = useState('')
     const [details,setState] = useState({
         startTime:'',
@@ -311,6 +311,7 @@ const NewSession = ({setOpen,id}) =>{
                                 recurring:"once",
                                 endTime:new Date(moment(eDate,"MM/DD/YYYY HH:mm").format()),
                                 tasks:[],
+                                notes:'',
                                 didHappen:false,
                                 contact:{
                                     phone:details.contact,

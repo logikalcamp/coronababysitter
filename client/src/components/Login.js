@@ -174,7 +174,7 @@ const Login = (props) => {
                     <img className={classes.loginImage} src={window.location.origin + "/images/login.png"}></img>
                     <ContainerTitle>
                         <div className={classes.title1}>{loginState == 'email' ? 'אהלן!' : 'מצוין!'}</div>
-                        <div className={classes.title2}>{loginState == 'email' ? 'כיף לראות שחזרת, הזן אימייל להתחברות' : 'עוד מספר שניות תקבל קוד למייל, תזין אותו שם למטה'}</div>
+                        <div className={classes.title2}>{loginState == 'email' ? 'כיף לראות שחזרת, הזנ.י אימייל להתחברות' : 'עוד מספר שניות תקבל.י קוד למייל'}</div>
                         {loginState == 'email' && (
                             <Toggle>
                                 <ToggleOption selected={!isDoctorLogin} onClick={() => {setIsDoctorLogin(false)}}>
@@ -202,7 +202,7 @@ const Login = (props) => {
                                 <ErrorLabel>{error}</ErrorLabel>
                             </InputField>
                         )}
-                    <Button onClick={() => performAction()}>{loginState == 'email' ? 'שלח' : 'אישור'}</Button>
+                    <Button onClick={() => performAction()}>{loginState == 'email' ? 'שלח' : 'המשך'}</Button>
                 </LoginDetailsContainer>
             </Container>
         </div>
