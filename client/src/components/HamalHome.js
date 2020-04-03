@@ -51,7 +51,7 @@ const HamalHome = () => {
     })
 
     const getUsers = async () => {
-        if(pendingUsers && pendingUsers.length > 0) return;
+        if(pendingUsers) return;
 
         try {
             var results = await Promise.all([axios.get(BASE_URL + '/api/volunteer/pending'),
