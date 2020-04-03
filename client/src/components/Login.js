@@ -55,7 +55,7 @@ const Login = (props) => {
         var loginApi = isDoctorLogin ? 'doctor' : 'volunteer';
 
         try {
-            var response = await axios.post(BASE_URL + `/api/${loginApi}/loginemail`, {email});
+            var response = await axios.post(BASE_URL + `/api/${loginApi}/loginemail`, {email: email.toLowerCase()});
             setLoginState('code');
         }
         catch (error) {

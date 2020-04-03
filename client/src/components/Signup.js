@@ -546,6 +546,7 @@ export const Signup = (props) => {
                         s={!agree}
                         onClick={()=>{
                             let data = {...details}
+                            data.email = data.email.toLowerCase();
                             data.birthday = new Date (moment(details.birthday,"DD/MM/YYYY").format())
                             // console.log(data)
                             axios.put(BASE_URL+'/api/volunteer/register',data)

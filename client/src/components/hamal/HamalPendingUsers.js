@@ -247,7 +247,7 @@ export const HamalPendingUsers = (props) => {
             var volunteersPendingNew = [];
 
             for(var i =0; i < results[0].data.length; i++) {
-                results[0].data[i].role="volunteer";
+                results[0].data[i].role ="volunteer";
                 var gridObject = getGridObjectFromSession(results[0].data[i]);
                 volunteersPendingNew.push(gridObject);
             }
