@@ -115,11 +115,8 @@ const FindSession = (props) => {
 
   const openSessionDetails = (event, session) => {
     debugger;
-    
-    let newSession = _.cloneDeep(session);
-    newSession.requests.push(props.auth.user._id);
 
-    Axios.put(BASE_URL+'/api/session/' + session._id, newSession)
+    Axios.post(BASE_URL+'/api/session/addrequest/' + session._id, {volunteerId:props.auth.user._id})
     .then(response => {
       console.log(response);
     })

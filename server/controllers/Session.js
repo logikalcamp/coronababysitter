@@ -91,8 +91,8 @@ module.exports.getAvailableSessions = function getAvailableSessions (req, res, n
     });
 };
 
-module.exports.updateSession = function updateSession (req, res, next, body, sessionId) {
-  req.SessionService.updateSession(body, sessionId)
+module.exports.addRequestToSession = function addRequestToSession (req, res, next, body, sessionId) {
+  req.SessionService.addRequestToSession(sessionId, body.volunteerId)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

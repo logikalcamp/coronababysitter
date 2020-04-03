@@ -64,8 +64,6 @@ class SessionService {
     });
   }
 
-
-  
   /**
    * Get all sessions of a specified user (and role)
    *
@@ -195,16 +193,21 @@ class SessionService {
     return MongoDB.count(COLLECTION_NAME, {filledBy:{$exists:true, $ne:null}}, this.MongoClient);
   }
 
-  /**
-   * Update a session
-   *
-   * body Session  (optional)
-   * sessionId String 
-   * no response value expected for this operation
-   **/
-  updateSession(body,sessionId) {
-    return new Promise(function(resolve, reject) {
-      resolve();
+  addRequestToSession(sessionId, volunteerId) {
+    return new Promise((resolve, reject) => {
+      var sessionId_oi = MongoDB.getMongoObjectId(sessionId);
+      var volunteerId_oi = MongoDB.getMongoObjectId(volunteerId);
+
+      if(!sessionId_oi || !volunteerId_oi) reject ("Ids are not in correct format");
+      console.log(sessionId_oi, volunteerId_oi);
+      Promise.all([MongoDB.findOne(COLLECTION_NAME, {_id : sessionId_oi}, this.MongoClient), MongoDB.findOne(VOL_COLLECTION_NAME, {_id : volunteerId_oi}, this.MongoClient)]).then(results => {
+        console.log(results)
+        if(!results[0] || !results[1]) reject("Error")
+
+        MongoDB.update(COLLECTION_NAME, {_id : sessionId_oi}, {
+          $push : {requests : volunteerId_oi}
+        }, this.MongoClient).then(resolve).catch(console.log)
+      }).catch(reject);
     });
   }
 

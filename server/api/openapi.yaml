@@ -477,12 +477,12 @@ paths:
         "405":
           description: Invalid input
       x-swagger-router-controller: Session
-  /session/{sessionId}:
-    put:
+  /session/addrequest/{sessionId}:
+    post:
       tags:
       - session
-      summary: Update a session
-      operationId: updateSession
+      summary: Add a new request from a volunteer to the session
+      operationId: addRequestToSession
       parameters:
       - name: sessionId
         in: path
@@ -495,12 +495,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Session'
+              type: object
+              properties:
+                volunteerId:
+                  type: string
       responses:
         "200":
-          description: Session created
+          description: Request added created
         "404":
-          description: Session not found
+          description: Not found
         "405":
           description: Invalid input
       x-swagger-router-controller: Session
