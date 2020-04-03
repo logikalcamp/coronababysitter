@@ -1,9 +1,10 @@
 'use strict';
 
 const randomize = require('randomatic');
-const MongoDB = require("../database/DataBase")
-const {EmailService} = require("./EmailService")
+const MongoDB = require("../database/DataBase");
+const {EmailService} = require("./EmailService");
 const { getPagingDbData } = require('../utils/paging');
+const {HamalService} = require("./HamalService");
 
 var COLLECTION_NAME = "Doctors";
 
@@ -79,7 +80,16 @@ class DoctorService {
         if(result) 
           reject("Doctor already exists");
         else {
-          MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
+          if ((body.secretCode) && (body.secretCode.toLowerCase() == "fightcorona2020")) {
+            MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then((response, error) => {
+              if (error) reject(error);
+              var hamalService = new HamalService(this.MongoClient);
+              hamalService.approveOrRejectUser({isApproved: true, hamalUserId: MongoDB.getMongoObjectId("5e8712efdd90fe3984112b2b"), role: "doctor"},
+                                               response.insertedId).then(resolve, reject);
+            });
+          } else {
+            MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
+          }
         }
       });
     });
