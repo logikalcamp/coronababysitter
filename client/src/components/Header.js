@@ -34,7 +34,7 @@ const Header = (props) => {
                             </HeaderSubCon>
                         </Link>
                         :
-                        <Link to="/hamalhome">
+                        <Link to="/cac">
                             <HeaderSubCon>
                                 <img src={window.location.origin + "/images/newL.png"} alt="nel" />
                                 <label id="lb">Sitter Seeker</label>

@@ -36,19 +36,23 @@ export const NotYetApprovedSessionsGrid = (props) => {
   }
   const [columnDefs] = useState([
     { 
-      headerName: "תאריך ושעה",
+      headerName: "תאריך",
       field: "startTime",
       valueFormatter: (params) => {
         const startTime = moment(params.value);
-        return startTime.format("H:mm DD-MM-YY");
+        return startTime.format("DD-MM-YY");
       }
     },
-    { 
-      headerName: "איש קשר",
-      field: "contact",
+    {
+      headerName: "שעות ההתנדבות",
+      field: "sessionHours",
       valueGetter: (params) => {
-        const {firstName, lastName} = params.data.doctor_o[0];
-        return firstName + ' ' + lastName;
+        let {startTime, endTime} = params.data;
+
+        startTime = moment(startTime);
+        endTime = moment(endTime);
+
+        return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
       }
     },
     { 

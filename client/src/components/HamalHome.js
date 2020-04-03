@@ -40,7 +40,7 @@ const styles = makeStyles(theme => ({
 const HamalHome = () => {
     const classes = styles();
     const [page, setPage] = useState(0);
-    const [pendingUsers, setPendingUsers] = useState([]);
+    const [pendingUsers, setPendingUsers] = useState(undefined);
     const [pendingUsersUI, setPendingUsersUI] = useState([]);
     const [counts, setCounts] = useState({
         pendingVolunteers: 0,
@@ -51,7 +51,7 @@ const HamalHome = () => {
     })
 
     const getUsers = async () => {
-        if(pendingUsers && pendingUsers.length > 0) return;
+        if(pendingUsers) return;
 
         try {
             var results = await Promise.all([axios.get(BASE_URL + '/api/volunteer/pending'),
@@ -60,7 +60,7 @@ const HamalHome = () => {
                                              axios.get(BASE_URL+'/api/volunteer/count'),
                                              axios.get(BASE_URL+'/api/doctor/count'),
                                              axios.get(BASE_URL+'/api/session/counturgentpending'),
-                                             axios.get(BASE_URL+'/api/session/countmatched')])
+                                             axios.get(BASE_URL+'/api/session/countmatched')]);
 
             var counts = {
                 pendingVolunteers: results[2].data.count,

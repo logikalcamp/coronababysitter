@@ -4,6 +4,7 @@ import moment from 'moment';
 import {BASE_URL} from '../../constants'
 import GridComp from '../Grid';
 import _ from 'lodash'
+import {MdEventBusy} from "react-icons/md";
 
 
 const NotYetApprovedSessionsGridCommands = (props) => {
@@ -18,10 +19,7 @@ const NotYetApprovedSessionsGridCommands = (props) => {
   };
   return (
     <span className="grid-command">
-      <img
-        src={prefix + '/images/icons8_event_declined_96px.png'}
-        onClick={onClick} 
-      />     
+      <MdEventBusy style={{color:"red",width:"2rem",height:"2rem"}} onClick={onClick}/>   
     </span>
   )
 }
@@ -39,19 +37,31 @@ export const OpenRequestsGrid = (props) => {
   }, [props])
   const [columnDefs] = useState([
     { 
-      headerName: "תאריך ושעה",
+      headerName: "תאריך",
       field: "startTime",
       valueFormatter: (params) => {
         const startTime = moment(params.value);
-        return startTime.format("H:mm DD-MM-YY");
+        return startTime.format("DD-MM-YY");
+      }
+    },
+    {
+      headerName: "שעות ההתנדבות",
+      field: "sessionHours",
+      valueGetter: (params) => {
+        let {startTime, endTime} = params.data;
+
+        startTime = moment(startTime);
+        endTime = moment(endTime);
+
+        return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
       }
     },
     { 
       headerName: "איש קשר",
       field: "contact",
       valueGetter: (params) => {
-        const {firstName, lastName} = params.data.doctor_o[0];
-        return firstName + ' ' + lastName;
+        const contact = params.data.contact.name;
+        return contact ;
       }
     },
     { 
@@ -63,7 +73,7 @@ export const OpenRequestsGrid = (props) => {
       }
     },
     { 
-      headerName: "",
+      headerName: "לביטול",
       field: "commands",
       width: 70,
       cellRenderer: "notYetApprovedSessionsGridCommands",

@@ -6,6 +6,7 @@ var {DoctorService} = require("./server/service/DoctorService");
 var {HamalService} = require("./server/service/HamalService");
 var {UtilsService} = require("./server/service/UtilsService");
 var {ImageService} = require("./server/service/ImageService");
+var {EmailService} = require("./server/service/EmailService");
 var path = require('path');
 var cors = require('cors');
 var bodyParser=require('body-parser');
@@ -75,7 +76,7 @@ app.use("*", async (req,res,next) => {
     next();
 })
 
-if(env == 'production') {
+if(env === 'production') {
     app.use(express.static(path.join(__dirname, 'client/build')));
     app.get('*', (req, res) => {
       res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
@@ -85,6 +86,17 @@ if(env == 'production') {
 
 // Initialize the Swagger middleware
 var server = http.listen(serverPort, function () {
+    if(env === 'production') {
+        new EmailService().sendEmail("abenjaminov@gmail.com", {
+            title: "SitterSeeker - Version Up",
+            body: `
+                <div>
+                    Enviroment: ${env}</br>
+                    Timestamp: ${new Date().toLocaleDateString("he")}
+                </div>
+            `
+        });
+    }
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
 });
 

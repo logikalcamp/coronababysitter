@@ -1,0 +1,20 @@
+{
+  "short_name": "Sitter Seeker",
+  "name": "babysitting matcher for medical teams",
+  "icons": [
+    {
+      "src": "tlogos.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "tlogo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#00C2CB",
+  "background_color": "#00C2CB"
+}
