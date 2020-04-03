@@ -592,7 +592,7 @@ paths:
       tags:
       - session
       summary: Get all not yet approved upcoming sessions for volunteer
-      operationId: getAllUpcomingNotYetApprovedSessionsByVolunteer
+      operationId: getAllUpcomingNotYetApprovedSessions
       parameters:
       - name: userId
         in: path
@@ -896,10 +896,13 @@ components:
           type: string
         address:
           type: string
-        lat:
-          type: number
-        long:
-          type: number
+        pos:
+          type: object
+          properties:
+            lat:
+              type: number
+            lng:
+              type: number
         photo:
           type: string
           description: Link to the user's photo, hosted on a photo server/cloud
@@ -958,10 +961,13 @@ components:
           type: string
         address:
           type: string
-        lat:
-          type: number
-        long:
-          type: number
+        pos:
+          type: object
+          properties:
+            lat:
+              type: number
+            lng:
+              type: number
         hobbies:
           type: array
           items:

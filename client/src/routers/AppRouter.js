@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import {BrowserRouter as Router, Route, Switch, Link, NavLink} from 'react-router-dom';
 import PrivateRoute from '../private-route/PrivateRoute'
 import Header from '../components/Header'
@@ -26,7 +26,20 @@ import {HamalPendingUsers} from '../components/hamal/HamalPendingUsers'
 import ErrorPage from '../components/ErrorPage'
 import {connect} from 'react-redux'
 
-const AppRouter = (props) =>(
+
+const AppRouter = (props) =>{
+  const [type,setType] = useState('none')
+
+  useEffect(() => {
+    if(props.auth.isAuthenticated){
+     setType(props.auth.user.type)
+    }
+    else{
+      setType("none")
+    }
+  }, [props])
+  console.log(type)
+  return(
     <Router>
       <Header/>
       {window.innerWidth < 600 && <MessageBar message={["כדי לקבל את החוויה הטובה ביותר",'באנדרואיד - "הגדרות" -> "הוספה למסך הבית"','באייפון - רק בדפדפן ספארי - "הגדרות" -> "הוסף למסך הבית"']}/> }
@@ -35,37 +48,45 @@ const AppRouter = (props) =>(
         <Route exact path="/logout" component={Logout}/>
         <Route exact path='/login' component={Login} />
         <Route exact path="/policy" component={Policy}/>
-        <Route exact path="/doctor/:id" component={CompleteDoctor}/>
+        <Route exact path="/doctors/:id" component={CompleteDoctor}/>
         <Route exact path="/Registration/:type" component={Signup}/>
         
         {
-          props.auth.user.type == "medical" &&
-          <PrivateRoute exact path="/medicalhome" component={MedicalDashboard}/>
+          
+          type == "medical" &&
+          <React.Fragment>
+            <PrivateRoute exact path="/medicalhome" component={MedicalDashboard}/>
+            <PrivateRoute exact path="/optionalvolunteers" component={OptionalVolunteers}/>
+          </React.Fragment>
+           
         }
+        {/* {
+          type == "medical" &&
+          
+        } */}
         {
-          props.auth.user.type == "medical" &&
-          <PrivateRoute exact path="/optionalvolunteers" component={OptionalVolunteers}/>
-        }
-        {
-          props.auth.user.type =="volunteer" &&
+          type =="volunteer" &&
           <PrivateRoute exact path='/volunteer-homepage' component={VolunteerHomepage} />
         }
         {
-          props.auth.user.type =="volunteer" &&
+          type =="volunteer" &&
           <PrivateRoute exact path='/find-session' component={FindSession} />
         }
         
-        <Route exact path="/hamal/pendingusers" component={HamalPendingUsers}/>
-        <Route exact path="/hamal/newrequests" component={HamalNewRequests}/>
-        <Route exact path="/hamal/volunteers" component={HamalVolunteersPage}/>
-        <Route exact path="/hamal/doctors" component={HamalDoctorsPage}/>
-        <Route exact path="/hamal" component={HamalHome}/>
+        <Route exact path="/cnc/pendingusers" component={HamalPendingUsers}/>
+        <Route exact path="/cnc/newrequests" component={HamalNewRequests}/>
+        <Route exact path="/cnc/volunteers" component={HamalVolunteersPage}/>
+        <Route exact path="/cnc/doctors" component={HamalDoctorsPage}/>
+        <Route exact path="/cnc" component={HamalHome}/>
         
         <Route path="/" component={ErrorPage} />
       </Switch>
       <Footer/>
     </Router>
-);
+  )
+}
+  
+
 
 const ToProps = (state,props) => {
   return {
