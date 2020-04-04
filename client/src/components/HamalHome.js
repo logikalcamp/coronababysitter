@@ -130,10 +130,10 @@ const HamalHome = (props) => {
 
     return (
         <Container>
-            {props.auth && <TopTitle>
-                <div className={classes.title1}>הי {props.auth.user.firstName + ' ' + props.auth.user.lastName}!</div>
+            <TopTitle>
+                <div className={classes.title1}>הי {props.auth ? props.auth.user.firstName + ' ' + props.auth.user.lastName : ''}!</div>
                 <div className={classes.title2}>כשהמציאות לא קלה, אנשים טובים יכולים לשפר אותה</div>
-            </TopTitle>}
+            </TopTitle>
             <CountBlocksContainer>
                 <CountBlock>
                     <CountBlockImageNumContainer>
