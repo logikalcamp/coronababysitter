@@ -269,8 +269,10 @@ export const Signup = (props) => {
                 birthday: "",
                 profession: "",
                 address: "",
-                lat:'',
-                long:'',
+                pos:{
+                    lat:'',
+                    lng:''
+                },
                 notes: "",
                 city: "",
                 tz: "",
@@ -431,8 +433,8 @@ export const Signup = (props) => {
     const handleChangeCenter =(lat,lng,address) =>{
         let b = GeoMasking(lat,lng)
         let d = {...details}
-        d["lat"] = b.geometry.coordinates[0]
-        d["lon"] = b.geometry.coordinates[1]
+        d.pos["lat"] = b.geometry.coordinates[0]
+        d.pos["lng"] = b.geometry.coordinates[1]
         d["address"] = address
         let city = address.split(',')
         d["city"] = city[1].replace(" ","")
