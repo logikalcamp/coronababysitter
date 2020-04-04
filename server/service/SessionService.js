@@ -118,19 +118,19 @@ class SessionService {
         aggregate.push(filter);  
         MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate: aggregate}, this.MongoClient).then((result2) => {
           sessions = result2;
-          var available = [];
-          console.log(sessions);
-          sessions.forEach((element) => {
-            if(element){
-              console.log(Location.getDistance(user.lat, user.lon, element.doctor_o[0].lat, element.doctor_o[0].lon));
+          var available = sessions;
+          // console.log(sessions);
+          // sessions.forEach((element) => {
+          //   if(element){
+          //     console.log(Location.getDistance(user.lat, user.lon, element.doctor_o[0].lat, element.doctor_o[0].lon));
 
-              console.log(user.pos.lat + "   "+ user.pos.lng + "    " + element.doctor_o[0].pos.lat +"   " + element.doctor_o[0].pos.lng);
-              if(Location.getDistance(user.pos.lat, user.pos.lng, element.doctor_o[0].pos.lat, element.doctor_o[0].pos.lng) < X){
-                available.push(element);
-              }
-            }
+          //     console.log(user.pos.lat + "   "+ user.pos.lng + "    " + element.doctor_o[0].pos.lat +"   " + element.doctor_o[0].pos.lng);
+          //     if(Location.getDistance(user.pos.lat, user.pos.lng, element.doctor_o[0].pos.lat, element.doctor_o[0].pos.lng) < X){
+          //       available.push(element);
+          //     }
+          //   }
           
-          });
+          // });
          
          resolve(available);
         });
