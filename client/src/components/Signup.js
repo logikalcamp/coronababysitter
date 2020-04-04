@@ -252,7 +252,8 @@ export const Signup = (props) => {
                 profession:"",
                 email:"",
                 phone:"",
-                isApproved:false   
+                isApproved:false,
+                secretCode:'' 
             })
             setError({
                 firstName:true,
@@ -277,7 +278,7 @@ export const Signup = (props) => {
                 city: "",
                 tz: "",
                 facebook: "",
-                photo: "",
+                picture: "",
                 phone: "",
                 hobbies: [],
                 isFemale:0,
@@ -285,7 +286,9 @@ export const Signup = (props) => {
                 institute: "",
                 email: "",
                 lastName:"",
-                isApproved:false
+                isApproved:false,
+                secretCode:''
+
             })
             setError({
                 birthday: true,
@@ -472,6 +475,11 @@ export const Signup = (props) => {
                         </React.Fragment>
                         }
                         {step != 2 && type!="medical" &&<Butt   onClick={()=>setStep(step+1)}>הבא</Butt>}
+                        <input type="text" value={details.secretCode} onChange={(e)=>{
+                            let d = {...details}
+                            d.secretCode = e.target.value
+                            setState(d)
+                        }} style={{width:"60%",padding:".5rem"}} placeholder="במידה ויש - הזינו קוד שקיבלת בסמס" />
                         {type=="medical" && <Butt 
                         disabled={!_.isEmpty(errors)}
                         s={!_.isEmpty(errors)}
@@ -500,6 +508,7 @@ export const Signup = (props) => {
                                                                 loading={isUploadingImage}/> : 
                                                     <img style={{width:"130px",height:"130px",margin:"auto"}} src={img} alt="profile" />}
                                 <input type='file' onChange={(e) => onChange(e.target.files[0])}/>
+                                {details.picture == '' && <label style={{color:"red"}}>התהליך יעוכב במידה ולא תוסיפו תמונה</label>}
                             </div>
                         }
                         <Text blur={onBlur} text={"הערות נוספות"} state={details} functio={setState} ke={'comments'}/>

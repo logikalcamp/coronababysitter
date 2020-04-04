@@ -7,6 +7,8 @@ import Axios from 'axios';
 import GridComp from '../Grid';
 import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
 import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
+import {connect} from 'react-redux'
+
 
 //#region Styles
 const VolunteerDashboardComp = styled.div`
@@ -115,14 +117,14 @@ const GridHeaderComp = styled.div`
 `;
 //#endregion
 
-export const VolunteerHomepage = (props) => {
+ const VolunteerHomepage = (props) => {
   return (
     <VolunteerDashboardComp>
       <Wrapper>
         <HeaderComp>
           <div>
             <h1>
-              היי עדי, כיף שבאת
+              היי {props.auth.user.firstName}, כיף שבאת
               <img src={window.location.origin + '/images/icons8_so_so_120px_2.png'} />
             </h1>
             <h2>כשהמציאות לא קלה, אנשים טובים יכולים לשפר אותה</h2>
@@ -152,3 +154,10 @@ export const VolunteerHomepage = (props) => {
     </VolunteerDashboardComp>
   )
 };
+
+const ToProps = (state,props) => {
+  return {
+      auth: state.auth
+  }
+}
+export default connect(ToProps)(VolunteerHomepage);

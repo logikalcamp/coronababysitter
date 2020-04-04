@@ -1,28 +1,50 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Axios from 'axios';
+import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
 
-
-export const Landing = (props) => {
+ const Landing = (props) => {
     // console.log(props)
     return(
-        <LandingCon>
-                <h1>ברוכים הבאים</h1>
-                <p>
-                מצב חירום! מחבקים את העורף הרפואי! 
-                בואו נדאג יחד , לילדים של האנשים שדואגים לכולנו בימים אלו.
-                <br/>
-                עמותת הקרן ע"ש רות ורובל בשיתוף עם אר"מ ביוזמה למען הצוותים הרפואיים העומדים בחזית -
-                שירותי בייביסיטר התנדבותיים לצוותים הרפואיים במדינה
-                </p>
-                <h2>להצטרפות</h2>
-                <div>
-                    <img onClick={()=>props.history.push('/Registration/medical')} src={window.location.origin + '/images/1.png'} alt="" />
-                    <img onClick={()=>props.history.push('/Registration/volunteer')} src={window.location.origin + '/images/2.png'} alt="" />
-                </div>
-        </LandingCon>
+        <React.Fragment>
+            {props.auth.isAuthenticated ? 
+                <React.Fragment>
+                    {props.auth.user.type == "medical" && <Redirect to="/medicalhome"/>}
+                    {props.auth.user.type == "volunteer" && <Redirect to="/volunteer-homepage"/>}
+                </React.Fragment>
+                :
+                <LandingCon>
+                        <h1>ברוכים הבאים</h1>
+                        <p>
+                        מצב חירום! מחבקים את העורף הרפואי! 
+                        בואו נדאג יחד , לילדים של האנשים שדואגים לכולנו בימים אלו.
+                        <br/>
+                        עמותת הקרן ע"ש רות ורובל בשיתוף עם אר"מ ביוזמה למען הצוותים הרפואיים העומדים בחזית -
+                        שירותי בייביסיטר התנדבותיים לצוותים הרפואיים במדינה
+                        </p>
+                        <h2>להצטרפות</h2>
+                        <div>
+                            <img onClick={()=>props.history.push('/Registration/medical')} src={window.location.origin + '/images/1.png'} alt="" />
+                            <img onClick={()=>props.history.push('/Registration/volunteer')} src={window.location.origin + '/images/2.png'} alt="" />
+                        </div>
+                </LandingCon>
+            }
+
+
+        </React.Fragment>
     )
 }
+
+
+
+const ToProps = (state,props) => {
+    return {
+        auth: state.auth
+    }
+}
+export default connect(ToProps)(Landing);
+
 
 const LandingCon = styled.div`
     display:flex;

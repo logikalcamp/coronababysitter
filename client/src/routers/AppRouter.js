@@ -3,13 +3,13 @@ import {BrowserRouter as Router, Route, Switch, Link, NavLink} from 'react-route
 import PrivateRoute from '../private-route/PrivateRoute'
 import Header from '../components/Header'
 import {Footer} from '../components/Footer'
-import {Landing} from '../components/Landing'
+import Landing from '../components/Landing'
 import {Signup} from '../components/Signup'
 import {HomePage} from '../components/HomePage'
 import { HamalVolunteersPage } from '../components/HamalVolunteers';
 import { HamalDoctorsPage } from '../components/HamalDoctors';
 import CompleteDoctor from '../components/CompleteDoctor'
-import {VolunteerHomepage} from '../components/volunteer-homepage/VolunteerHomepage';
+import VolunteerHomepage from '../components/volunteer-homepage/VolunteerHomepage';
 import FindSession from '../components/find-session/FindSession';
 import MedicalDashboard from '../components/medical/Dashboard'
 import OptionalVolunteers from '../components/medical/OptionalVolunteers'
