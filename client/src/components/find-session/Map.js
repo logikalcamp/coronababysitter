@@ -32,8 +32,8 @@ export const Map = (props) => {
         {props.availableSessions.map(session => 
           <Marker
             key={session._id}
-            lat={_.get(session.doctor_o[0], 'lat')}
-            lng={_.get(session.doctor_o[0], 'lon')}
+            lat={_.get(session.doctor_o[0], 'pos.lat')}
+            lng={_.get(session.doctor_o[0], 'pos.lng')}
             
             session={session}
             openSessionDetails={props.openSessionDetails}

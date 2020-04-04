@@ -116,7 +116,7 @@ export const FindSessionsGrid = (props) => {
     { 
       colId: "contact",
       headerName: "איש קשר",
-      field: "contact"
+      field: "contact.name"
     },
     {
       colId: "children",

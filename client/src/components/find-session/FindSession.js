@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 import Axios from 'axios';
+import moment from 'moment';
 
 import {FindSessionsGrid} from './FindSessionGrid';
 import {Map} from './Map';
@@ -10,7 +11,8 @@ import {SessionDetailsModal} from './SessionDetailsModal';
 
 import {MapFilterModal} from './MapFilterModal';
 
-import {BASE_URL} from '../../constants'
+import {BASE_URL} from '../../constants';
+import { TemplateService } from 'ag-grid-community';
 
 //#region Styles
 const FindSessionComp = styled.div`
@@ -94,7 +96,7 @@ const MAP_FILTER_MODAL = 'MAP_FILTER_MODAL';
 const FindSession = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [availableSessions, setAvailableSessions] = useState([]);
-  const [mapCenter, setMapCenter] = useState({lat: props.auth.user.lat , lng: props.auth.user.lon});
+  const [mapCenter, setMapCenter] = useState(props.auth.user.pos);
   const [modalData, setModalData] = useState(undefined);
   const [filters, setFilters] = useState();
 
@@ -102,7 +104,20 @@ const FindSession = (props) => {
     const volunteerId = props.auth.user._id;
     
     Axios.get(BASE_URL+'/api/session/getavailablesessions/' + volunteerId).then(result => {
-      setAvailableSessions(result.data);
+      const availablesessions = _.map(result.data, session => {
+        const childrenAges = _.map(session.doctor_o[0].children, c => c.age);
+
+        return {
+          ...session,
+          _childrenCount: childrenAges && childrenAges.length,
+          _minChildAge: _.min(childrenAges),
+          _maxChildAge: _.max(childrenAges),
+          _startTime: moment(session.startTime),
+          _endTime: moment(session.endTime)
+        };
+      });
+
+      setAvailableSessions(availablesessions);
     })
   }, []);
 
@@ -111,9 +126,9 @@ const FindSession = (props) => {
   }
 
   const handleRowSelected	 = (event) => {
-    const {lat, lon} = event.data.doctor_o[0];
+    const {pos} = event.data.doctor_o[0];
 
-    setMapCenter({lat: lat, lng: lon});
+    setMapCenter(pos);
   }
 
   const openSessionDetails = (event, session) => {
@@ -136,8 +151,6 @@ const FindSession = (props) => {
   }
 
   const applyFilters = (filtersObj) => {
-    console.log(filtersObj);
-
     setFilters(filtersObj);
     setModalData(undefined);
   }
@@ -164,21 +177,31 @@ const FindSession = (props) => {
   }
 
   const getAvailableSessions = () => {
-    const filteredAvailableSessions = _.filter(session => {
-      /*const startDate;
-      const endDate;
-      const startAge;
-      const endAge;
-      const startChildAmount;
-      const endChildAmount;
-      const distance;
-      const startTime;
-      const endTime;*/
+    if (filters) {
+      let temp = _.filter(availableSessions, session => {
+        if (filters.startDate && session._startTime < filters.startDate) {
+          return false;
+        } else if (filters.endDate && session._endTime > filters.endDate) {
+          return false;
+        } else if ((filters.startChildAmount && session._childrenCount > filters.startChildAmount) ||
+         (filters.endChildAmount && session._childrenCount < filters.endChildAmount)) {
+          return false;
+        } else if (filters.startAge && session._minChildAge > filters.startAge) {
+          return false;
+        } else if (filters.endAge && session._maxChildAge > filters.endAge) {
+          return false;
+        } else if (filters.startTime && session._startTime.hour() < filters.startTime) {
+          return false;
+        } else if (filters.endTime && session._endTime.hour() > filters.endTime) {
+          return false;
+        }
 
-      debugger;
-      return true;
-    })
+        return true;
+      })
 
+      return temp;
+    }
+  
     return availableSessions;
   }
 
@@ -198,7 +221,7 @@ const FindSession = (props) => {
         </TableWrapper>
         <MapWrapper isExpanded={isExpanded}>
           <Map 
-            ownLocation={{lat: props.auth.user.lat , lng: props.auth.user.lon}}
+            ownLocation={{...props.auth.user.pos}}
             mapCenter={mapCenter}
             openSessionDetails={openSessionDetails}
 
