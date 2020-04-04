@@ -84,7 +84,7 @@ class DoctorService {
             MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then((response, error) => {
               if (error) reject(error);
               var hamalService = new HamalService(this.MongoClient);
-              hamalService.approveOrRejectUser({isApproved: true, hamalUserId: MongoDB.getMongoObjectId("5e8712efdd90fe3984112b2b"), role: "doctor"},
+              hamalService.approveOrRejectUser({isApproved: true, hamalUserId: MongoDB.getMongoObjectId("5e887c4a77885033c8d53af5"), role: "doctor"},
                                                response.insertedId).then(resolve, reject);
             });
           } else {
