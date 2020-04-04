@@ -163,13 +163,13 @@ export const HamalNewRequests = (props) => {
                             toggleModal(false);
                         });
                     },
-                    backgroundColor:'red'
                 },
                 {
                     text: 'לא',
                     action: () => {
                         toggleModal(false)
-                    }
+                    },
+                    backgroundColor:'red'
                 }
             ]
         }
@@ -220,13 +220,6 @@ export const HamalNewRequests = (props) => {
     registerForAction("EditSession", "f1", editSession);
     registerForAction("DeleteSession", "f1", deleteSession);
 
-      const isIn24Hours = (date) => {
-        var timeStamp = Math.round(new Date().getTime() / 1000);
-        var timeStampTomorrow = timeStamp + (24 * 3600);
-        var is24 = date <= new Date(timeStampTomorrow*1000).getTime();
-        return is24;
-      }
-
       const getGridObjectFromSession = (session)  => {
             moment.locale("he")
             var startTimeText = moment(new Date(session.startTime)).format("LLL");
@@ -251,7 +244,7 @@ export const HamalNewRequests = (props) => {
             for(var i =0; i<result.data.length; i++) {
                 var gridObject = getGridObjectFromSession(result.data[i]);
 
-                if(isIn24Hours(new Date(result.data[i].startTime))) {
+                if(DateUtils.isIn24Hours(new Date(result.data[i].startTime))) {
                     urgentRequestsNew.push(gridObject);
                 }
                 else {
@@ -261,6 +254,8 @@ export const HamalNewRequests = (props) => {
 
             setUrgentRequests(urgentRequestsNew);
             setOtherRequests(otherRequestsNew);
+        }).catch(error => {
+            console.log("Error while fetching sessions");
         })
       }
 

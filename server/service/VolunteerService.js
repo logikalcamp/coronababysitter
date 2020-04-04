@@ -90,7 +90,7 @@ class VolunteerService {
             MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then((response, error) => {
               if (error) reject(error);
               var hamalService = new HamalService(this.MongoClient);
-              hamalService.approveOrRejectUser({isApproved: true, hamalUserId: MongoDB.getMongoObjectId("5e8712efdd90fe3984112b2b"), role: "volunteer"},
+              hamalService.approveOrRejectUser({isApproved: true, hamalUserId: MongoDB.getMongoObjectId("5e887c4a77885033c8d53af5"), role: "volunteer"},
                                                response.insertedId).then(resolve, reject);
             });
           } else {
@@ -105,8 +105,8 @@ class VolunteerService {
   loginEmailVolunteer(body, req) {
     return new Promise((resolve, reject) => {
       MongoDB.findOne(COLLECTION_NAME, { email: body.email }, this.MongoClient).then((result) => {
-        if (result == null) reject("Volunteer not found");
-        else if(!result.isApproved) reject ("Volunteer was not approved yet");
+        if (result == null) reject("E-1");
+        else if(!result.isApproved) reject ("E-2");
         else {
           var emailService = new EmailService();
           var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.

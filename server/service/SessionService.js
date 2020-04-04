@@ -122,7 +122,7 @@ class SessionService {
           console.log(sessions);
           sessions.forEach((element) => {
             if(element){
-              console.log(Location.getDistance(user.lat, user.lon, element.doctor_o[0].lat, element.doctor_o[0].lon));
+              console.log(Location.getDistance(user.pos.lat, user.pos.lng, element.doctor_o[0].pos.lat, element.doctor_o[0].pos.lng));
 
               console.log(user.pos.lat + "   "+ user.pos.lng + "    " + element.doctor_o[0].pos.lat +"   " + element.doctor_o[0].pos.lng);
               if(Location.getDistance(user.pos.lat, user.pos.lng, element.doctor_o[0].pos.lat, element.doctor_o[0].pos.lng) < X){

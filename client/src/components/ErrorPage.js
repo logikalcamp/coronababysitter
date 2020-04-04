@@ -10,6 +10,7 @@ const ErrorPage = () => {
                 <div>
                      נראה שדף זה לא קיים או שאין לך הרשאות אליו , אנא לחצ.י על הלוגו בימין למעלה לחזרה לדף הבית            
                 </div>
+                <img style={{height:"13rem"}} src={window.location.origin + '/images/oops.png'} alt="aa"/>
             </div>
         </div>
     )

@@ -76,7 +76,7 @@ class DoctorService {
     return new Promise((resolve, reject) => {
 
       // Check if ID was already inserted
-      MongoDB.findOne(COLLECTION_NAME, {tz : body.tz}, this.MongoClient).then((result) => {
+      MongoDB.findOne(COLLECTION_NAME, {email : body.email}, this.MongoClient).then((result) => {
         if(result) 
           reject("Doctor already exists");
         else {
@@ -84,7 +84,7 @@ class DoctorService {
             MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then((response, error) => {
               if (error) reject(error);
               var hamalService = new HamalService(this.MongoClient);
-              hamalService.approveOrRejectUser({isApproved: true, hamalUserId: MongoDB.getMongoObjectId("5e8712efdd90fe3984112b2b"), role: "doctor"},
+              hamalService.approveOrRejectUser({isApproved: true, hamalUserId: MongoDB.getMongoObjectId("5e887c4a77885033c8d53af5"), role: "doctor"},
                                                response.insertedId).then(resolve, reject);
             });
           } else {
@@ -98,8 +98,9 @@ class DoctorService {
   loginEmailDoctor(body) {
     return new Promise((resolve, reject) => {
       MongoDB.findOne(COLLECTION_NAME, { email: body.email }, this.MongoClient).then((result) => {
-        if (result == null) reject("Doctor not found");
-        else if(!result.isApproved) reject ("Doctor was not approved yet");
+        if (result == null) reject("E-1"); // Doctor doesnt exist
+        else if(!result.isApproved) reject ("E-2"); // Doctor not yet approved
+        else if(!result.adress) reject ("E-3"); // Doctor hasnt finished process
         else {
           var emailService = new EmailService();
           var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.

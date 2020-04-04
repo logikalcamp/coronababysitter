@@ -75,8 +75,12 @@ module.exports.loginEmailVolunteer = function loginEmailVolunteer (req, res, nex
       utils.writeJson(req,res, response);
     })
     .catch(function (response) {
-      // utils.writeJson(req,res, response);
-      res.status(400).json({'message': response.toString()});
+      if(response == "E-1" || response == "E-2"){
+        utils.writeJson(req,res, response);
+      } 
+      else {
+        res.status(400).json({'message': response.toString()});
+      }
     });
 };
 

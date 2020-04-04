@@ -49,6 +49,16 @@ const Login = (props) => {
         setModalData({open, title,secondaryTitle, button});
     }
 
+    const showMessageWithClose = (title1, title2) => {
+        toggleModal(true, title1, title2, 
+        {
+            text:'סגור', 
+            action :() => {
+                toggleModal(false)
+            }
+        });
+    }
+
     const login = async () => {
         if(!isValidEmailFormat) return;
 
@@ -56,7 +66,18 @@ const Login = (props) => {
 
         try {
             var response = await axios.post(BASE_URL + `/api/${loginApi}/loginemail`, {email: email.toLowerCase()});
-            setLoginState('code');
+            if(response.data == "E-1") {
+                showMessageWithClose('מייל שגוי', 'מייל לא נמצא במערכת');
+            }
+            else if(response.data == "E-2") {
+                showMessageWithClose('אימות', 'משתמש עדיין לא עבר אימות של החמ"ל');
+            }
+            else if(response.data == "E-3") {
+                showMessageWithClose('תהליך הרישום', 'תהליך הרישום עדיין לא הושלם');
+            }
+            else {
+                setLoginState('code');
+            }
         }
         catch (error) {
             console.log(error);
@@ -88,13 +109,7 @@ const Login = (props) => {
                 }
             }
             else {
-                toggleModal(true, 'קוד שגוי', 'אנא וודא שוב שהקוד שהזנת תקין', 
-                {
-                    text:'סגור', 
-                    action :() => {
-                        toggleModal(false)
-                    }
-                });
+                showMessageWithClose('קוד שגוי', 'אנא וודא שוב שהקוד שהזנת תקין');
             }
         }
         catch (error) {

@@ -86,17 +86,6 @@ if(env === 'production') {
 
 // Initialize the Swagger middleware
 var server = http.listen(serverPort, function () {
-    if(env === 'production') {
-        new EmailService().sendEmail("abenjaminov@gmail.com", {
-            title: "SitterSeeker - Version Up",
-            body: `
-                <div>
-                    Enviroment: ${env}</br>
-                    Timestamp: ${new Date().toLocaleDateString("he")}
-                </div>
-            `
-        });
-    }
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
 });
 

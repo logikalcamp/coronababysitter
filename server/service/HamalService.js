@@ -42,7 +42,7 @@ class HamalService {
               var emailInfo;
               var emailService = new EmailService();
               if (body.isApproved) {
-                emailInfo = emailService.getApproveEmail("http://localhost:3001/" + userCollectionLowerCase + "/" + user._id);
+                emailInfo = emailService.getApproveEmail("https://sitterseeker.robins.app/" + userCollectionLowerCase + "/" + user._id);
               } else {
                 emailInfo = emailService.getRejectEmail();
               }
