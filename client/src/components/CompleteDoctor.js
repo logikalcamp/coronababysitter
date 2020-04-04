@@ -139,6 +139,7 @@ const CompleteDoctor = (props) => {
     const handleChangeCenter =(lat,lng,address) =>{
         let b = GeoMasking(lat,lng)
         let d = {...details}
+        if(!d.pos) d.pos = {};
         d.pos["lat"] = b.geometry.coordinates[0]
         d.pos["lng"] = b.geometry.coordinates[1]
         d["address"] = address

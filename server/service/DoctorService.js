@@ -22,6 +22,7 @@ class DoctorService {
    * no response value expected for this operation
    **/
   createDoctor(body, docId) {
+    console.log(body);
       return MongoDB.findOneAndUpdate(COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(docId) }, body, this.MongoClient);
   }
 
