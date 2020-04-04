@@ -1,5 +1,7 @@
 const getTimeInIsrael = (dateString) => {
-    return new Date(new Date(dateString).toLocaleString("he-IL", {timeZone: "Asia/Jerusalem"}));
+    var newDate = new Date(new Date(dateString).toLocaleString("he-IL", {timeZone: "Asia/Jerusalem"}));
+    console.log("Old",dateString,"New", newDate);
+    return newDate;
 }
 
 module.exports.getTimeInIsrael = getTimeInIsrael;
