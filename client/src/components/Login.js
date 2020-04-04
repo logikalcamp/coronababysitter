@@ -75,7 +75,9 @@ const Login = (props) => {
             else if(response.data == "E-3") {
                 showMessageWithClose('תהליך הרישום', 'תהליך הרישום עדיין לא הושלם');
             }
-            setLoginState('code');
+            else {
+                setLoginState('code');
+            }
         }
         catch (error) {
             console.log(error);
