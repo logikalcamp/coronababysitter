@@ -98,6 +98,7 @@ const numbers = ["0","1","2","3","4","5","6","7","8","9"]
 
 
 const Tags = ({text,state,functio,ke}) => {
+    // const [hob,setHob] = useState([{value:"ארוחה"},{value:"מקלחת"},{value:"החלפת חיתול"},{value:"השכבה"}])
     const [hob,setHob] = useState(["ארוחה","מקלחת","החלפת חיתול","השכבה"])
     return (
         <InCon >
@@ -375,7 +376,8 @@ const NewSession = ({setOpen,id}) =>{
                                timeRequested: new Date(),
                                 recurring:"once",
                                 endTime:new Date(moment(eDate,"MM/DD/YYYY HH:mm").format()),
-                                tasks:details.tasks,
+                                // tasks:details.tasks,
+                                tasks:[],
                                 notes:'',
                                 didHappen:false,
                                 contact:{
@@ -383,19 +385,19 @@ const NewSession = ({setOpen,id}) =>{
                                     name:details.contactName
                                 }
                             }
-                            console.log(data)
-                            // axios.post(BASE_URL+"/api/session",data)
-                            // .then((res)=>{
-                            //     console.log(res)
-                            //     if(res.status == 200){
-                            //         // alert("yai")
-                            //         setDone(true)
-                            //     }
-                            //     else{
-                            //         // alert("oops")
-                            //         setErr("משהו השתבש")
-                            //     }
-                            // })
+                            // console.log(data)
+                            axios.post(BASE_URL+"/api/session",data)
+                            .then((res)=>{
+                                console.log(res)
+                                if(res.status == 200){
+                                    // alert("yai")
+                                    setDone(true)
+                                }
+                                else{
+                                    // alert("oops")
+                                    setErr("משהו השתבש")
+                                }
+                            })
                         }}
                         >צור בקשה</button>
                     </div>
