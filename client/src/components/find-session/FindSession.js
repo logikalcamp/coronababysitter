@@ -103,7 +103,7 @@ const FindSession = (props) => {
   useEffect(() => {
     const volunteerId = props.auth.user._id;
     
-    Axios.get(BASE_URL+'/api/session/getavailablesessions/' + volunteerId).then(result => {
+    Axios.post(BASE_URL+'/api/session/getavailablesessions/' + volunteerId).then(result => {
       const availablesessions = _.map(result.data, session => {
         const childrenAges = _.map(session.doctor_o[0].children, c => c.age);
 

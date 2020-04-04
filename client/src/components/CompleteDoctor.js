@@ -114,7 +114,7 @@ const CompleteDoctor = (props) => {
 
     useEffect(() => {
         console.log(id)
-        axios.get(BASE_URL+`/api/doctor/${id}`)
+        axios.post(BASE_URL+`/api/doctor/${id}`)
         .then(res=>{
             let d = {...res.data}
             d["children"] = [{age:0,isFemale:0}]

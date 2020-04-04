@@ -54,13 +54,13 @@ const HamalHome = () => {
         if(pendingUsers) return;
 
         try {
-            var results = await Promise.all([axios.get(BASE_URL + '/api/volunteer/pending'),
-                                             axios.get(BASE_URL + '/api/doctor/pending'),
-                                             axios.get(BASE_URL+'/api/volunteer/countpending'),
-                                             axios.get(BASE_URL+'/api/volunteer/count'),
-                                             axios.get(BASE_URL+'/api/doctor/count'),
-                                             axios.get(BASE_URL+'/api/session/counturgentpending'),
-                                             axios.get(BASE_URL+'/api/session/countmatched')]);
+            var results = await Promise.all([axios.post(BASE_URL + '/api/volunteer/pending'),
+                                             axios.post(BASE_URL + '/api/doctor/pending'),
+                                             axios.post(BASE_URL+'/api/volunteer/countpending'),
+                                             axios.post(BASE_URL+'/api/volunteer/count'),
+                                             axios.post(BASE_URL+'/api/doctor/count'),
+                                             axios.post(BASE_URL+'/api/session/counturgentpending'),
+                                             axios.post(BASE_URL+'/api/session/countmatched')]);
 
             var counts = {
                 pendingVolunteers: results[2].data.count,

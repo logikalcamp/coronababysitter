@@ -242,7 +242,7 @@ export const HamalPendingUsers = (props) => {
     const loadPage = () => {
         if((doctorsPending && doctorsPending.length > 0) || (volunteersPending && volunteersPending.length > 0)) return;
 
-        Promise.all([Axios.get(BASE_URL + '/api/volunteer/pending'),Axios.get(BASE_URL + '/api/doctor/pending')]).then(results => {
+        Promise.all([Axios.post(BASE_URL + '/api/volunteer/pending'),Axios.post(BASE_URL + '/api/doctor/pending')]).then(results => {
             var doctorsPendingNew = [];
             var volunteersPendingNew = [];
 

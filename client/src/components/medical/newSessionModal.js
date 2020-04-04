@@ -307,7 +307,7 @@ const NewSession = ({setOpen,id}) =>{
                                 startTime:new Date(moment(sDate,"MM/DD/YYYY HH:mm").format()),
                                 requests:[],
                                 doctor_id:id,
-                               timeRequested new Date(),
+                               timeRequested: new Date(),
                                 recurring:"once",
                                 endTime:new Date(moment(eDate,"MM/DD/YYYY HH:mm").format()),
                                 tasks:[],
