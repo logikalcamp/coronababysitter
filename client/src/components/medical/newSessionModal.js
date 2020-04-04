@@ -33,7 +33,7 @@ const Modal = styled.div`
     div{
         display:flex;
         width:40%;
-        margin:1rem auto;
+        margin:.5rem auto;
         flex-direction:column;
     }
     label{
@@ -95,7 +95,7 @@ const TimeDate = styled.div`
 const numbers = ["0","1","2","3","4","5","6","7","8","9"]
 
 const NewSession = ({setOpen,id}) =>{
-    const [done,setDone] = useState(true)
+    const [done,setDone] = useState(false)
     const [err,setErr] = useState('')
     const [details,setState] = useState({
         startTime:'',
@@ -105,7 +105,7 @@ const NewSession = ({setOpen,id}) =>{
         eDate:'',
         requests:[],
         doctor_id:id,
-        "timeRequested": new Date(),
+        timeRequested: new Date(),
         recurring:"once",
         endTime:'',
         tasks:[],
@@ -307,10 +307,11 @@ const NewSession = ({setOpen,id}) =>{
                                 startTime:new Date(moment(sDate,"MM/DD/YYYY HH:mm").format()),
                                 requests:[],
                                 doctor_id:id,
-                                "timeRequested": new Date(),
+                               timeRequested: new Date(),
                                 recurring:"once",
                                 endTime:new Date(moment(eDate,"MM/DD/YYYY HH:mm").format()),
                                 tasks:[],
+                                notes:'',
                                 didHappen:false,
                                 contact:{
                                     phone:details.contact,

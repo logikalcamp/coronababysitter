@@ -220,13 +220,6 @@ export const HamalNewRequests = (props) => {
     registerForAction("EditSession", "f1", editSession);
     registerForAction("DeleteSession", "f1", deleteSession);
 
-      const isIn24Hours = (date) => {
-        var timeStamp = Math.round(new Date().getTime() / 1000);
-        var timeStampTomorrow = timeStamp + (24 * 3600);
-        var is24 = date <= new Date(timeStampTomorrow*1000).getTime();
-        return is24;
-      }
-
       const getGridObjectFromSession = (session)  => {
             moment.locale("he")
             var startTimeText = moment(new Date(session.startTime)).format("LLL");
@@ -244,14 +237,14 @@ export const HamalNewRequests = (props) => {
       const loadPage = () => {
         if((urgentRequests && urgentRequests.length > 0) || (otherRequests && otherRequests.length > 0)) return;
 
-        Axios.get(BASE_URL + "/api/session/getUpcomingNotYetApprovedSessions").then((result) => {
+        Axios.post(BASE_URL + "/api/session/getUpcomingNotYetApprovedSessions").then((result) => {
             var urgentRequestsNew = [];
             var otherRequestsNew = [];
 
             for(var i =0; i<result.data.length; i++) {
                 var gridObject = getGridObjectFromSession(result.data[i]);
 
-                if(isIn24Hours(new Date(result.data[i].startTime))) {
+                if(DateUtils.isIn24Hours(new Date(result.data[i].startTime))) {
                     urgentRequestsNew.push(gridObject);
                 }
                 else {

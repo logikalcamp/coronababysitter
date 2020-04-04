@@ -25,16 +25,6 @@ module.exports.getAllSessionsByUser = function getAllSessionsByUser (req, res, n
     });
 };
 
-module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next) {
-  req.SessionService.getAllUpcomingNotYetApprovedSessions()
-    .then(function (response) {
-      utils.writeJson(req,res, response);
-    })
-    .catch(function (response) {
-      // utils.writeJson(req,res, response);
-      res.status(400).json({'message': response.toString()});
-    });
-};
 
 module.exports.getAllNotAssignedSessions = function getAllNotAssignedSessions (req, res, next) {
   req.SessionService.getAllNotAssignedSessions()
@@ -69,16 +59,6 @@ module.exports.getAllUpcomingApprovedSessionsByVolunteer = function getAllUpcomi
     });
 };
 
-module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next) {
-  req.SessionService.getAllUpcomingNotYetApprovedSessions()
-    .then(function (response) {
-      utils.writeJson(req,res, response);
-    })
-    .catch(function (response) {
-      // utils.writeJson(req,res, response);
-      res.status(400).json({'message': response.toString()});
-    });
-};
 
 module.exports.getAvailableSessions = function getAvailableSessions (req, res, next, userId) {
   req.SessionService.getAvailableSessions(userId)
@@ -113,7 +93,7 @@ module.exports.countMatchedSessions = function countMatchedSessions (req, res, n
     });
 };
 
-module.exports.countUrgentPendingSessions = function countUrgentPendingSessions (req, res, next, body) {
+module.exports.countUrgentPendingSessions = function countUrgentPendingSessions (req, res, next) {
   utils.writeJson(req,res,{count: 0});
   // req.SessionService.countUrgentSessions(body)
   //   .then(function (response) {

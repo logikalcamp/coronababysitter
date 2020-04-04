@@ -175,7 +175,7 @@ export const HamalVolunteersPage = (props) => {
         if(newPage == page) return;
 
         setPage(newPage);
-        Axios.get(BASE_URL+'/api/volunteer/approved/' + newPage).then((result) => {
+        Axios.post(BASE_URL+'/api/volunteer/approved/' + newPage).then((result) => {
             createVolunteerUI(result.data);
         });
     }
@@ -199,7 +199,7 @@ export const HamalVolunteersPage = (props) => {
     }
 
     useEffect(() => {
-        Promise.all([Axios.get(BASE_URL+'/api/volunteer/approved/' + page), Axios.get(BASE_URL+'/api/volunteer/count')]).then(result => {
+        Promise.all([Axios.post(BASE_URL+'/api/volunteer/approved/' + page), Axios.post(BASE_URL+'/api/volunteer/count')]).then(result => {
             if(volunteers) return;
             
             createVolunteerUI(result[0].data);

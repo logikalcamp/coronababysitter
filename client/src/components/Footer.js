@@ -10,7 +10,7 @@ export const Footer = () => {
                 {
                     window.innerWidth >=800 && 
                     <div>
-                        <img src={window.location.origin + "/images/logo.png"} alt="logo" style={{width:"150px",height:"50px"}}/>
+                        <img src={window.location.origin + "/images/logoo.png"} alt="logo" style={{width:"150px",height:"50px"}}/>
                     </div>
                 }
                 <div>
@@ -35,6 +35,7 @@ const FooterCon = styled.div`
     right:0; */
     /* display:flex;
     justify-content:space-around; */
+    z-index:1;
     background:#ffffff;
     padding:.5rem 1rem;
     

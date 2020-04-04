@@ -177,7 +177,7 @@ export const HamalDoctorsPage = (props) => {
         if(newPage == page) return;
 
         setPage(newPage);
-        Axios.get(BASE_URL+'/api/doctor/approved/' + newPage).then((result) => {
+        Axios.post(BASE_URL+'/api/doctor/approved/' + newPage).then((result) => {
             createDoctorsUI(result.data);
         });
     }
@@ -201,7 +201,7 @@ export const HamalDoctorsPage = (props) => {
     }
 
     useEffect(() => {
-        Promise.all([Axios.get(BASE_URL+'/api/doctor/approved/' + page), Axios.get(BASE_URL+'/api/doctor/count')]).then(result => {
+        Promise.all([Axios.post(BASE_URL+'/api/doctor/approved/' + page), Axios.post(BASE_URL+'/api/doctor/count')]).then(result => {
             if(doctors) return;
             createDoctorsUI(result[0].data);
 

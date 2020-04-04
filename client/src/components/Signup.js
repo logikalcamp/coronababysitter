@@ -26,9 +26,9 @@ const errorRules = {
     profession: "must",
     address: "must",
     tz: "tz",
-    facebook: "must",
+    facebook: "recomend",
     phone: "phone",
-    name: "must",
+    firstName: "must",
     lastName:"must",
     institute: "must",
     email: "email",
@@ -245,18 +245,19 @@ export const Signup = (props) => {
     useEffect(()=>{
         if(type=="medical"){
             setState({
-                name:"",
+                firstName:"",
                 lastName:"",
                 tz:"",
                 institute:"",
                 profession:"",
                 email:"",
-                phone:""   
+                phone:"",
+                isApproved:false   
             })
             setError({
-                name:true,
+                firstName:true,
                 lastName:true,
-                tz:true,
+                // tz:true,
                 institute:true,
                 profession:true,
                 email:true,
@@ -268,8 +269,10 @@ export const Signup = (props) => {
                 birthday: "",
                 profession: "",
                 address: "",
-                lat:'',
-                long:'',
+                pos:{
+                    lat:'',
+                    lng:''
+                },
                 notes: "",
                 city: "",
                 tz: "",
@@ -278,19 +281,20 @@ export const Signup = (props) => {
                 phone: "",
                 hobbies: [],
                 isFemale:0,
-                name: "",
+                firstName: "",
                 institute: "",
                 email: "",
-                lastName:""
+                lastName:"",
+                isApproved:false
             })
             setError({
                 birthday: true,
                 profession: true,
                 address: true,
-                tz: true,
-                facebook: true,
+                // tz: true,
+                // facebook: true,
                 phone: true,
-                name: true,
+                firstName: true,
                 lastName:true,
                 institute: true,
                 email: true,
@@ -329,6 +333,14 @@ export const Signup = (props) => {
                     let a = {...errors}
                     delete a[ke]
                     setError(a)
+                }
+                break;
+            case "recomend":
+                 // check min 2 char
+                 if(details[ke].length < 2){
+                    setErr(text + " זה שדה מומלץ - כדי לא לעכב את תהליך ההרשמה")
+                }else{
+                    setErr('')
                 }
                 break;
             case "tz":
@@ -395,17 +407,23 @@ export const Signup = (props) => {
 
     useEffect(() => {
         console.log("boom",details.facebook)
+        if(details.facebook == '') {
+            setImg(window.location.origin + "/images/profilePlaceholder.png")
+        }
         if(details.facebook!='' && details.facebook){
             axios.post(BASE_URL+'/api/utils/facebookimage',{facebookURL:details.facebook})
             .then(res=>{
                 setImg(res.data.pictureURL)
                 details.picture = res.data.pictureURL;
                 console.log(res)})
+                .catch(()=>{
+
+                })
         }
     }, [details.facebook])
 
     useEffect(() => {
-        if(details.name=='' || details.lastName==''||details.tz==''||details.birthday==''||details.email==''||details.phone==''||details.gender=='יש לבחור'){
+        if(details.name=='' || details.lastName==''||details.birthday==''||details.email==''||details.phone==''||details.gender=='יש לבחור'){
             setStep1(false)
         }else{
             setStep1(true)
@@ -415,8 +433,8 @@ export const Signup = (props) => {
     const handleChangeCenter =(lat,lng,address) =>{
         let b = GeoMasking(lat,lng)
         let d = {...details}
-        d["lat"] = b.geometry.coordinates[0]
-        d["lon"] = b.geometry.coordinates[1]
+        d.pos["lat"] = b.geometry.coordinates[0]
+        d.pos["lng"] = b.geometry.coordinates[1]
         d["address"] = address
         let city = address.split(',')
         d["city"] = city[1].replace(" ","")
@@ -428,6 +446,7 @@ export const Signup = (props) => {
 
     return(
         <React.Fragment>
+        <div style={{height:"100%",width:"100%",overflowY:"auto"}}>
             <SignupCon>
                 <h2>להצטרפות</h2>
                 <h1>{type == "medical" ? "אני צוות רפואי":"אני מתנדב.ת"}</h1>
@@ -436,9 +455,9 @@ export const Signup = (props) => {
                 {
                     step == 1 && 
                     <section>
-                        <Text blur={onBlur} text={"שם פרטי"}  state={details} functio={setState} ke={'name'}/>
+                        <Text blur={onBlur} text={"שם פרטי"}  state={details} functio={setState} ke={'firstName'}/>
                         <Text blur={onBlur} text={"שם משפחה"}  state={details} functio={setState} ke={'lastName'}/>
-                        <Text blur={onBlur} text={"ת.ז"} state={details} functio={setState} ke={"tz"} />
+                        {/* <Text blur={onBlur} text={"ת.ז"} state={details} functio={setState} ke={"tz"} /> */}
                         <Text blur={onBlur} text={"מייל"} state={details} functio={setState} ke={"email"}/>
                         <Text blur={onBlur} text={"מספר פלאפון"} state={details} functio={setState} ke={"phone"}/>
                         {type=="medical" ? 
@@ -501,6 +520,7 @@ export const Signup = (props) => {
                     
                 </Buttons>
             </SignupCon>    
+            </div>
             <Back open={done} onClick={()=>{setDone(false)
             window.location.href = '/'}
             }/>
@@ -528,14 +548,19 @@ export const Signup = (props) => {
                         s={!agree}
                         onClick={()=>{
                             let data = {...details}
+                            data.email = data.email.toLowerCase();
                             data.birthday = new Date (moment(details.birthday,"DD/MM/YYYY").format())
-                            console.log(data)
+                            // console.log(data)
                             axios.put(BASE_URL+'/api/volunteer/register',data)
                             .then(res=>{
-                                console.log(res)
                                 if(res.status == 200){
-                                    setSent(false)
+                                        setSent(false)
+                                        
                                 }
+                            }).catch(err=>{
+                                alert("משהו השתבש - ייתכן כי כתובת המייל כבר קיימת במערכת")
+                                setStep(1)
+                                setDone(false)
                             })
                         }}>הירשם</Butt>
                         }
@@ -569,6 +594,7 @@ const Modal = styled.div`
     display:${props=>props.open ? "block":"none"};
     top: 50%;
     z-index: 1010;
+    width:300px;
     left: 50%;
     transform: translate(-50%, -50%);
     background: white;
@@ -580,9 +606,6 @@ const Modal = styled.div`
 const SignupCon = styled.div`
     max-width:1366px;
     padding:1rem;
-    height:100%;
-    width:100%;
-
     margin:auto;
     section{
         /* height:31rem; */

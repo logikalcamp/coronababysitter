@@ -28,10 +28,10 @@ const MainDiv = styled.div`
 const ManageSessions = (props) => {
     const [tab,setTab] = useState(1)
     useEffect(() => {
-        axios.get(BASE_URL+'/api/volunteer/countpending').then(res=>{
+        axios.post(BASE_URL+'/api/volunteer/countpending').then(res=>{
             console.log(res)
         })
-        axios.get(BASE_URL+'/api/volunteer/pending/0').then(result => {
+        axios.post(BASE_URL+'/api/volunteer/pending/0').then(result => {
         //   setNotYetApprovedSessions(result.data);
         console.log(result)
         })
@@ -81,7 +81,7 @@ export default ManageSessions;
 // ]);
 
 // useEffect(() => {
-//   Axios.get(BASE_URL+'/api/session/getnotyetapprovedsessions/5e7ca72c343daa68c8d7277f').then(result => {
+//   Axios.post(BASE_URL+'/api/session/getnotyetapprovedsessions/5e7ca72c343daa68c8d7277f').then(result => {
 //     setNotYetApprovedSessions(result.data);
 //   })
 // }, [])

@@ -3,12 +3,16 @@ import React, { useState, useEffect } from 'react';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
 import Axios from 'axios';
+import moment from 'moment';
 
 import {FindSessionsGrid} from './FindSessionGrid';
 import {Map} from './Map';
 import {SessionDetailsModal} from './SessionDetailsModal';
 
-import {BASE_URL} from '../../constants'
+import {MapFilterModal} from './MapFilterModal';
+
+import {BASE_URL} from '../../constants';
+import { TemplateService } from 'ag-grid-community';
 
 //#region Styles
 const FindSessionComp = styled.div`
@@ -92,14 +96,28 @@ const MAP_FILTER_MODAL = 'MAP_FILTER_MODAL';
 const FindSession = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [availableSessions, setAvailableSessions] = useState([]);
-  const [mapCenter, setMapCenter] = useState({lat: 32.344084 , lng: 34.870139});
+  const [mapCenter, setMapCenter] = useState(props.auth.user.pos);
   const [modalData, setModalData] = useState(undefined);
+  const [filters, setFilters] = useState();
 
   useEffect(() => {
     const volunteerId = props.auth.user._id;
     
-    Axios.get(BASE_URL+'/api/session/getavailablesessions/' + volunteerId).then(result => {
-      setAvailableSessions(result.data);
+    Axios.post(BASE_URL+'/api/session/getavailablesessions/' + volunteerId).then(result => {
+      const availablesessions = _.map(result.data, session => {
+        const childrenAges = _.map(session.doctor_o[0].children, c => c.age);
+
+        return {
+          ...session,
+          _childrenCount: childrenAges && childrenAges.length,
+          _minChildAge: _.min(childrenAges),
+          _maxChildAge: _.max(childrenAges),
+          _startTime: moment(session.startTime),
+          _endTime: moment(session.endTime)
+        };
+      });
+
+      setAvailableSessions(availablesessions);
     })
   }, []);
 
@@ -108,26 +126,22 @@ const FindSession = (props) => {
   }
 
   const handleRowSelected	 = (event) => {
-    const {lat, lon} = event.data.doctor_o[0];
+    const {pos} = event.data.doctor_o[0];
 
-    setMapCenter({lat: lat, lng: lon});
+    setMapCenter(pos);
   }
 
   const openSessionDetails = (event, session) => {
-    debugger;
-
     Axios.post(BASE_URL+'/api/session/addrequest/' + session._id, {volunteerId:props.auth.user._id})
     .then(response => {
-      console.log(response);
+      setModalData({
+        type: SESSION_DETAILS_MODAL,
+        session
+    });
     })
     .catch(error => {
       console.log(error);
     });
-
-    /*setModalData({
-      type: SESSION_DETAILS_MODAL,
-      session
-    });*/
   }
 
   const openMapFilter = (event) => {
@@ -136,17 +150,22 @@ const FindSession = (props) => {
     });
   }
 
+  const applyFilters = (filtersObj) => {
+    setFilters(filtersObj);
+    setModalData(undefined);
+  }
+
   const getModal = () => {
     let retVal = '';
 
     if (modalData && modalData.type) {
       switch(modalData.type) {
         case SESSION_DETAILS_MODAL:
-          retVal = 'Session Details';
+          retVal = <SessionDetailsModal />;
           break;
 
         case MAP_FILTER_MODAL:
-          retVal = <SessionDetailsModal />;
+          retVal = <MapFilterModal {...filters} handleApply={applyFilters} onClose={(e) => setModalData(undefined)}/>;
           break;
 
         default:
@@ -155,6 +174,35 @@ const FindSession = (props) => {
     }
 
     return retVal;
+  }
+
+  const getAvailableSessions = () => {
+    if (filters) {
+      let temp = _.filter(availableSessions, session => {
+        if (filters.startDate && session._startTime < filters.startDate) {
+          return false;
+        } else if (filters.endDate && session._endTime > filters.endDate) {
+          return false;
+        } else if ((filters.startChildAmount && session._childrenCount > filters.startChildAmount) ||
+         (filters.endChildAmount && session._childrenCount < filters.endChildAmount)) {
+          return false;
+        } else if (filters.startAge && session._minChildAge > filters.startAge) {
+          return false;
+        } else if (filters.endAge && session._maxChildAge > filters.endAge) {
+          return false;
+        } else if (filters.startTime && session._startTime.hour() < filters.startTime) {
+          return false;
+        } else if (filters.endTime && session._endTime.hour() > filters.endTime) {
+          return false;
+        }
+
+        return true;
+      })
+
+      return temp;
+    }
+  
+    return availableSessions;
   }
 
   return (
@@ -168,16 +216,16 @@ const FindSession = (props) => {
             openSessionDetails={openSessionDetails}
             openMapFilter={openMapFilter}
 
-            availableSessions={availableSessions}
+            availableSessions={getAvailableSessions()}
           />
         </TableWrapper>
         <MapWrapper isExpanded={isExpanded}>
           <Map 
-            ownLocation={{lat: 32.344084 , lng: 34.870139}}
+            ownLocation={{...props.auth.user.pos}}
             mapCenter={mapCenter}
             openSessionDetails={openSessionDetails}
 
-            availableSessions={availableSessions}
+            availableSessions={getAvailableSessions()}
           />
         </MapWrapper>
         <ModalCon open={modalData && modalData.type !== ''} onClick={() => setModalData(undefined)}/>
