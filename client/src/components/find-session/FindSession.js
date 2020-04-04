@@ -132,12 +132,18 @@ const FindSession = (props) => {
   }
 
   const openSessionDetails = (event, session) => {
+    setModalData({
+      type: SESSION_DETAILS_MODAL,
+      session
+    });
+
+    /**/
+  }
+
+  const applyToSession = (session, callback) => {
     Axios.post(BASE_URL+'/api/session/addrequest/' + session._id, {volunteerId:props.auth.user._id})
     .then(response => {
-      setModalData({
-        type: SESSION_DETAILS_MODAL,
-        session
-    });
+      callback();
     })
     .catch(error => {
       console.log(error);
@@ -161,11 +167,19 @@ const FindSession = (props) => {
     if (modalData && modalData.type) {
       switch(modalData.type) {
         case SESSION_DETAILS_MODAL:
-          retVal = <SessionDetailsModal />;
+          retVal =  <SessionDetailsModal
+                      session={modalData.session}
+                      onApply={applyToSession}
+                      onClose={(e) => setModalData(undefined)}
+                    />;
           break;
 
         case MAP_FILTER_MODAL:
-          retVal = <MapFilterModal {...filters} handleApply={applyFilters} onClose={(e) => setModalData(undefined)}/>;
+          retVal =  <MapFilterModal 
+                      {...filters}
+                      handleApply={applyFilters}
+                      onClose={(e) => setModalData(undefined)}
+                    />;
           break;
 
         default:

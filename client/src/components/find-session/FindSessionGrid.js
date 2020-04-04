@@ -89,7 +89,7 @@ const ChildrenCellRenderer = (props) => {
       {children.splice(0, 5).map(child => {
         let img = '';
 
-        if (child.age > 3) img = 'child';
+        if (child.age < 3) img = 'child';
         else if (child.isFemale) img = 'girl';
         else img = 'boy';
 
@@ -109,8 +109,11 @@ export const FindSessionsGrid = (props) => {
       headerName: "תאריך",
       field: "date",
       valueFormatter: (params) => {
-        const startTime = moment(params.value);
-        return startTime.format("DD-MM-YY");
+        let startTime = _.get(params.data, 'startTime');
+
+        if (startTime) return startTime = moment(params.data.startTime).format("DD-MM-YY");
+
+        return params.value;
       }
     },
     { 
@@ -124,7 +127,11 @@ export const FindSessionsGrid = (props) => {
       field: "children",
       cellRenderer: "childrenCellRenderer",
       valueGetter: (params) => {
-        return params.data.doctor_o[0].children;
+        let children = _.get(params.data, 'doctor_o[0].children');
+
+        if (children) return children;
+
+        return params.value;
       }
     },
     {
@@ -132,12 +139,17 @@ export const FindSessionsGrid = (props) => {
       headerName: "כתובת",
       field: "address",
       valueGetter: (params) => {
-        let address = params.data.doctor_o[0].address;
-        address = address.split(',');
-        address = address[0] + ', ' + address[1];
-        address = address.replace(/[0-9]/g, '');
+        let address = _.get(params.data, 'doctor_o[0].address');
 
-        return address;
+        if (address) {
+          address = address.split(',');
+          address = address[0] + ', ' + address[1];
+          address = address.replace(/[0-9]/g, '');
+  
+          return address;
+        }
+        
+        return params.value;
       }
     },
     {
@@ -145,12 +157,17 @@ export const FindSessionsGrid = (props) => {
       headerName: "שעות ההתנדבות",
       field: "sessionHours",
       valueGetter: (params) => {
-        let {startTime, endTime} = params.data;
+        let startTime = _.get(params.data, 'startTime');
+        let endTime = _.get(params.data, 'endTime');
+      
+        if (startTime && endTime) {
+          startTime = moment(startTime);
+          endTime = moment(endTime);
 
-        startTime = moment(startTime);
-        endTime = moment(endTime);
+          return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
+        }
 
-        return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
+        return params.value;
       }
     },
     {
