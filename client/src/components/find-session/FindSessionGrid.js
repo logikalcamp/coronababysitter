@@ -26,7 +26,7 @@ const GridWrapper = styled.div`
     width: 100%;
     margin-bottom: 10px;
 
-    &:last-child: {
+    &:last-child {
       margin-bottom: 0;
     }
   }
@@ -64,16 +64,38 @@ const GridExpanderComp = styled.div`
   padding: 10px 5px;
   background: #fff;
   border-radius: 8px;
+  @media(max-width:450px){
+    display:none;
+  }
 `;
 //#endregion
+
+const ApplyComp = styled.div`
+  font-size: 13px;  
+  color: #53b493;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+
+  svg {
+    height: 16px;
+    width: 16px;
+    padding-inline-start: 5px;
+  }
+`;
 
 const FindSessionsGridCommands = (props) => {
   return (
     <span className="grid-command">
-      <AddCircleIcon
+      <ApplyComp onClick={(e) => props.onClick(e, props.data)}>
+        הציעו עזרה
+        {/* <AddCircleIcon /> */}
+      </ApplyComp>
+      {/* <AddCircleIcon
         style={{ height: '30px', width: '30px', color: '#53b493' }}
         onClick={(e) => props.onClick(e, props.data)} 
-      />     
+      />      */}
     </span>
   )
 }
@@ -174,7 +196,6 @@ export const FindSessionsGrid = (props) => {
       colId: "commands",
       headerName: "",
       field: "commands",
-      width: 70,
       cellRenderer: "findSessionsGridCommands",
       cellRendererParams: {
         onClick: props.openSessionDetails
@@ -204,7 +225,7 @@ export const FindSessionsGrid = (props) => {
     <GridWrapper>
       <GridHeaderComp>
         <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
-        ההתנדבויות הבאות שלי
+        אז איפה אוכל לעזור ?
         <img 
           src={window.location.origin + '/images/icons8_filter_96px.png'}
           style={{ position: 'absolute', left: 0, cursor: 'pointer' }}

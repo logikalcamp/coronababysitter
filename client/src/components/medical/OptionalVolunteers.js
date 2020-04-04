@@ -270,11 +270,11 @@ const OptionalVolunteers = (props) => {
                     .then(res=>{
                       console.log(res)
                       if(res.status == 200) {
-                        let a = _.filter(requests,function(o){return o._id != even._id})
-                        setRequests(a)
+                        let a = _.filter(array,function(o){return o._id != even._id})
+                        setArr(a)
+                        setRequests([])
                       }
                     })
-
                   }
                 }}
                 >קבל הצעה</Butt>

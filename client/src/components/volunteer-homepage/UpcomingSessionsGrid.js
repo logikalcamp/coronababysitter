@@ -32,7 +32,7 @@ export const UpcomingSessionsGrid = (props) => {
     },
     { 
       headerName: "איש קשר",
-      field: "contact"
+      field: "contact.name"
     },
     {
       headerName: "שעות ההתנדבות",
@@ -48,6 +48,7 @@ export const UpcomingSessionsGrid = (props) => {
 
   useEffect(() => {
     Axios.post(BASE_URL+'/api/session/getupcomingsessions/5e7ca72c343daa68c8d7277f').then(result => {
+      console.log(result)
       setUpcomingSessions(result.data);
     })
   }, [])

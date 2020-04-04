@@ -13,7 +13,7 @@ import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
 
 const VolunteerDashboardComp = styled.div`
   height: 100%;
-  padding:  50px;
+  padding:25px  50px;
   @media(max-width:450px) {
     height: 100%;
     padding: 0 5%;
@@ -30,24 +30,34 @@ const Wrapper = styled.div`
   justify-content: space-around;
 `;
 const HeaderComp = styled.div`
-  height: 15%;
+  /* height: 15%; */
 
   display: flex;
   justify-content: space-between;
 
   h1, h2 {
     font-weight: 300;
+    margin:0;
   }
 
   h1 {
     display: flex;
     align-items: center;
+    @media(max-width:450px){
+      font-size:14px;
+  }
 
     img {
       margin: 0 0.5rem;
     }
   }
+  h2{
 
+  margin-bottom:1rem;
+    @media(max-width:450px){
+      font-size:12px; 
+    }
+  }
   #button {
     align-self: center;
     background-color: #53B493;

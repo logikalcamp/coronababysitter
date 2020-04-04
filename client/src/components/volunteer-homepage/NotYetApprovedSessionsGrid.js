@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import moment from 'moment';
 import {BASE_URL} from '../../constants'
-
+import _ from 'lodash'
 import GridComp from '../Grid';
 
 const NotYetApprovedSessionsGridCommands = (props) => {
@@ -24,11 +24,24 @@ export const NotYetApprovedSessionsGrid = (props) => {
   const [columnDefs] = useState([
     { 
       headerName: "תאריך ושעה",
-      field: "startTime"
+      field: "startTime",
+      valueGetter: (params) => {
+        let startTime = _.get(params.data, 'startTime');
+      
+        if (startTime ) {
+          startTime = moment(startTime);
+          // endTime = moment(endTime);
+
+          return startTime.format("DD/MM") + ' - ' + startTime.format("H:mm");
+        }
+
+        return params.value;
+      }
     },
     { 
       headerName: "איש קשר",
-      field: "contact"
+      field: "contact.name"
+      
     },
     { 
       headerName: "",

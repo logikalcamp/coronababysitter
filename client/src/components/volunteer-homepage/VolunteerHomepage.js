@@ -13,7 +13,11 @@ import {connect} from 'react-redux'
 //#region Styles
 const VolunteerDashboardComp = styled.div`
   height: 100%;
-  padding: 100px 50px 50px 50px;
+  padding: 25px 50px;
+  @media(max-width:450px){
+    overflow-y:auto; 
+    padding: 25px ;
+  }
 `;
 const Wrapper = styled.div`
   height: 100%;
@@ -25,28 +29,39 @@ const Wrapper = styled.div`
   justify-content: space-around;
 `;
 const HeaderComp = styled.div`
-  height: 15%;
+  /* height: 15%; */
 
   display: flex;
   justify-content: space-between;
 
   h1, h2 {
     font-weight: 300;
+    margin:0;
+
   }
 
   h1 {
     display: flex;
     align-items: center;
+    @media(max-width:450px){
+      font-size:14px;
+  }
 
     img {
       margin: 0 0.5rem;
     }
   }
+  h2{
 
+  margin-bottom:1rem;
+    @media(max-width:450px){
+      font-size:12px; 
+    }
+  }
   a {
     align-self: center;
     background-color: #53B493;
-    padding: 1.5rem;
+    padding: 1rem;
     border-radius: 8px;
     font-size: 18px;
     color: #ffffff;
@@ -54,7 +69,13 @@ const HeaderComp = styled.div`
     
     display: flex;
     align-items: center;
-  
+    @media(max-width:450px){
+      padding: .5rem;
+    font-size: 12px;
+    img{
+      margin:0 5px;
+    }
+  }
     img {
       margin: 0 0.5rem;
     }

@@ -17,7 +17,10 @@ import { TemplateService } from 'ag-grid-community';
 //#region Styles
 const FindSessionComp = styled.div`
   height: 100%;
-  padding: 100px 50px 50px 50px;
+  padding: 50px;
+  @media(max-width:450px){
+    padding:25px;
+  }
 `;
 const Wrapper = styled.div`
   height: 100%;
@@ -34,6 +37,11 @@ const TableWrapper = styled.div`
 
   flex-basis: ${props => props.isExpanded ? "66.7%" : "33.3%"};
   transition: flex-basis 500ms ease-in-out;
+  @media(max-width:450px){
+    width:100%;
+    
+    flex-basis:100%;
+  }
 `;
 const MapWrapper = styled.div`
   min-width: 33.3%;
@@ -42,6 +50,11 @@ const MapWrapper = styled.div`
   transition: flex-basis 500ms ease-in-out;
 
   position: relative;
+  @media(max-width:450px){
+    width:100%;
+    flex-basis:100%;
+    display:none;
+  }
 `;
 const ModalCon = styled.div`
   position: fixed;
