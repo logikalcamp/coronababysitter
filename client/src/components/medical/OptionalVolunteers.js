@@ -202,8 +202,9 @@ function calcCrow (lat1, lon1, lat2, lon2){
     Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   var d = R * c;
+  console.log(d)
   if(d<1){
-    console.log(d)
+    console.log("distance",d)
     return (d*1000).toFixed(0)
   }
   else{
@@ -241,13 +242,13 @@ const OptionalVolunteers = (props) => {
     }
     
     const Option = ({pic,firstName,data}) => {
-      let length = calcCrow(data.lat,data.lon,props.auth.user.lat,props.auth.user.lon)
+      let length = calcCrow(data.pos.lat,data.pos.lng,props.auth.user.pos.lat,props.auth.user.pos.lng)
       return (
         <OptionCon>
           <div>
-            <img src={pic} />
+            <img src={pic == "" ? window.location.origin + '/images/profilePlaceholder.png' : pic} />
           </div>
-          <div style={{width:"100%"}}>
+          <div style={{width:"100%",marginRight:".5rem"}}>
               <div>{data.firstName}, {data.isFemale ? `בת ${moment().diff(moment(data.birthday),"years")}` : `בן ${moment().diff(moment(data.birthday),"years")}`}</div>
               <Detail><MdWork/>{data.isFemale ? `עובדת/לומדת ב${data.institute}`:`עובד/לומד ב${data.institute}`}</Detail>
               <div>
@@ -255,22 +256,30 @@ const OptionalVolunteers = (props) => {
               </div>
               <Detail>
               <FaMapMarkerAlt/> 
-                מרחק {length} {length>99 ? "מטרים":'ק"מ'}
+                מרחק של כ{length} {length>99 ? "מטרים":'ק"מ'}
               </Detail>
               <div style={{justifyContent:"flex-end",display:"flex"}}>
                 <Butt
                 onClick={()=>{
-                  Axios.post(BASE_URL+`/api/session/approve/${even._id}`,{volunteerId:data._id})
-                  .then(res=>{
-                    console.log(res)
-                    if(res.status == 200) {
-                      // let a = _.filter(requests,function(o){return o._id != even._id})
-                      // setRequests(a)
-                    }
-                  })
+
+                let text = 'האם את.ה בטוח.ה שברצונך לאשר את ההצעה?' 
+                  
+                  if(window.confirm(text)){
+                    
+                    Axios.post(BASE_URL+`/api/session/approve/${even._id}`,{volunteerId:data._id})
+                    .then(res=>{
+                      console.log(res)
+                      if(res.status == 200) {
+                        let a = _.filter(requests,function(o){return o._id != even._id})
+                        setRequests(a)
+                      }
+                    })
+
+                  }
                 }}
                 >קבל הצעה</Butt>
               </div>
+                <label style={{fontSize:"10px",color:"red"}}>שימו לב בעת אישור ההצעה - שאר ההצעות ימחקו</label>
           </div>
         </OptionCon>
       )
@@ -288,10 +297,10 @@ const OptionalVolunteers = (props) => {
     useEffect(() => {
       Axios.post(BASE_URL+`/api/session/${id}`,{isFilled:false}).then(result => {
         console.log(result);
-        setTimeout(()=>{
           setload(false)
+        // setTimeout(()=>{
   
-        },2000)
+        // },2000)
         setArr(result.data)
       })
     }, [])

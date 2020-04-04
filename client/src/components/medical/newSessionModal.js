@@ -27,6 +27,8 @@ const Modal = styled.div`
     width:800px;
     margin-left:-400px;
     margin-top:-300px;
+    height:600px;
+    overflow-y:auto;
     z-index:5;
     background:white;
     border-radius:20px;
@@ -93,6 +95,68 @@ const TimeDate = styled.div`
 
 
 const numbers = ["0","1","2","3","4","5","6","7","8","9"]
+
+
+const Tags = ({text,state,functio,ke}) => {
+    const [hob,setHob] = useState(["ארוחה","מקלחת","החלפת חיתול","השכבה"])
+    return (
+        <InCon >
+            <label>{text}</label>
+            <div id="divi">
+                <div style={{display:"flex",flexWrap:"wrap",flexDirection: "unset"}}>
+                {hob.map((x)=>{
+                    return (
+                        <React.Fragment>
+                            <Chosen 
+                            chosen={(state[ke].includes(x))}
+                            onClick={()=>{
+                                if(state[ke].includes(x)){
+                                    console.log("a")
+                                    let i = state[ke].indexOf(x)
+                                    console.log(i)
+                                    let d = {...state}
+                                     d[ke].splice(i,1)
+                                    functio(d)
+                                }
+                                else{
+                                    console.log("b")
+                                    let all = {...state}
+                                    all[ke].push(x)
+                                    functio(all)
+                                }
+                            }}>{x}</Chosen>
+                            <input value={state[ke].includes(x)} type="checkbox" style={{display:"none"}} />
+                        </React.Fragment>
+                    )
+                })}
+                </div>
+                <input placeholder="אחר" type="text"
+                onBlur={(e)=>{
+                    if(e.target.value!=''){
+                        let all = {...state}
+                        all[ke].push(e.target.value)
+
+                        setHob([...hob,e.target.value])
+                        functio(all)
+                        e.target.value=""
+                    }
+                }}
+                 onKeyDown={(e)=>{
+                     if(e.key=="Enter" && e.target.value!=""){
+                        e.preventDefault()
+                        let all = {...state}
+                        all[ke].push(e.target.value)
+                        setHob([...hob,e.target.value])
+                        functio(all)
+                        e.target.value=""
+                    }
+                }}></input>
+            </div>
+        </InCon>
+    )
+}
+
+
 
 const NewSession = ({setOpen,id}) =>{
     const [done,setDone] = useState(false)
@@ -266,7 +330,7 @@ const NewSession = ({setOpen,id}) =>{
                         }}/>
                     </div>
                     <div>
-                        <label>איש קשר</label>
+                        <label>איש קשר זמין</label>
                         <input value={details.contactName} onChange={(e)=>{
                             let d = {...details}
                             d.contactName = e.target.value
@@ -281,14 +345,15 @@ const NewSession = ({setOpen,id}) =>{
                             setState(d)
                         }} />
                     </div>
-                    <div>
+                    {/* <div>
                         <label>מטלות</label>
                         <input  value={details.tasks} onChange={(e)=>{
                             let d = {...details}
                             d.tasks = e.target.value
                             setState(d)
                         }}/>
-                    </div>
+                    </div> */}
+                    <Tags text={"מטלות"} state={details} functio={setState} ke={"tasks"}/>
                     <div>
                         <label>הערות נוספות</label>
                         <input value={details.notes} onChange={(e)=>{
@@ -310,7 +375,7 @@ const NewSession = ({setOpen,id}) =>{
                                timeRequested: new Date(),
                                 recurring:"once",
                                 endTime:new Date(moment(eDate,"MM/DD/YYYY HH:mm").format()),
-                                tasks:[],
+                                tasks:details.tasks,
                                 notes:'',
                                 didHappen:false,
                                 contact:{
@@ -318,19 +383,19 @@ const NewSession = ({setOpen,id}) =>{
                                     name:details.contactName
                                 }
                             }
-                            // console.log(data)
-                            axios.post(BASE_URL+"/api/session",data)
-                            .then((res)=>{
-                                console.log(res)
-                                if(res.status == 200){
-                                    // alert("yai")
-                                    setDone(true)
-                                }
-                                else{
-                                    // alert("oops")
-                                    setErr("משהו השתבש")
-                                }
-                            })
+                            console.log(data)
+                            // axios.post(BASE_URL+"/api/session",data)
+                            // .then((res)=>{
+                            //     console.log(res)
+                            //     if(res.status == 200){
+                            //         // alert("yai")
+                            //         setDone(true)
+                            //     }
+                            //     else{
+                            //         // alert("oops")
+                            //         setErr("משהו השתבש")
+                            //     }
+                            // })
                         }}
                         >צור בקשה</button>
                     </div>
@@ -343,3 +408,42 @@ const NewSession = ({setOpen,id}) =>{
 }
 
 export default NewSession;
+
+
+const InCon = styled.div`
+    margin:auto;
+    display:flex;
+    flex-direction:column;
+    margin-bottom:1rem;
+    #divi{
+        display: flex;
+        flex-direction: column;
+        width: unset;
+        margin: unset;
+    }
+    input,select{
+        padding:0.5rem;
+        border-radius:5px;
+        border:1px solid #828282;
+        outline-color:#00C2CB ;
+        option{
+            padding:.5rem 0;
+        }
+    }
+    div{
+        width: unset;
+        margin: unset; 
+    }
+
+`
+
+const Chosen = styled.label`
+    color:${props => props.chosen ? "#014649":"#828282"};
+    background:${props=>props.chosen ? "#039BA3" :"#e2e2e2"} ;
+    border:${props=>props.chosen ? "1px solid #00B5BD" :"0"} ;
+    padding:0.5rem;
+    border-radius:5px;
+    margin:5px;
+    cursor:pointer;
+
+`

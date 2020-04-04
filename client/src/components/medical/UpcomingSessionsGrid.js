@@ -99,10 +99,10 @@ export const UpcomingSessionsGrid = (props) => {
   useEffect(() => {
     Axios.post(BASE_URL+`/api/session/${props.id}`,{isFilled:true}).then(result => {
       setUpcomingSessions(result.data);
-      setTimeout(()=>{
-        setload(false)
+      setload(false)
+      // setTimeout(()=>{
 
-      },4000)
+      // },4000)
       console.log(result);
     })
   }, [])
