@@ -33,7 +33,7 @@ const Modal = styled.div`
     div{
         display:flex;
         width:40%;
-        margin:1rem auto;
+        margin:.5rem auto;
         flex-direction:column;
     }
     label{
@@ -105,7 +105,7 @@ const NewSession = ({setOpen,id}) =>{
         eDate:'',
         requests:[],
         doctor_id:id,
-        "timeRequested": new Date(),
+        timeRequested: new Date(),
         recurring:"once",
         endTime:'',
         tasks:[],
@@ -307,7 +307,7 @@ const NewSession = ({setOpen,id}) =>{
                                 startTime:new Date(moment(sDate,"MM/DD/YYYY HH:mm").format()),
                                 requests:[],
                                 doctor_id:id,
-                                "timeRequested": new Date(),
+                               timeRequested new Date(),
                                 recurring:"once",
                                 endTime:new Date(moment(eDate,"MM/DD/YYYY HH:mm").format()),
                                 tasks:[],
