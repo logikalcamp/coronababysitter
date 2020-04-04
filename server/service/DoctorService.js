@@ -22,7 +22,6 @@ class DoctorService {
    * no response value expected for this operation
    **/
   createDoctor(body, docId) {
-    console.log(body);
       return MongoDB.findOneAndUpdate(COLLECTION_NAME, { '_id': MongoDB.getMongoObjectId(docId) }, body, this.MongoClient);
   }
 
@@ -101,7 +100,7 @@ class DoctorService {
       MongoDB.findOne(COLLECTION_NAME, { email: body.email }, this.MongoClient).then((result) => {
         if (result == null) reject("E-1"); // Doctor doesnt exist
         else if(!result.isApproved) reject ("E-2"); // Doctor not yet approved
-        else if(!result.adress) reject ("E-3"); // Doctor hasnt finished process
+        else if(!result.address) reject ("E-3"); // Doctor hasnt finished process
         else {
           var emailService = new EmailService();
           var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.
