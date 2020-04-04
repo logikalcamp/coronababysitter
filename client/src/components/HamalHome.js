@@ -11,6 +11,9 @@ import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import * as DateUtils from '../utils/dateUtils';
+import moment from 'moment'
+import 'moment/locale/he'
 
 const styles = makeStyles(theme => ({
     title1: {
@@ -37,11 +40,13 @@ const styles = makeStyles(theme => ({
     }
 }));
 
-const HamalHome = () => {
+const HamalHome = (props) => {
     const classes = styles();
     const [page, setPage] = useState(0);
     const [pendingUsers, setPendingUsers] = useState(undefined);
     const [pendingUsersUI, setPendingUsersUI] = useState([]);
+    const [urgentRequests, setUrgentRequests] = useState(undefined);
+    const [urgentRequestsUI, setUrgentRequestsUI] = useState([]);
     const [counts, setCounts] = useState({
         pendingVolunteers: 0,
         volunteers: 0,
@@ -59,14 +64,16 @@ const HamalHome = () => {
                                              axios.post(BASE_URL+'/api/volunteer/countpending'),
                                              axios.post(BASE_URL+'/api/volunteer/count'),
                                              axios.post(BASE_URL+'/api/doctor/count'),
-                                             axios.post(BASE_URL+'/api/session/counturgentpending'),
+                                             axios.post(BASE_URL+'/api/session/getUpcomingNotYetApprovedSessions'),
                                              axios.post(BASE_URL+'/api/session/countmatched')]);
+
+            var urgentRequests_temp = Enumerable.from(results[5].data).where(request => DateUtils.isIn24Hours(new Date(request.startTime))).toArray();
 
             var counts = {
                 pendingVolunteers: results[2].data.count,
                 volunteers: results[3].data.count,
                 doctors: results[4].data.count,
-                urgentRequests: results[5].data.count,
+                urgentRequests: urgentRequests_temp.length,
                 matchedSessions: results[6].data.count
             }
 
@@ -93,6 +100,22 @@ const HamalHome = () => {
                     </Row>
             );
 
+            moment.locale("he");
+            var urgentRequestsUI_temp = urgentRequests_temp.map(urgentRequest => {
+                let date = moment(new Date(urgentRequest.startTime)).format("L");
+                let startTime = moment(new Date(urgentRequest.startTime)).format("LT");
+                let endTime = moment(new Date(urgentRequest.endTime)).format("LT");
+                return (<Row>
+                        <RowPart>{urgentRequest.requests.length}</RowPart>
+                        <RowPart>{startTime + ' - ' + endTime}</RowPart>
+                        <RowPart>{urgentRequest.doctor_o[0].firstName + ' ' + urgentRequest.doctor_o[0].firstName}</RowPart>
+                        <RowPart>{date}</RowPart>
+                    </Row>)
+            });
+
+            setUrgentRequests(urgentRequests_temp);
+            setUrgentRequestsUI(urgentRequestsUI_temp);
+
             setPendingUsers(pendingUsers_temp);
             setPendingUsersUI(pendingUsersUI);
         }
@@ -107,10 +130,10 @@ const HamalHome = () => {
 
     return (
         <Container>
-            <TopTitle>
-                <div className={classes.title1}>הי שם משתמש!</div>
-                <div className={classes.title2}>משפט מוטיבציה מפוצץ!</div>
-            </TopTitle>
+            {props.auth && <TopTitle>
+                <div className={classes.title1}>הי {props.auth.user.firstName + ' ' + props.auth.user.lastName}!</div>
+                <div className={classes.title2}>כשהמציאות לא קלה, אנשים טובים יכולים לשפר אותה</div>
+            </TopTitle>}
             <CountBlocksContainer>
                 <CountBlock>
                     <CountBlockImageNumContainer>
@@ -178,9 +201,10 @@ const HamalHome = () => {
                         <Row className={classes.userRowTitle}>
                             <RowPart>מספר הצעות</RowPart>
                             <RowPart>טווח שעות</RowPart>
-                            <RowPart>שם המתנדב</RowPart>
+                            <RowPart>שם</RowPart>
                             <RowPart>תאריך</RowPart>
                         </Row>
+                        {urgentRequestsUI}
                     </MeatingTableContainer>
                 </div>
             </PageMainContent>
