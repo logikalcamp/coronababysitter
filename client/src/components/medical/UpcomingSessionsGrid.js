@@ -4,6 +4,7 @@ import moment from 'moment';
 import {BASE_URL} from '../../constants'
 import _ from 'lodash'
 import GridComp from '../Grid';
+import 'moment/locale/he'
 
 const UpcomingSessionsGridCommands = (props) => {
   const prefix = window.location.origin
@@ -62,9 +63,9 @@ export const UpcomingSessionsGrid = (props) => {
       valueGetter: (params) => {
         let {startTime, endTime} = params.data;
 
-        startTime = moment(startTime);
-        endTime = moment(endTime);
-
+        startTime = moment(new Date(startTime).toLocaleString("he", {timeZone: "UTC"}));
+        endTime = moment(new Date(endTime).toLocaleString("he", {timeZone: "UTC"}));
+        
         return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
       }
     },
