@@ -163,13 +163,13 @@ export const HamalNewRequests = (props) => {
                             toggleModal(false);
                         });
                     },
-                    backgroundColor:'red'
                 },
                 {
                     text: 'לא',
                     action: () => {
                         toggleModal(false)
-                    }
+                    },
+                    backgroundColor:'red'
                 }
             ]
         }
@@ -254,6 +254,8 @@ export const HamalNewRequests = (props) => {
 
             setUrgentRequests(urgentRequestsNew);
             setOtherRequests(otherRequestsNew);
+        }).catch(error => {
+            console.log("Error while fetching sessions");
         })
       }
 

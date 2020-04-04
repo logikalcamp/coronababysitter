@@ -105,8 +105,8 @@ class VolunteerService {
   loginEmailVolunteer(body, req) {
     return new Promise((resolve, reject) => {
       MongoDB.findOne(COLLECTION_NAME, { email: body.email }, this.MongoClient).then((result) => {
-        if (result == null) reject("Volunteer not found");
-        else if(!result.isApproved) reject ("Volunteer was not approved yet");
+        if (result == null) reject("E-1");
+        else if(!result.isApproved) reject ("E-2");
         else {
           var emailService = new EmailService();
           var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.

@@ -174,14 +174,14 @@ export const HamalPendingUsers = (props) => {
                             setIsModalLoading(false);
                             toggleModal(false);
                         });
-                    },
-                    backgroundColor:'red'
+                    }
                 },
                 {
                     text: 'לא',
                     action: () => {
                         toggleModal(false)
-                    }
+                    },
+                    backgroundColor:'red'
                 }
             ]
         }
@@ -230,7 +230,7 @@ export const HamalPendingUsers = (props) => {
     const approveOrRejectUser = (user, isApproved) => {
         return Axios.post(BASE_URL + `/api/hamal/approve-reject/${user._id}`, {
             isApproved,
-            hamalUserId: '5e7a7e289505a02de8a513a6',
+            hamalUserId: '5e887c4a77885033c8d53af5',
             role: user.role
         });
     }
@@ -240,7 +240,7 @@ export const HamalPendingUsers = (props) => {
     registerForAction("RejectClicked", "f1",onRejectClicked);
 
     const loadPage = () => {
-        if((doctorsPending && doctorsPending.length > 0) || (volunteersPending && volunteersPending.length > 0)) return;
+        if((doctorsPending) || (volunteersPending)) return;
 
         Promise.all([Axios.post(BASE_URL + '/api/volunteer/pending'),Axios.post(BASE_URL + '/api/doctor/pending')]).then(results => {
             var doctorsPendingNew = [];
