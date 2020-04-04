@@ -77,10 +77,10 @@ export const NotYetApprovedSessionsGrid = (props) => {
   useEffect(() => {
     Axios.post(BASE_URL+`/api/session/${props.id}`,{isFilled:false}).then(result => {
       console.log(result);
-      setTimeout(()=>{
-        setload(false)
+      setload(false)
+      // setTimeout(()=>{
 
-      },2000)
+      // },2000)
       setNotYetApprovedSessions(result.data)
     })
   }, [])

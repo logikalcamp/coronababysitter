@@ -508,7 +508,7 @@ export const Signup = (props) => {
                                                                 loading={isUploadingImage}/> : 
                                                     <img style={{width:"130px",height:"130px",margin:"auto"}} src={img} alt="profile" />}
                                 <input type='file' onChange={(e) => onChange(e.target.files[0])}/>
-                                {details.picture == '' && <label style={{color:"red"}}>התהליך יעוכב במידה ולא תוסיפו תמונה</label>}
+                                {details.picture == '' && <label style={{color:"red"}}>חובה להוסיף תמונה על מנת להירשם!</label>}
                             </div>
                         }
                         <Text blur={onBlur} text={"הערות נוספות"} state={details} functio={setState} ke={'comments'}/>
@@ -521,8 +521,8 @@ export const Signup = (props) => {
                 <Buttons step={step}>
                     {step != 1 && <button onClick={()=>setStep(step-1)}>הקודם</button>}
                     {step == 2 && <Butt 
-                    disabled={!_.isEmpty(errors)}
-                    s={!_.isEmpty(errors)}
+                    disabled={!_.isEmpty(errors) || details.picture==""}
+                    s={!_.isEmpty(errors) || details.picture==""}
                     onClick={()=>{
                         setDone(true)
                     }}>סיים</Butt>}

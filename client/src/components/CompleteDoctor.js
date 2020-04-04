@@ -139,6 +139,7 @@ const CompleteDoctor = (props) => {
     const handleChangeCenter =(lat,lng,address) =>{
         let b = GeoMasking(lat,lng)
         let d = {...details}
+        if(!d.pos) d.pos = {};
         d.pos["lat"] = b.geometry.coordinates[0]
         d.pos["lng"] = b.geometry.coordinates[1]
         d["address"] = address
@@ -195,7 +196,7 @@ const CompleteDoctor = (props) => {
                     <div style={{height:"100%",width:"100%"}}>
                     <SignupCon amount={children}>
                         <h2>השלמת התחברות</h2>
-                        <h1> היי {details.firstName} , כיף שחזרת !</h1>
+                        <h1> היי {details.firstName} , עוד כמה פרטים קטנים וסיימנו!</h1>
                         <SignupForm>
                             <InCon>
                                 <label>כתובת</label>
