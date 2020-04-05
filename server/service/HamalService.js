@@ -19,11 +19,14 @@ class HamalService {
         MongoDB.findByMongoId(COLLECTION_NAME, body.hamalUserId, this.MongoClient).then((result) => {
           var hamalUser = result;
           var userCollection = "";
+          var userLink = '';
 
           if (body.role == "volunteer") {
             userCollection = "Volunteers";
+            userLink = "https://sitterseeker.robins.app/login";
           } else {
             userCollection = "Doctors";
+            userLink = "https://sitterseeker.robins.app/doctors/" + user._id;
           }
 
           // Update the user status, add the user to the hamal's user approved/rejected users lists
@@ -42,7 +45,7 @@ class HamalService {
               var emailInfo;
               var emailService = new EmailService();
               if (body.isApproved) {
-                emailInfo = emailService.getApproveEmail("https://sitterseeker.robins.app/" + userCollectionLowerCase + "/" + user._id);
+                emailInfo = emailService.getApproveEmail(userLink);
               } else {
                 emailInfo = emailService.getRejectEmail();
               }
