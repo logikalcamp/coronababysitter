@@ -1029,7 +1029,7 @@ components:
         tasks:
           type: array
           items:
-            $ref: '#/components/schemas/Session_tasks'
+            type: string
         recurring:
           type: string
           enum:
@@ -1246,12 +1246,5 @@ components:
         isFemale: true
         age: 0
     Session_tasks:
-      type: object
-      properties:
-        taskName:
-          type: string
-        taskSelected:
-          type: boolean
-      example:
-        taskName: taskName
-        taskSelected: true
+      type: string
+      
