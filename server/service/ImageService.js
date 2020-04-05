@@ -1,6 +1,4 @@
-//const {GPhotos} = require('upload-gphotos');
-const fs = require('fs');
-//var path = require('path');
+
 var cloudinary = require('cloudinary').v2;
 const sharp = require('sharp');
 
