@@ -10,19 +10,26 @@ const db = () => {
 
 }
 
-const PrivateRoute = ({ component: Component, auth, ...rest }) => (
+const PrivateRoute = ({ component: Component, auth, ...rest }) => {
+  var ping = '';
+
+  if(rest.path.startsWith('/cnc')) {
+    var ping = prompt("על מנת להמשיך הזן ססמא");
+  }
+
+  return (
   <Route
     {...rest}
     
     render={props =>
-      auth.isAuthenticated === true ? (
+      ping == 'חיבוק' || auth.isAuthenticated === true ? (
         <Component {...props} />
       ) : (
         <Redirect to="/login" />
       )
     }
   />
-);
+)};
 
 PrivateRoute.propTypes = {
   auth: PropTypes.object.isRequired

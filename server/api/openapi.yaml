@@ -731,6 +731,26 @@ paths:
         "404":
           description: Error while approving sessions.
       x-swagger-router-controller: Session
+  /ping:
+    post:
+      tags:
+      - hamal
+      summary: Create new hamal user
+      operationId: checkHamalPassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pingval:
+                  type: string
+      responses:
+        "200":
+          description: Hamal user created
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Hamal
   /hamal:
     post:
       tags:

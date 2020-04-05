@@ -9,6 +9,10 @@ class HamalService {
     this.MongoClient = MongoClient;
   }
 
+  checkHamalPassword(password) {
+    return Promise.resolve(password == 'חיבוק');
+  }
+
   /**
    * Approve or reject a user (doctor / volunteer)
    * userId String 

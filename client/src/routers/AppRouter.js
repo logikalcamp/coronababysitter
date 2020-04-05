@@ -73,11 +73,11 @@ const AppRouter = (props) =>{
           <PrivateRoute exact path='/find-session' component={FindSession} />
         }
         
-        <Route exact path="/cnc/pendingusers" component={HamalPendingUsers}/>
-        <Route exact path="/cnc/newrequests" component={HamalNewRequests}/>
-        <Route exact path="/cnc/volunteers" component={HamalVolunteersPage}/>
-        <Route exact path="/cnc/doctors" component={HamalDoctorsPage}/>
-        <Route exact path="/cnc" component={HamalHome}/>
+        <PrivateRoute exact path="/cnc/pendingusers" component={HamalPendingUsers}/>
+        <PrivateRoute exact path="/cnc/newrequests" component={HamalNewRequests}/>
+        <PrivateRoute exact path="/cnc/volunteers" component={HamalVolunteersPage}/>
+        <PrivateRoute exact path="/cnc/doctors" component={HamalDoctorsPage}/>
+        <PrivateRoute exact path="/cnc" component={HamalHome}/>
         
         <Route path="/" component={ErrorPage} />
       </Switch>
