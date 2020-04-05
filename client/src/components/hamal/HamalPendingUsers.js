@@ -299,7 +299,7 @@ export const HamalPendingUsers = (props) => {
                 <UsersContent>
                     <Collapsable>
                         <CollapsableHeader>
-                            <Title>רופאים {doctorsPending ? `(${doctorsPending.length})` : ''}</Title>
+                            <Title>צוותים רפואיים {doctorsPending ? `(${doctorsPending.length})` : ''}</Title>
                             {!doctorsOpen && <KeyboardArrowDownIcon className={classes.arrowIcon} onClick={toggleCollapsables}></KeyboardArrowDownIcon>}
                             {doctorsOpen && <KeyboardArrowUpIcon className={classes.arrowIcon} onClick={toggleCollapsables}></KeyboardArrowUpIcon>}
                         </CollapsableHeader>

@@ -54,7 +54,7 @@ export const UpcomingSessionsGrid = (props) => {
       }
     },
     { 
-      headerName: "רופא",
+      headerName: "הורה",
       field: "contact",
       valueGetter: (params) => {
         const contact = params.data.doctor_o[0].firstName;

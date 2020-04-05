@@ -53,6 +53,7 @@ export const NotYetApprovedSessionsGrid = (props) => {
   
   useEffect(() => {
     Axios.post(BASE_URL+'/api/session/getnotyetapprovedsessions/5e7ca72c343daa68c8d7277f').then(result => {
+      console.log(result)
       setNotYetApprovedSessions(result.data);
     })
   }, [])

@@ -75,7 +75,6 @@ class DoctorService {
    **/
   registerDoctor(body) {
     return new Promise((resolve, reject) => {
-
       // Check if ID was already inserted
       MongoDB.findOne(COLLECTION_NAME, {email : body.email}, this.MongoClient).then((result) => {
         if(result) 
@@ -89,6 +88,7 @@ class DoctorService {
                                                response.insertedId).then(resolve, reject);
             });
           } else {
+            body.isApproved = false;
             MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
           }
         }

@@ -376,8 +376,8 @@ const NewSession = ({setOpen,id}) =>{
                                timeRequested: new Date(),
                                 recurring:"once",
                                 endTime:new Date(moment(eDate,"MM/DD/YYYY HH:mm").format()),
-                                // tasks:details.tasks,
-                                tasks:[],
+                                tasks:details.tasks,
+                                // tasks:[],
                                 notes:'',
                                 didHappen:false,
                                 contact:{

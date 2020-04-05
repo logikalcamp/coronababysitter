@@ -207,7 +207,7 @@ export const FindSessionsGrid = (props) => {
     if (props.isExpanded) {
       return columnDefs;
     } else {
-      return _.filter(columnDefs, colDef => _.includes(['date', 'contact', 'sessionHours'], colDef.colId));
+      return _.filter(columnDefs, colDef => _.includes(['date', 'contact', 'sessionHours','commands'], colDef.colId));
     }
   }
 
