@@ -45,7 +45,7 @@ class HamalService {
               var emailInfo;
               var emailService = new EmailService();
               if (body.isApproved) {
-                emailInfo = emailService.getApproveEmail(userLink);
+                emailInfo = emailService.getApproveEmail(userLink, body.role);
               } else {
                 emailInfo = emailService.getRejectEmail();
               }
