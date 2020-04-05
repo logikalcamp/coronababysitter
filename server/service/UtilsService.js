@@ -6,8 +6,9 @@ const request = require('request')
 
 class UtilsService {
   
-  constructor(MongoClient) {
+  constructor(MongoClient, _codeService) {
     this.MongoClient = MongoClient;
+    this.codeService = _codeService;
   };
 
   getFacebookPicture(body) {
@@ -35,30 +36,29 @@ class UtilsService {
 
   loginUser(body) {
     return new Promise((resolve, reject) => {
-      console.log(global.session);
-      var userSession = global.session.loginCodes[body.email];
-      if (userSession) {
-        var isValid = (userSession == body.code);
-
-        // User is logged in, delete code from session.
-        if (isValid) delete global.session.loginCodes[body.email];
+      this.codeService.checkExistingCode(body.email, body.code).then(result => {
+        this.codeService.deleteCode(body.email);
         
-        MongoDB.findOne("Volunteers", { email: body.email }, this.MongoClient).then((result) => {
-          if (result)
-            resolve({valid: isValid, user: result});
-          else {
-            MongoDB.findOne("Doctors", { email: body.email }, this.MongoClient).then((result) => {
-              resolve({valid: isValid, user: result});
-            }).catch((error) => {
-              reject(error);
-            });
-          }
-        }).catch((error) => {
-          reject(error);
-        });
-      } else {
-        reject("No code available for this email.");
-      }
+        if(!result.error) {
+          MongoDB.findOne("Volunteers", { email: body.email }, this.MongoClient).then((volunteer) => {
+            if (volunteer)
+              
+              resolve({valid: result.isValid, user: volunteer});
+            else {
+              MongoDB.findOne("Doctors", { email: body.email }, this.MongoClient).then((doctor) => {
+                resolve({valid: result.isValid, user: doctor});
+              }).catch((error) => {
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+            reject(error);
+          });
+        }
+        else {
+          reject(result.error)
+        }
+      })
     })
   }
 }

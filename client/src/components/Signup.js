@@ -481,7 +481,7 @@ export const Signup = (props) => {
                             setState(d)
                         }} style={{width:"60%",padding:".5rem"}} placeholder="במידה ויש - הזינו קוד שקיבלת בסמס" />
                         {type=="medical" && <Butt 
-                        disabled={!_.isEmpty(errors)}
+                        disabled={!_.isEmpty(errors) || isUploadingImage}
                         s={!_.isEmpty(errors)}
                         onClick={()=>{
                             setDone(true)   
@@ -521,7 +521,7 @@ export const Signup = (props) => {
                 <Buttons step={step}>
                     {step != 1 && <button onClick={()=>setStep(step-1)}>הקודם</button>}
                     {step == 2 && <Butt 
-                    disabled={!_.isEmpty(errors) || details.picture==""}
+                    disabled={!_.isEmpty(errors) || details.picture=="" || isUploadingImage}
                     s={!_.isEmpty(errors) || details.picture==""}
                     onClick={()=>{
                         setDone(true)

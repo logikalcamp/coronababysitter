@@ -1,6 +1,6 @@
 'use strict';
 
-const randomize = require('randomatic');
+
 const MongoDB = require("../database/DataBase")
 const {EmailService} = require("./EmailService")
 
@@ -10,8 +10,9 @@ var COLLECTION_NAME = "Volunteers";
 
 class VolunteerService {
   //COLLECTION_NAME = "Volunteers"
-  constructor(MongoClient) {
+  constructor(MongoClient, _codeService) {
     this.MongoClient = MongoClient;
+    this.codeService = _codeService
   }
 
   /**
@@ -108,20 +109,17 @@ class VolunteerService {
         if (result == null) reject("E-1");
         else if(!result.isApproved) reject ("E-2");
         else {
-          var emailService = new EmailService();
-          var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.
-          emailService.sendEmail(result.email, emailService.getLoginEmail(loginCode));
-
-          if (!global.session.loginCodes) {
-            global.session.loginCodes = {};
-          }
-
-          global.session.loginCodes[body.email] = loginCode;
-          resolve("Login email sent.")
+          this.codeService.getNewCode(result.email).then(loginCode => {
+            var emailService = new EmailService();
+          
+            emailService.sendEmail(result.email, emailService.getLoginEmail(loginCode));
+            resolve("Login email sent.")
+          }).catch((error) => {
+            reject(error)
+          });
         }
       }).catch((error) => {
-        console.log("Error " + error);
-        reject(error);
+        reject(error)
       });
     });
   }
@@ -131,7 +129,7 @@ class VolunteerService {
   }
 
   countPendingVolunteers() {
-    return MongoDB.count(COLLECTION_NAME,{isApproved: false}, this.MongoClient);
+    return MongoDB.count(COLLECTION_NAME,{isApproved: false, isRejected: {$eq:null}}, this.MongoClient);
   }
 }
 

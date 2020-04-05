@@ -7,6 +7,7 @@ var {HamalService} = require("./server/service/HamalService");
 var {UtilsService} = require("./server/service/UtilsService");
 var {ImageService} = require("./server/service/ImageService");
 var {EmailService} = require("./server/service/EmailService");
+var {CodeService} = require("./server/service/CodesService");
 var path = require('path');
 var cors = require('cors');
 var bodyParser=require('body-parser');
@@ -66,11 +67,12 @@ app.use("*", async (req,res,next) => {
     if(req.baseUrl.startsWith("/api")) {
             req.MongoClient = await dataBase.getConnection();
             req.MongoDB = req.MongoClient.db();
-            req.VolunteerService = new VolunteerService(req.MongoDB);
+            req.CodeService = new CodeService(req.MongoDB);
+            req.VolunteerService = new VolunteerService(req.MongoDB,req.CodeService);
             req.SessionService = new SessionService(req.MongoDB);
-            req.DoctorService = new DoctorService(req.MongoDB);
+            req.DoctorService = new DoctorService(req.MongoDB,req.CodeService);
             req.HamalService = new HamalService(req.MongoDB);
-            req.UtilsService = new UtilsService(req.MongoDB);
+            req.UtilsService = new UtilsService(req.MongoDB,req.CodeService);
     }
     
     next();

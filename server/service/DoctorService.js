@@ -10,8 +10,9 @@ var COLLECTION_NAME = "Doctors";
 
 class DoctorService {
   
-  constructor(MongoClient) {
+  constructor(MongoClient, _codeService) {
     this.MongoClient = MongoClient;
+    this.codeService = _codeService;
   };
 
   /**
@@ -102,16 +103,14 @@ class DoctorService {
         else if(!result.isApproved) reject ("E-2"); // Doctor not yet approved
         else if(!result.address) reject ("E-3"); // Doctor hasnt finished process
         else {
-          var emailService = new EmailService();
-          var loginCode = randomize('0', 6).toString(); // Generate a 6-digit code.
-          emailService.sendEmail(result.email, emailService.getLoginEmail(loginCode));
-
-          if (!global.session.loginCodes) {
-            global.session.loginCodes = {}
-          }
-
-          global.session.loginCodes[body.email] = loginCode
-          resolve("Login email sent.")
+          this.codeService.getNewCode(result.email).then(loginCode => {
+            var emailService = new EmailService();
+          
+            emailService.sendEmail(result.email, emailService.getLoginEmail(loginCode));
+            resolve("Login email sent.")
+          }).catch((error) => {
+            reject(error)
+          });
         }
       }).catch((error) => {
         reject(error)
