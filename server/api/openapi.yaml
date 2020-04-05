@@ -592,7 +592,7 @@ paths:
       tags:
       - session
       summary: Get all not yet approved upcoming sessions for volunteer
-      operationId: getAllUpcomingNotYetApprovedSessions
+      operationId: getAllUpcomingNotYetApprovedSessionsByVolunteer
       parameters:
       - name: userId
         in: path

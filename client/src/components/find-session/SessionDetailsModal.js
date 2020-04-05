@@ -271,7 +271,7 @@ const SessionDetails = (props) => {
   console.log(props.session);
   const firstName = _.get(props, 'session.doctor_o[0].firstName');
   const lastName = _.get(props, 'session.doctor_o[0].lastName');
-  const header = _.join([firstName, lastName, 'צריך את עזרתך!'], ' ');
+  const header = _.join([firstName, lastName, 'צריכ/ה את עזרתך!'], ' ');
 
   const startTime = moment(_.get(props, 'session.startTime'));
   const endTime = moment(_.get(props, 'session.endTime'));
@@ -279,7 +279,8 @@ const SessionDetails = (props) => {
   const date = startTime.format("DD-MM-YY");
   const sessionHours = endTime.format("H:mm") + ' - ' + startTime.format("H:mm")
 
-  const addressArr = _.get(props, 'session.doctor_o[0].address').split(',');
+  const addr = _.get(props, 'session.doctor_o[0].address');
+  const addressArr = addr.split(',')
   const address = _.join([addressArr[0], addressArr[1]], ', ').replace(/[0-9]/g, '');
 
   const tasks = _.get(props.session, 'tasks');

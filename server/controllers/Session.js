@@ -37,8 +37,8 @@ module.exports.getAllNotAssignedSessions = function getAllNotAssignedSessions (r
   });
 };
 
-module.exports.getAllUpcomingNotYetApprovedSessions = function getAllUpcomingNotYetApprovedSessions (req, res, next, userId) {
-  req.SessionService.getAllUpcomingNotYetApprovedSessions(userId)
+module.exports.getAllUpcomingNotYetApprovedSessionsByVolunteer = function getAllUpcomingNotYetApprovedSessionsByVolunteer (req, res, next, userId) {
+  req.SessionService.getAllUpcomingNotYetApprovedSessionsByVolunteer(userId)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

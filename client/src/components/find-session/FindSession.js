@@ -100,6 +100,15 @@ const ModalContentCon = styled.div`
     0% { -webkit-transform: translateX(0%); }
     100% { -webkit-transform: translateX(-100%); }
   }
+
+  @media(max-width:450px){
+    width: 350px;
+    height: 600px;
+    top: 50%;
+    margin-top: -300px;
+    left:${props=>props.open ? "50%":"0"} ;
+    margin-left: ${props => props.open ? "-175px":"0px"};
+  }
 `;
 //#endregion
 
