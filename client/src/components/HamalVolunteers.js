@@ -152,6 +152,9 @@ const styles = makeStyles(theme => ({
     },
     selectedPage: {
         fontWeight: 'bold'
+    },
+    facebookLink: {
+        color:'inherit'
     }
   }));
 
@@ -291,7 +294,7 @@ export const HamalVolunteersPage = (props) => {
                       </div>
                       <div className={classes.iconText}>
                           <FacebookIcon className={classes.marginLeft}/>
-                        <div>{selectedVolunteer ? selectedVolunteer.facebook : ''}</div>
+                        <div><a className={classes.facebookLink} target="_blank" href={selectedVolunteer ? selectedVolunteer.facebook : ''}>{selectedVolunteer ? selectedVolunteer.facebook : ''}</a></div>
                       </div>
                       <div>
                           <div className={classes.iconText}>
