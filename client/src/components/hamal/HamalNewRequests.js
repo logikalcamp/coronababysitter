@@ -235,7 +235,7 @@ export const HamalNewRequests = (props) => {
       }
       
       const loadPage = () => {
-        if((urgentRequests && urgentRequests.length > 0) || (otherRequests && otherRequests.length > 0)) return;
+        if(urgentRequests && otherRequests) return;
 
         Axios.post(BASE_URL + "/api/session/getUpcomingNotYetApprovedSessions").then((result) => {
             var urgentRequestsNew = [];
