@@ -120,8 +120,10 @@ const backupCheck = async () => {
 var server = http.listen(serverPort, function () {
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
 
-    // Backup Code
-    backupCheck();
+    //if(env === 'production') {
+        // Backup Code
+        backupCheck();
+    //}
 });
 
 global.session = {};

@@ -41,10 +41,34 @@ class DoctorService {
    *
    * returns List
    **/
-  getApprovedDoctors(page) {
+  getApprovedDoctors(page, options) {
     var{from, to} = getPagingDbData(page, "doctors");
 
-    return MongoDB.findMany(COLLECTION_NAME,{isApproved: true}, this.MongoClient,from,to);
+    const applyOptions = options.search || options.orderBy;
+
+    var query = {}
+    var filter = {
+      isApproved: true
+    };
+
+    if(applyOptions) {
+      query.$query = filter;
+    }
+    else {
+      query = filter;
+    }
+      
+
+      if(options.search) {
+        query.$query.$or = [{firstName : {$regex:`.*${options.search}.*`}},{lastName : {$regex:`.*${options.search}.*`}},{address : {$regex:`.*${options.search}.*`}}];
+      }
+
+      if(options.orderBy) {
+        query.$orderBy = {}
+        query.$orderBy[options.orderBy.column] = options.orderBy.desc ? -1 : 1;
+      }
+
+      return MongoDB.findMany(COLLECTION_NAME,query, this.MongoClient,from,to);
   }
 
   /**
@@ -105,7 +129,7 @@ class DoctorService {
         else if(!result.address) reject ("E-3"); // Doctor hasnt finished process
         else {
           if(result.email == "testmailvolunteer@mail.com") resolve("Test email user");
-          
+
           this.codeService.getNewCode(result.email).then(loginCode => {
             var emailService = new EmailService();
           

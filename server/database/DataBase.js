@@ -176,6 +176,9 @@ exports.getBackupData = async () => {
     const sysData = await exports.findOne("SysData", {data:'server'}, backupConnectionData.DB);
 
     if(sysData.lastBackup && wasInLast24Hours(sysData.lastBackup)) return undefined;
+    if(sysData.isBackingUp) return undefined;
+
+    await exports.findOneAndUpdate("SysData",{data:'server'},{isBackingUp:true}, backupConnectionData.DB);
 
     const volunteers = await exports.findMany("Volunteers", {},backupConnectionData.DB);
     const docotrs = await exports.findMany("Doctors", {},backupConnectionData.DB);
@@ -200,7 +203,7 @@ exports.getBackupData = async () => {
 
 exports.finishBackup = (date) => {
     return new Promise((resolve,reject) => {
-        exports.findOneAndUpdate("SysData",{data:'server'},{lastBackup:date}, backupConnectionData.DB).then(result => {
+        exports.findOneAndUpdate("SysData",{data:'server'},{lastBackup:date,isBackingUp:false}, backupConnectionData.DB).then(result => {
             backupConnectionData.client.close();
             resolve();
         })

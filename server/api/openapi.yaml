@@ -107,6 +107,21 @@ paths:
         explode: false
         schema:
           type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                search:
+                  type: string
+                orderBy:
+                  type: object
+                  properties:
+                    column:
+                      type: string
+                    desc: 
+                      type: boolean
       responses:
         "200":
           description: All Approved volunteers
@@ -284,6 +299,21 @@ paths:
         explode: false
         schema:
           type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                search:
+                  type: string
+                orderBy:
+                  type: object
+                  properties:
+                    column:
+                      type: string
+                    desc: 
+                      type: boolean
       responses:
         "200":
           description: All Approved Doctors

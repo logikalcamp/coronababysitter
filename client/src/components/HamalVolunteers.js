@@ -167,6 +167,22 @@ export const HamalVolunteersPage = (props) => {
     const [pageCount, setPageCount] = useState(0);
     const [pagesUI, setPagesUI] = useState('');
     const [page,setPage] = useState(0);
+    var searchText = '';
+    var getOptions = {};
+
+    var timeout = undefined;
+
+    const searchTextChanged = (event) => {
+        searchText = event.target.value;
+        if(timeout){
+            clearTimeout(timeout)
+        }
+
+        timeout = setTimeout((() => {
+            getOptions = {search:searchText ? searchText : '' };
+            updateVolunteers();
+        }).bind(this), 350)
+    }
 
     const calculateAge = (birthday) => { // birthday is a date
         var ageDifMs = Date.now() - birthday.getTime();
@@ -174,7 +190,7 @@ export const HamalVolunteersPage = (props) => {
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
 
-    const updateVolunteers = (newPage) => {
+    const updatePageAndData = (newPage) => {
         if(newPage == page) return;
 
         setPage(newPage);
@@ -201,8 +217,8 @@ export const HamalVolunteersPage = (props) => {
         setVolunteersMap(vols)
     }
 
-    useEffect(() => {
-        Promise.all([Axios.post(BASE_URL+'/api/volunteer/approved/' + page), Axios.post(BASE_URL+'/api/volunteer/count')]).then(result => {
+    const updateVolunteers = () => {
+        Promise.all([Axios.post(BASE_URL+'/api/volunteer/approved/' + page,getOptions), Axios.post(BASE_URL+'/api/volunteer/count')]).then(result => {
             if(volunteers) return;
             
             createVolunteerUI(result[0].data);
@@ -211,15 +227,21 @@ export const HamalVolunteersPage = (props) => {
             var pagesui = [];
 
             for(var i=0; i < pageCount + 1; i++) {
-                pagesui.unshift((<Page className={page == i ? classes.selectedPage : ''} onClick={() => updateVolunteers(i)}>{i+1}</Page>))
+                pagesui.unshift((<Page className={page == i ? classes.selectedPage : ''} onClick={() => updatePageAndData(i)}>{i+1}</Page>))
             }
 
             setPagesUI((<Pages>
-                <ChevronRightIcon onClick={() => updateVolunteers(Math.max(0, page - 1))}></ChevronRightIcon>
+                <ChevronRightIcon onClick={() => updatePageAndData(Math.max(0, page - 1))}></ChevronRightIcon>
                     {pagesui}
-                <ChevronLeftIcon onClick={() => updateVolunteers(Math.min(pageCount, page + 1))}></ChevronLeftIcon>
+                <ChevronLeftIcon onClick={() => updatePageAndData(Math.min(pageCount, page + 1))}></ChevronLeftIcon>
             </Pages>));
         });
+    }
+
+    useEffect(() => {
+        if(volunteersMap) return;
+
+        updateVolunteers();
     }, [volunteers]);
 
     return (
@@ -229,7 +251,7 @@ export const HamalVolunteersPage = (props) => {
                     מאגר המתנדבים
                 </div>
                 <div className={classes.margin}>
-                    <TextField id="search-text" label="חפש מתנדב במאגר"
+                    <TextField id="search-text" label="חפש מתנדב במאגר" onChange={searchTextChanged}
                      InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">

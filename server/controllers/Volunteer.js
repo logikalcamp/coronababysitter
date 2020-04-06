@@ -25,8 +25,8 @@ module.exports.getAllVolunteers = function getAllVolunteers (req, res, next, pag
     });
 };
 
-module.exports.getApprovedVolunteers = function getApprovedVolunteers (req, res, next, page) {
-  req.VolunteerService.getApprovedVolunteers(page)
+module.exports.getApprovedVolunteers = function getApprovedVolunteers (req, res, next,body, page) {
+  req.VolunteerService.getApprovedVolunteers(page,body)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })

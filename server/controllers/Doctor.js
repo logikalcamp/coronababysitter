@@ -25,8 +25,8 @@ module.exports.getAllDoctors = function getAllDoctors (req, res, next,page) {
     });
 };
 
-module.exports.getApprovedDoctors = function getApprovedDoctors (req, res, next,page) {
-  req.DoctorService.getApprovedDoctors(page)
+module.exports.getApprovedDoctors = function getApprovedDoctors (req, res, next,body,page) {
+  req.DoctorService.getApprovedDoctors(page,body)
     .then(function (response) {
       utils.writeJson(req,res, response);
     })
