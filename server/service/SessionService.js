@@ -241,15 +241,25 @@ class SessionService {
 
   async approveSession(sessionId, volunteerId) {
     try {
-        var results = await Promise.all([MongoDB.findOne(COLLECTION_NAME, {_id: MongoDB.getMongoObjectId(sessionId), requests: MongoDB.getMongoObjectId(volunteerId)}, this.MongoClient),
+      // Check if the vilunteer is already occupied, if he is, his ID is supposed to be removed from the requests array of the current session
+
+        var results = await Promise.all([MongoDB.findOne(COLLECTION_NAME, {_id: MongoDB.getMongoObjectId(sessionId), 
+                                                                           requests: MongoDB.getMongoObjectId(volunteerId)}, this.MongoClient),
                                          MongoDB.findByMongoId(VOL_COLLECTION_NAME,volunteerId, this.MongoClient)]);
 
-        if(results[0] && results[1]) {
+        if(!requests[1]) { // Volunteer not found
+          reject("E-1");
+        }
+        else if (!requests[0]) { // Volunteer not available
+          reject("E-2")
+        }
+        else {
           var session = results[0];
 
           var startDate = new Date(session.startTime);
           var endDate = new Date(session.endTime);
 
+          // Remove volunteers from requests in half an hour range
           startDate.setMinutes(startDate.getMinutes() - 30);
           endDate.setMinutes(endDate.getMinutes() + 30);
 

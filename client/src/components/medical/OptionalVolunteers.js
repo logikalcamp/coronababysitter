@@ -6,6 +6,7 @@ import Axios from 'axios';
 import { MdAdd } from "react-icons/md";
 import {connect} from 'react-redux'
 import NewSessionModal from './newSessionModal'
+import { makeStyles } from '@material-ui/core/styles';
 import GridComp from '../Grid';
 // import {UpcomingSessionsGrid} from './UpcomingSessionsGrid';
 import {NotYetApprovedSessionsGrid} from './NotYetApprovedSessionsGrid';
@@ -15,6 +16,37 @@ import {FaMapMarkerAlt,FaHeart} from "react-icons/fa";
 import {MdWork} from "react-icons/md";
 import { BASE_URL } from '../../constants';
 import _ from 'lodash'
+import { Button, ModalBackdrop, Modal, ContainerTitle, ButtonsContainer } from '../Utils'
+
+const styles = makeStyles(theme => ({
+  arrowIcon: {
+      width: '40px',
+      height: '40px',
+      cursor:'pointer'
+  },
+  descriptionText: {
+      fontSize: '20px'
+  },
+  heartIcon : {
+      width:'20px',
+      height: '20px',
+      color:'#00C2CB'
+  },
+  hobbiesText: {
+      marginRight: '5px'
+  },
+  loader: {
+      margin:'auto'
+  },
+  title1: {
+      fontSize: '28px',
+      marginBottom: '20px'
+  },
+  title2: {
+      fontSize: '20px',
+      textAlign: 'center'
+  },
+}));
 
 const VolunteerDashboardComp = styled.div`
   height: 100%;
@@ -226,6 +258,7 @@ function toRad(Value)
 const array = ["aaa","vvv","bbb","ccc"]
 
 const OptionalVolunteers = (props) => {
+  const classes = styles();
     const [openModal,setOpen] = useState(false)
     const [requests,setRequests] = useState([])
     const [chosen,setChosen] = useState('')
@@ -233,6 +266,16 @@ const OptionalVolunteers = (props) => {
     const [load,setload] = useState(true)
     const [even,setEvent] = useState('')
     const id = props.auth.user._id
+    const [modalData, setModalData] = useState({
+      open: false,
+      title: 'כותרת ראשית',
+      secondaryTitle: 'כותרת משנית',
+      buttons: [{text: '', action: () => {}}]
+  })
+
+  const toggleModal = (open, title= '', secondaryTitle= '', buttons = []) => {
+    setModalData({open, title,secondaryTitle, buttons});
+}
     
     const handleClick = (val,event) => {
       setRequests(event.data.volunteers_array_o)
@@ -270,8 +313,17 @@ const OptionalVolunteers = (props) => {
                     
                     Axios.post(BASE_URL+`/api/session/approve/${even._id}`,{volunteerId:data._id})
                     .then(res=>{
-                      console.log(res)
-                      if(res.status == 200) {
+                      if(res.data == "E-1") {
+                          console.log("Volunteer not found")
+                      }
+                      else if (res.data == "E-2") {
+                        toggleModal(true,'מתנדב כבר אינו פנוי','אנו מתנצים אך מתנדב זה כבר תפוס בשעות אלו. ניתן לרענן את המסך על מנת לקבל נתונים עדכניים',[{
+                          text:'אוקיי', action: () => {
+                            toggleModal(false)
+                          }
+                        }]);
+                      }
+                      else if(res.status == 200) {
                         let a = _.filter(array,function(o){return o._id != even._id})
                         setArr(a)
                         setRequests([])
@@ -317,6 +369,18 @@ const OptionalVolunteers = (props) => {
       <React.Fragment>
           {openModal && <NewSessionModal id={id} setOpen={setOpen}/>}
           <VolunteerDashboardComp>
+          <ModalBackdrop open={modalData.open}>
+                    <Modal open={modalData.open}>
+                        <ContainerTitle>
+                            <div className={classes.title1}>{modalData.title}</div>
+                            <div className={classes.title2}>{modalData.secondaryTitle}</div>
+                        </ContainerTitle>
+                        <ButtonsContainer>
+                            {modalData.buttons[0] && <Button color={modalData.buttons[0].color} backgroundColor={modalData.buttons[0].backgroundColor} onClick={() => modalData.buttons[0].action()}>{modalData.buttons[0].text}</Button>}
+                            {modalData.buttons[1] && <Button color={modalData.buttons[1].color} backgroundColor={modalData.buttons[1].backgroundColor} onClick={() => modalData.buttons[1].action()}>{modalData.buttons[1].text}</Button>}
+                        </ButtonsContainer>
+                    </Modal>
+                </ModalBackdrop>
               <div id="Con">
                   <HeaderComp>
                   <div>

@@ -12,7 +12,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import SchoolIcon from '@material-ui/icons/School';
 import * as DateUtils from '../../utils/dateUtils';
 import DotLoader from "react-spinners/DotLoader";
-import { Collapsable, CollapsableContent, CollapsableHeader, Title, Button, ModalBackdrop, Modal, ContainerTitle } from '../Utils'
+import { Collapsable, CollapsableContent, CollapsableHeader, Title, Button, ModalBackdrop, Modal, ContainerTitle,ButtonsContainer } from '../Utils'
 import moment from 'moment'
 import 'moment/locale/he'
 
@@ -130,10 +130,20 @@ export const HamalNewRequests = (props) => {
     const approveSession = (sessionId, volunteerId) => {
         setIsApproving(true);
         Axios.post(BASE_URL + `/api/session/approve/${sessionId}`, {volunteerId:volunteerId}).then(result => {
-          setUrgentRequests(undefined);
-          setOtherRequests(undefined);
-          setSelectedSessionRequests([]);
-          setIsApproving(false);
+            if(result.data == "E-1") {
+                console.log("Volunteer not found")
+            }
+            else if (result.data = "E-2") {
+                toggleModal(true,'מתנדב כבר אינו פנוי','אנו מתנצים אך מתנדב זה כבר תפוס בשעות אלו.',[{
+                    text:'אוקיי', action: () => {
+                        toggleModal(false)
+                    }
+                  }]);
+            }
+            setUrgentRequests(undefined);
+            setOtherRequests(undefined);
+            setSelectedSessionRequests([]);
+            setIsApproving(false);
         }).catch(error => {
             console.log(error)
         })
@@ -323,15 +333,6 @@ export const HamalNewRequests = (props) => {
         </div>
     );
 };
-
-
-const ButtonsContainer = styled.div`
-    display:flex;
-    flex-direction:row;
-    justify-content:center;
-    align-items:center;
-    width: 100%;
-`
 
 const AcceptButton = styled.div`
     background-color:#00C2CB;

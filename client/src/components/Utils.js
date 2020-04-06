@@ -13,6 +13,13 @@ export const Collapsable = styled.div`
     margin-bottom: 20px;
     flex-direction:column;
 `
+export const ButtonsContainer = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
+    width: 100%;
+`
 
 export const CollapsableHeader = styled.div`
     width: 100%;
