@@ -264,7 +264,7 @@ const OptionalVolunteers = (props) => {
                 <Butt
                 onClick={()=>{
 
-                let text = 'האם את.ה בטוח.ה שברצונך לאשר את ההצעה?' 
+                let text = 'שימו לב ! אנחנו ממליצים לאשר רק לאחר שיחה טלפונית, האם את.ה בטוח.ה שברצונך לאשר את ההצעה?' 
                   
                   if(window.confirm(text)){
                     
@@ -276,7 +276,10 @@ const OptionalVolunteers = (props) => {
                         setArr(a)
                         setRequests([])
                       }
+                    }).catch(err=>{
+                        alert("היי , התרחשה שגיאה - ייתכן כי מתנדב זה כבר לא זמין , אנא רעננו את הדף ונסו שוב")
                     })
+
                   }
                 }}
                 >קבל הצעה</Butt>

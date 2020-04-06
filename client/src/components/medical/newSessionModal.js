@@ -177,7 +177,6 @@ const NewSession = ({setOpen,id}) =>{
         didHappen:false,
         contact:''
     })
-    console.log(window.location)
     return(
         <React.Fragment>
             <Background onClick={()=>{setOpen(false)}}></Background>
@@ -365,10 +364,13 @@ const NewSession = ({setOpen,id}) =>{
                     </div>
                     {err!='' && <div>{err}</div>}
                     <div>
-                        <button
+                        <Button
+                        disabled={details.sDate == '' || details.eHour == '' || details.sHour =='' || details.contact =='' || details.contactName == '' || moment()>moment(details.sDate)}
+                        dis={details.sDate == '' || details.eHour == '' || details.sHour =='' || details.contact =='' || details.contactName == '' || moment()>moment(details.sDate)}
                         onClick={()=>{
                             let sDate = moment(details.sDate).format("MM/DD/YYYY") + moment(details.sHour,"HH:mm").format("HH:mm")
                             let eDate = moment(details.sDate).format("MM/DD/YYYY") + moment(details.eHour,"HH:mm").format("HH:mm")
+                            
                             let data = {
                                 startTime:new Date(moment(sDate,"MM/DD/YYYY HH:mm").format()),
                                 requests:[],
@@ -399,7 +401,7 @@ const NewSession = ({setOpen,id}) =>{
                                 }
                             })
                         }}
-                        >צור בקשה</button>
+                        >צור בקשה</Button>
                     </div>
                     </React.Fragment>
                 }
@@ -410,6 +412,10 @@ const NewSession = ({setOpen,id}) =>{
 }
 
 export default NewSession;
+
+const Button = styled.button`
+    opacity:${props=>props.dis ? "0.5":"1"}
+`
 
 
 const InCon = styled.div`

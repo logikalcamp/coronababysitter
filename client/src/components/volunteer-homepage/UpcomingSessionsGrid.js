@@ -2,33 +2,44 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import moment from 'moment';
 import {BASE_URL} from '../../constants'
-
+import _ from 'lodash'
 import GridComp from '../Grid';
 
 const UpcomingSessionsGridCommands = (props) => {
   const prefix = window.location.origin
-  const onClick = (event) => console.log(event);
+  console.log(props)
+  let phone = props.data.contact.phone.slice(1,10)
 
   return (
     <span className="grid-command">
-      <img
+      {/* <img
         src={prefix + '/images/icons8_event_declined_96px.png'}
-        onClick={onClick} 
-      />
-      <img 
-        src={prefix + '/images/icons8_phone_96px_1.png'}
-        onClick={onClick}
-      />     
+        onClick={props.onClick(props.data._id)} 
+      /> */}
+      <a href={`tel:+972${phone}`}>
+        <img 
+          src={prefix + '/images/icons8_phone_96px_1.png'}
+        />  
+      </a>   
     </span>
   )
 }
 
 export const UpcomingSessionsGrid = (props) => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
+  const deleteSession = (id) =>{ 
+    // let arr = _.filter(upcomingSessions,)
+  }
   const [columnDefs] = useState([
     { 
       headerName: "תאריך",
-      field: "date"
+      field: "date",
+      valueFormatter: (params) => {
+        console.log(params.data.startTime)
+        let time = _.get(params.data, 'startTime');
+        if (time) return moment(time).format("DD/MM/YYYY")
+        return params.value;
+      }
     },
     { 
       headerName: "איש קשר",
@@ -36,13 +47,24 @@ export const UpcomingSessionsGrid = (props) => {
     },
     {
       headerName: "שעות ההתנדבות",
-      field: "sessionHours"
+      field: "sessionHours",
+      valueFormatter: (params) => {
+        console.log(params)
+        let stime = _.get(params.data, 'startTime');
+        let etime = _.get(params.data, 'endTime');
+        let time = moment(stime).format("HH:mm") +"-"+moment(etime).format("HH:mm")
+        if (time) return time
+        return params.value;
+      }
     },
     { 
       headerName: "",
       field: "commands",
       width: 95,
-      cellRenderer: "upcomingSessionsGridCommands"
+      cellRenderer: "upcomingSessionsGridCommands",
+      cellRendererParams: {
+        onClick: deleteSession
+      }
     }
   ]);
 
