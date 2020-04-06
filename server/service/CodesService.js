@@ -11,6 +11,10 @@ class CodeService {
 
   getNewCode(email) {
     var loginCode = randomize('0', 6).toString();
+    
+    if(email == 'testmailvolunteer@mail.com')
+      return Promise.resolve("101010");
+    
     return new Promise((resolve,reject) => {
       MongoDB.findOne(COLLECTION_NAME, {email: email},this.MongoClient).then(result => {
 
@@ -31,6 +35,8 @@ class CodeService {
 
   checkExistingCode(email, code) {
     return new Promise((resolve,reject) => {
+      if(email == 'testmailvolunteer@mail.com' && code == '101010') resolve({isValid:true,error:undefined}); // volunteer test user
+      
         MongoDB.findOne(COLLECTION_NAME, {email}, this.MongoClient).then(result => {
             if(result) {
                 resolve({

@@ -41,6 +41,7 @@ class SessionService {
       // Check if a session with the same start time already exists for this doctor
       MongoDB.findOne(COLLECTION_NAME, {"doctor._id" : MongoDB.getMongoObjectId(body.doctor_id),
                                              startTime: body.startTime}, this.MongoClient).then((result) => {
+      console.log(body)
         if(result) 
           reject("Session already exists");
         else {
