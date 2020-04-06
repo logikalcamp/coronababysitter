@@ -107,7 +107,7 @@ class SessionService {
    **/
   getAvailableSessions(userId) {
     return new Promise((resolve, reject) => {
-      var X = 25;
+      var X = 50;
       var user;
       var id = MongoDB.getMongoObjectId(userId);
       MongoDB.findOne("Volunteers", {"_id" : id}, this.MongoClient).then((result1) => {
@@ -242,7 +242,7 @@ class SessionService {
   async approveSession(sessionId, volunteerId) {
     try {
         var results = await Promise.all([MongoDB.findOne(COLLECTION_NAME, {_id: MongoDB.getMongoObjectId(sessionId), requests: MongoDB.getMongoObjectId(volunteerId)}, this.MongoClient),
-                MongoDB.findByMongoId(VOL_COLLECTION_NAME,volunteerId, this.MongoClient)]);
+                                         MongoDB.findByMongoId(VOL_COLLECTION_NAME,volunteerId, this.MongoClient)]);
 
         if(results[0] && results[1]) {
           var session = results[0];

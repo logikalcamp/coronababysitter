@@ -160,4 +160,8 @@ exports.deleteOne = (collection, query, db) => {
     });
 }
 
+export.Backup = () => {
+    
+}
+
 module.exports = exports;

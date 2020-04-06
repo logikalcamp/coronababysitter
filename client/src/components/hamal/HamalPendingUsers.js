@@ -89,7 +89,7 @@ const pendingUsersGridCommands = (props) => {
         <span>
             <VerifiedUserIcon onClick={approveClicked} className="grid-command-green"></VerifiedUserIcon>
             <BlockIcon onClick={blockClicked} className="grid-command-red"></BlockIcon>
-            <InfoIcon onClick={infoClicked} className="grid-command-theme"></InfoIcon>
+            {props.data.user.role == 'volunteer' && <InfoIcon onClick={infoClicked} className="grid-command-theme"></InfoIcon>}
         </span>
     )
   }
