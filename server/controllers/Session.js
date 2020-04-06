@@ -14,6 +14,18 @@ module.exports.createSession = function createSession (req, res, next, body) {
     });
 };
 
+module.exports.getAllFilledSessions = function getAllFilledSessions (req, res) {
+  req.SessionService.getAllFilledSessions()
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+};
+
+
 module.exports.getAllSessionsByUser = function getAllSessionsByUser (req, res, next, body, userId) {
   req.SessionService.getAllSessionsByUser(body, userId)
     .then(function (response) {

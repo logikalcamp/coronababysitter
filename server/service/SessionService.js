@@ -156,6 +156,22 @@ class SessionService {
   }
 
     /**
+   * Get all upcoming sessions that haven't been filled yest
+   * userId String 
+   * returns List
+   **/
+  getAllFilledSessions() {
+    var aggregate = [];
+    lookUpForSessions(aggregate);
+    var filter = {$match: {
+      "filledBy": {$exists: true, $nin : [null]} 
+            }
+    };
+    aggregate.push(filter);
+    return MongoDB.findManyAggregate(COLLECTION_NAME, {aggregate : aggregate}, this.MongoClient);
+  }
+
+    /**
    * Get all upcoming, not yet approved sessions of a specified volunteer
    * userId String 
    * returns List
