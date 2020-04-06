@@ -282,7 +282,28 @@ class SessionService {
   deleteSession(sessionId) {
     return MongoDB.deleteOne(COLLECTION_NAME,{_id:MongoDB.getMongoObjectId(sessionId)}, this.MongoClient);
   }
+
+  async volunteerWithraw(body){
+    var sessionObject;
+      await MongoDB.findOne(COLLECTION_NAME, {_id : MongoDB.getMongoObjectId(body.session_id)},
+      this.MongoClient).then((result)=> {
+        console.log ("result/n" +result);
+        sessionObject = Object.assign({}, result);
+      });
+      console.log("session /n" + sessionObject);
+      await MongoDB.deleteOne(COLLECTION_NAME,{_id:MongoDB.getMongoObjectId(body.session_id)}, this.MongoClient);
+      delete sessionObject['filledBy'];
+      sessionObject.requests = [];
+      sessionObject.shitbro = "wow";
+     
+      delete sessionObject['_id'];
+      console.log(sessionObject);
+      return this.createSession(sessionObject);
+
+  }
+
 }
+  
 
 module.exports.SessionService = SessionService;
 

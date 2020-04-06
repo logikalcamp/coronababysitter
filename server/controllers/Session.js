@@ -25,6 +25,17 @@ module.exports.getAllFilledSessions = function getAllFilledSessions (req, res) {
     });
 };
 
+module.exports.volunteerWithraw = function deletvolunteerWithraweSession (req, res, next,body) {
+  req.SessionService.volunteerWithraw(body)
+    .then(function (response) {
+      utils.writeJson(req,res, response);
+    })
+    .catch(function (response) {
+      // utils.writeJson(req,res, response);
+      res.status(400).json({'message': response.toString()});
+    });
+}
+
 
 module.exports.getAllSessionsByUser = function getAllSessionsByUser (req, res, next, body, userId) {
   req.SessionService.getAllSessionsByUser(body, userId)

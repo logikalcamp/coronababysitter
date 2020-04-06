@@ -587,6 +587,25 @@ paths:
         "404":
           description: No sessions found
       x-swagger-router-controller: Session
+  /session/volunteerWithraw:
+    post:
+      tags:
+      - session
+      summary: allowing withrawal of a session
+      operationId: volunteerWithraw
+      responses:
+        "200":
+          description: Deleting the original session and reopens it with no requests and filling
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+                x-content-type: application/json
+        "404":
+          description: No sessions found
+      x-swagger-router-controller: Session
   /session/getAllFilledSessions:
     post:
       tags:
@@ -595,7 +614,7 @@ paths:
       operationId: getAllFilledSessions
       responses:
         "200":
-          description: All approved  seessions
+          description: All approved seessions
           content:
             application/json:
               schema:
