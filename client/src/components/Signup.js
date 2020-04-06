@@ -494,7 +494,7 @@ export const Signup = (props) => {
                         <Text blur={onBlur} text={"מסלול לימודים / מקצוע"} state={details} functio={setState} ke={'profession'} />
                         <Text blur={onBlur} text={"מוסד לימודים / מקום עבודה"}  state={details} functio={setState} ke={'institute'}/>
                         <InCon>
-                            <label>כתובת</label>
+                            <label>כתובת מגורים</label>
                             <Searchi shay={handleChangeCenter}/>
                         </InCon>
 

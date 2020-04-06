@@ -385,10 +385,7 @@ const NewSession = ({setOpen,id}) =>{
                                     name:details.contactName
                                 }
                             }
-                            // console.log(data)
-                            data.timeRequested = moment(data.timeRequested).format('YYYY-MM-DD HH:mm:ss');
-                            data.startTime = moment(data.startTime).format('YYYY-MM-DD HH:mm:ss');
-                            data.endTime = moment(data.endTime).format('YYYY-MM-DD HH:mm:ss');
+
                             axios.post(BASE_URL+"/api/session",data)
                             .then((res)=>{
                                 console.log(res)

@@ -4,17 +4,22 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {BASE_URL} from '../constants';
 import axios from "axios";
+import {loginUser} from '../actions/auth'
 
 
 const db = () => {
 
 }
 
-const PrivateRoute = ({ component: Component, auth, ...rest }) => {
+const PrivateRoute = ({ component: Component, auth,dispatch, ...rest }) => {
   var ping = '';
+  var cncConnected = JSON.parse(localStorage.getItem('cnc-connected'));
 
-  if(rest.path.startsWith('/cnc')) {
+  if(rest.path.startsWith('/cnc') && !cncConnected) {
     var ping = prompt("על מנת להמשיך הזן ססמא");
+
+    if(ping == 'חיבוק')
+      localStorage.setItem("cnc-connected",true)
   }
 
   return (
@@ -22,7 +27,7 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
     {...rest}
     
     render={props =>
-      ping == 'חיבוק' || auth.isAuthenticated === true ? (
+      ping == 'חיבוק' || cncConnected || auth.isAuthenticated === true ? (
         <Component {...props} />
       ) : (
         <Redirect to="/login" />

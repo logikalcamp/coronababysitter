@@ -1027,8 +1027,10 @@ components:
           type: string
         timeRequested:
           type: string
+          format: date-time
         timeApproved:
           type: string
+          format: date-time
         requests:
           type: array
           description: List of all volunteers who requested this session
@@ -1040,8 +1042,10 @@ components:
           type: boolean
         startTime:
           type: string
+          format: date-time
         endTime:
           type: string
+          format: date-time
         tasks:
           type: array
           items:

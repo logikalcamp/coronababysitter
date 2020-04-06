@@ -1,7 +1,6 @@
 'use strict';
 
 const {VOL_COLLECTION_NAME} = require('./VolunteerService')
-const {getTimeInIsrael} = require('../utils/dates');
 
 var getLookUp = (tableFrom, local, foreign, as) => {
   return ({
@@ -54,11 +53,11 @@ class SessionService {
             body.requests[i] = MongoDB.getMongoObjectId(body.requests[i]);
 
           if (body.timeApproved)
-            body.timeApproved =getTimeInIsrael(body.timeApproved);
+            body.timeApproved =new Date(body.timeApproved);
             
-          body.timeRequested = getTimeInIsrael(body.timeRequested);
-          body.startTime = getTimeInIsrael(body.startTime);
-          body.endTime = getTimeInIsrael(body.endTime);
+          body.timeRequested = new Date(body.timeRequested);
+          body.startTime = new Date(body.startTime);
+          body.endTime = new Date(body.endTime);
           
           MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then(resolve, reject);
         }
@@ -148,6 +147,7 @@ class SessionService {
   getAllUpcomingApprovedSessionsByVolunteer(userId) {
     var aggregate = [];
     lookUpForSessions(aggregate);
+    console.log(userId);
     var filter = {$match: {
       "filledBy": MongoDB.getMongoObjectId(userId)
             }
@@ -231,8 +231,8 @@ class SessionService {
         if(results[0] && results[1]) {
           var session = results[0];
 
-          var startDate = getTimeInIsrael(session.startTime);
-          var endDate = getTimeInIsrael(session.endTime);
+          var startDate = new Date(session.startTime);
+          var endDate = new Date(session.endTime);
 
           startDate.setMinutes(startDate.getMinutes() - 30);
           endDate.setMinutes(endDate.getMinutes() + 30);
