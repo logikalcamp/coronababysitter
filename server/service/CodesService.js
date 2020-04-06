@@ -12,11 +12,20 @@ class CodeService {
   getNewCode(email) {
     var loginCode = randomize('0', 6).toString();
     return new Promise((resolve,reject) => {
-        MongoDB.insertOne(COLLECTION_NAME, {code: loginCode, email: email}, this.MongoClient).then(result => {
+      MongoDB.findOne(COLLECTION_NAME, {email: email},this.MongoClient).then(result => {
+
+        if(result) {
+          console.log(result)
+          MongoDB.findOneAndUpdate(COLLECTION_NAME, {email:email}, {code:loginCode}, this.MongoClient).then(result => {
             resolve(loginCode);
-        }).catch(error => {
-            reject(error);
-        })
+          }).catch(reject);
+        }
+        else {
+          MongoDB.insertOne(COLLECTION_NAME, {code: loginCode, email: email}, this.MongoClient).then(result => {
+            resolve(loginCode);
+          }).catch(reject);
+        }
+      }).catch(reject);
     })
   }
 

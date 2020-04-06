@@ -30,7 +30,7 @@ class HamalService {
             userLink = "https://sitterseeker.robins.app/login";
           } else {
             userCollection = "Doctors";
-            userLink = "https://sitterseeker.robins.app/doctors/" + user._id;
+            userLink = "https://sitterseeker.robins.app/doctors/" + userId;
           }
 
           // Update the user status, add the user to the hamal's user approved/rejected users lists
