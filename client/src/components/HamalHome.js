@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { useHistory } from 'react-router-dom';
+import { useHistory,Link } from 'react-router-dom'; 
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -135,6 +135,7 @@ const HamalHome = (props) => {
                 <div className={classes.title2}>כשהמציאות לא קלה, אנשים טובים יכולים לשפר אותה</div>
             </TopTitle>
             <CountBlocksContainer>
+                <Link to="/cnc/pendingusers" >
                 <CountBlock>
                     <CountBlockImageNumContainer>
                         <PersonIcon className={classes.icon}></PersonIcon>
@@ -144,6 +145,8 @@ const HamalHome = (props) => {
                     </CountBlockImageNumContainer>
                     <CountBlockText>יוזרים ממתינים לאישור</CountBlockText>
                 </CountBlock>
+                </Link>
+                <Link to="/cnc/newrequests" >
                 <CountBlock>
                     <CountBlockImageNumContainer>
                         <PriorityHighIcon className={classes.icon}></PriorityHighIcon>
@@ -153,6 +156,8 @@ const HamalHome = (props) => {
                     </CountBlockImageNumContainer>
                     <CountBlockText>בקשות דחופות</CountBlockText>
                 </CountBlock>
+                </Link>
+                <Link to="/cnc/volunteers" >
                 <CountBlock>
                     <CountBlockImageNumContainer>
                         <FavoriteIcon className={classes.icon}></FavoriteIcon>
@@ -162,6 +167,8 @@ const HamalHome = (props) => {
                     </CountBlockImageNumContainer>
                     <CountBlockText>מתנדבים</CountBlockText>
                 </CountBlock>
+                </Link>
+                <Link to="/cnc/doctors" >
                 <CountBlock>
                     <CountBlockImageNumContainer>
                         <LocalHospitalIcon className={classes.icon}></LocalHospitalIcon>
@@ -171,6 +178,7 @@ const HamalHome = (props) => {
                     </CountBlockImageNumContainer>
                     <CountBlockText>צוות רפואי</CountBlockText>
                 </CountBlock>
+                </Link>
                 <CountBlock>
                     <CountBlockImageNumContainer>
                         <EventAvailableIcon className={classes.icon}></EventAvailableIcon>

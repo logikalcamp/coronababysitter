@@ -385,7 +385,7 @@ const NewSession = ({setOpen,id}) =>{
                                     name:details.contactName
                                 }
                             }
-                            // console.log(data)
+
                             axios.post(BASE_URL+"/api/session",data)
                             .then((res)=>{
                                 console.log(res)

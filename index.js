@@ -50,7 +50,7 @@ app.post('/api/uploadphoto', async (req,res,next) => {
         else {
             var imageService = new ImageService();
 
-            var photo = await imageService.uploadImageToGooglePhotos("Volunteers", file['photoFile'].path);
+            var photo = await imageService.uploadImageToCloud(file['photoFile'].path);
 
             if(photo != undefined) {
                 res.send({photo: photo});

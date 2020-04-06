@@ -15,7 +15,7 @@ const Tab = styled.div`
 `
 const MainCon = styled.div`
     width:100%;
-    height:100%
+    height:100%;
 `
 const Con = styled.div`
     max-width:1366px;
@@ -27,29 +27,18 @@ const MainDiv = styled.div`
 
 const ManageSessions = (props) => {
     const [tab,setTab] = useState(1)
+    const [arr,setArr] = useState([])
     useEffect(() => {
-        axios.post(BASE_URL+'/api/session/getnotyetapprovedsessions/5e7ca72c343daa68c8d7277f').then(result => {
-        //   setNotYetApprovedSessions(result.data);
+        axios.post(BASE_URL+'/api/session/getUpcomingNotYetApprovedSessions').then(result => {
+            setArr(result.data);
         console.log(result)
         })
       }, [])
     return (
         <MainCon>
             <Con>
-                <h1>בקשות לסשנים שעדיין לא תואמו</h1>
-                <Tabs>
-                    <Tab onClick={()=>setTab(1)} selected={tab==1}>סשנים דחופים</Tab>
-                    <Tab onClick={()=>setTab(2)} selected={tab==2}>סשנים לא דחופים</Tab>
-                </Tabs>
-                {tab == 1 ? 
-                <MainDiv>
-                    דחוף
-                </MainDiv>
-                :
-                <MainDiv>
-                    לא דחוף
-                </MainDiv>
-                }
+                <h1>סשנים שנקבעו במערכת </h1>
+                
 
             </Con>
         </MainCon>

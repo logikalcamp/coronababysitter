@@ -37,8 +37,9 @@ class UtilsService {
   loginUser(body) {
     return new Promise((resolve, reject) => {
       this.codeService.checkExistingCode(body.email, body.code).then(result => {
-        this.codeService.deleteCode(body.email);
-        
+        if(body.email != 'testmailvolunteer@mail.com')
+          this.codeService.deleteCode(body.email);
+
         if(!result.error) {
           MongoDB.findOne("Volunteers", { email: body.email }, this.MongoClient).then((volunteer) => {
             if (volunteer)

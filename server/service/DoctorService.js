@@ -103,6 +103,8 @@ class DoctorService {
         else if(!result.isApproved) reject ("E-2"); // Doctor not yet approved
         else if(!result.address) reject ("E-3"); // Doctor hasnt finished process
         else {
+          if(result.email == "testmailvolunteer@mail.com") resolve("Test email user");
+          
           this.codeService.getNewCode(result.email).then(loginCode => {
             var emailService = new EmailService();
           
