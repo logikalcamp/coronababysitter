@@ -131,7 +131,7 @@ const HamalHome = (props) => {
     return (
         <Container>
             <TopTitle>
-                <div className={classes.title1}>הי {props.auth ? props.auth.user.firstName + ' ' + props.auth.user.lastName : ''}!</div>
+                {/* <div className={classes.title1}>הי {props.auth ? props.auth.user.firstName + ' ' + props.auth.user.lastName : ''}!</div> */}
                 <div className={classes.title2}>כשהמציאות לא קלה, אנשים טובים יכולים לשפר אותה</div>
             </TopTitle>
             <CountBlocksContainer>
@@ -179,6 +179,7 @@ const HamalHome = (props) => {
                     <CountBlockText>צוות רפואי</CountBlockText>
                 </CountBlock>
                 </Link>
+                <Link to="/cnc/sessions" >
                 <CountBlock>
                     <CountBlockImageNumContainer>
                         <EventAvailableIcon className={classes.icon}></EventAvailableIcon>
@@ -188,6 +189,7 @@ const HamalHome = (props) => {
                     </CountBlockImageNumContainer>
                     <CountBlockText>התנדבויות תואמו</CountBlockText>
                 </CountBlock>
+                </Link>
             </CountBlocksContainer>
             <PageMainContent>
                 <div className={classes.flexFour}>
@@ -312,7 +314,8 @@ const TopTitle = styled.div`
     flex-direction: column;
     align-items:flex-start;
     width: 100%;
-    height: 10%
+    margin-top:1rem;
+    /* height: 10%; */
 `
 
 const CountBlocksContainer = styled.div`
@@ -322,13 +325,19 @@ const CountBlocksContainer = styled.div`
     align-items:center;
     padding-top: 20px;
     padding-bottom:20px;
-    height: 15%
+    height: 15%;
+    
+    a{
+        text-decoration:none;
+        color:#4f4f4f;
+        cursor:pointer;
+    }
 `
 
 const CountBlock = styled.div`
     height: 75px;
     background-color:white;
-    border-box: 3px 3px 3px gray;
+    border-box: 0px 0px 3px gray;
     clear:both;
     border-radius: 8px;
     flex-basis: 200px;
@@ -337,6 +346,9 @@ const CountBlock = styled.div`
     display:flex;
     flex-direction: column;
     justify-content: space-between;
+    &:hover{
+        border:1px solid #00C2CB; 
+    }
 `
 
 const CountBlockImageNumContainer = styled.div`
@@ -358,6 +370,7 @@ const PageMainContent = styled.div`
     clear:both;
     flex-direction:row;
     height: 100%;
+    color:#4f4f4f;
     width: 100%;
     height: 75%
 `

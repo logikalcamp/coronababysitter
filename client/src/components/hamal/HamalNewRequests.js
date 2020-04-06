@@ -267,6 +267,7 @@ export const HamalNewRequests = (props) => {
       }
 
     return (
+        <div style={{height:"100%",width:"100%",overflowY:"auto"}}>
         <Container>
             <ModalBackdrop open={modalData.open}>
                     <Modal open={modalData.open}>
@@ -319,6 +320,7 @@ export const HamalNewRequests = (props) => {
                 </RequestsContent>
             </ContainerContent>
         </Container>
+        </div>
     );
 };
 
@@ -349,7 +351,7 @@ const RequestsContent = styled.div`
     border-radius: 8px;
     background-color:white;
     height:auto;
-    box-shadow: 5px 5px 5px gray;
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
     margin-right: 15px;
     padding: 10px;
 `
@@ -362,7 +364,8 @@ const RequestsTitle = styled.div`
     height: 30px;
     border-bottom: 1px solid gray;
     font-size: 24px;
-    height: 10%;
+    /* height: 10%; */
+    padding: .5rem 0;
 `
 const RequestBoxContainer = styled.div`
     overflow:scroll;
@@ -405,7 +408,9 @@ const VolunteerInfo = styled.div`
 `
 
 const Container = styled.div`
-    height: 100%;
+    /* height: 100%; */
+    max-width:1366px;
+    margin:auto;
     padding: 15px 50px 50px 50px;
     display:flex;
     flex-direction:column;

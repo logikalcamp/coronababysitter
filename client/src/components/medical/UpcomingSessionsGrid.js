@@ -53,11 +53,12 @@ export const UpcomingSessionsGrid = (props) => {
         return startTime.format("DD-MM-YY");
       }
     },
+    
     { 
-      headerName: "הורה",
+      headerName: "איש קשר זמין",
       field: "contact",
       valueGetter: (params) => {
-        const contact = params.data.doctor_o[0].firstName;
+        const contact = params.data.contact.name;
         return contact;
       }
     },
@@ -73,20 +74,21 @@ export const UpcomingSessionsGrid = (props) => {
         return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
       }
     },
-    { 
-      headerName: "איש קשר זמין",
-      field: "contact",
-      valueGetter: (params) => {
-        const contact = params.data.contact.name;
-        return contact;
-      }
-    },
+    
     { 
       headerName: "מתנדב",
       field: "volunteer",
       valueGetter: (params) => {
         const {firstName,lastName} = params.data.chosen_volunteer_o[0];
         return firstName + ' ' +lastName;
+      }
+    },
+    { 
+      headerName: "פלאפון מתנדב",
+      field: "contact",
+      valueGetter: (params) => {
+        const contact = params.data.chosen_volunteer_o[0].phone;
+        return contact;
       }
     },
     
