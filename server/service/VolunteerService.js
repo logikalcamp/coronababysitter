@@ -3,6 +3,7 @@
 
 const MongoDB = require("../database/DataBase")
 const {EmailService} = require("./EmailService")
+const {HamalService} = require("./HamalService");
 
 const { getPagingDbData } = require('../utils/paging');
 
@@ -88,6 +89,7 @@ class VolunteerService {
           reject("Volunteer already exists");
         else {
           if ((body.secretCode) && (body.secretCode.toLowerCase() == "fightcorona2020")) {
+            delete body.secretCode;
             MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then((response, error) => {
               if (error) reject(error);
               var hamalService = new HamalService(this.MongoClient);
