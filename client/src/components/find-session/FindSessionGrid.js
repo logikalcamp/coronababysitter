@@ -133,7 +133,7 @@ export const FindSessionsGrid = (props) => {
       valueFormatter: (params) => {
         let startTime = _.get(params.data, 'startTime');
 
-        if (startTime) return startTime = moment(params.data.startTime).format("DD-MM-YY");
+        if (startTime) return startTime = moment(params.data.startTime).format("DD/MM/YY");
 
         return params.value;
       }

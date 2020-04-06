@@ -108,6 +108,9 @@ const ModalContentCon = styled.div`
     margin-top: -300px;
     left:${props=>props.open ? "50%":"0"} ;
     margin-left: ${props => props.open ? "-175px":"0px"};
+    transform:unset;
+    display:${props=>props.open ? "flex":"none"};
+    animation:unset;
   }
 `;
 //#endregion
@@ -126,7 +129,10 @@ const FindSession = (props) => {
     const volunteerId = props.auth.user._id;
     
     Axios.post(BASE_URL+'/api/session/getavailablesessions/' + volunteerId).then(result => {
-      const availablesessions = _.map(result.data, session => {
+      
+      let results = _.sortBy(result.data, [function(o) { return o.startTime; }]);
+      
+      const availablesessions = _.map(results, session => {
         const childrenAges = _.map(session.doctor_o[0].children, c => c.age);
 
         return {
@@ -166,6 +172,8 @@ const FindSession = (props) => {
     Axios.post(BASE_URL+'/api/session/addrequest/' + session._id, {volunteerId:props.auth.user._id})
     .then(response => {
       callback();
+      let newSessions = _.filter(availableSessions,(o)=>{return o._id != session._id})
+      setAvailableSessions(newSessions)
     })
     .catch(error => {
       console.log(error);

@@ -41,8 +41,11 @@ export const UpcomingSessionsGrid = (props) => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [load,setload] = useState(true)
   const DeleteSession = (val) =>{
-    let a = _.filter(upcomingSessions,function(o){return o._id != val})
-    setUpcomingSessions(a)
+    let text = "האם את.ה בטוח.ה שברצונך לבטל את הפגישה?"
+    if(window.confirm(text)){
+      let a = _.filter(upcomingSessions,function(o){return o._id != val})
+      setUpcomingSessions(a)
+    }
   }
   const [columnDefs] = useState([
     { 
@@ -68,9 +71,9 @@ export const UpcomingSessionsGrid = (props) => {
       valueGetter: (params) => {
         let {startTime, endTime} = params.data;
 
-        startTime = moment(new Date(startTime).toLocaleString("he", {timeZone: "UTC"}));
-        endTime = moment(new Date(endTime).toLocaleString("he", {timeZone: "UTC"}));
-        
+        startTime = moment(startTime);
+        endTime = moment(endTime);
+        console.log(startTime)
         return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
       }
     },

@@ -237,7 +237,7 @@ const Child = (props) => {
     <div>
       <ChildComp>
         <div><img src={window.location.origin + '/images/icons8_' + img + '_96px.png'} /></div>
-        <div>{child.age}</div>
+        <div>{child.age} {child.isFemale ? "בת":"בן"}</div>
       </ChildComp>
     </div>
   )
