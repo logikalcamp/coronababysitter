@@ -243,6 +243,7 @@ const OptionalVolunteers = (props) => {
     
     const Option = ({pic,firstName,data}) => {
       let length = calcCrow(data.pos.lat,data.pos.lng,props.auth.user.pos.lat,props.auth.user.pos.lng)
+      let phone = data.phone.slice(1,10)
       return (
         <OptionCon>
           <div>
@@ -258,6 +259,7 @@ const OptionalVolunteers = (props) => {
               <FaMapMarkerAlt/> 
                 מרחק של כ{length} {length>99 ? "מטרים":'ק"מ'}
               </Detail>
+              <Detail>{data.phone} <a href={`tel:+972${phone}`}>חייג.י כאן</a></Detail>
               <div style={{justifyContent:"flex-end",display:"flex"}}>
                 <Butt
                 onClick={()=>{
@@ -279,6 +281,7 @@ const OptionalVolunteers = (props) => {
                 }}
                 >קבל הצעה</Butt>
               </div>
+
                 <label style={{fontSize:"10px",color:"red"}}>שימו לב בעת אישור ההצעה - שאר ההצעות ימחקו</label>
           </div>
         </OptionCon>

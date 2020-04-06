@@ -140,8 +140,15 @@ export const FindSessionsGrid = (props) => {
     },
     { 
       colId: "contact",
-      headerName: "איש קשר",
-      field: "contact.name"
+      headerName: "הורה",
+      field: "firstName",
+      valueGetter: (params) => {
+        let name = _.get(params.data, 'doctor_o[0].firstName');
+
+        if (name) return name;
+
+        return params.value;
+      }
     },
     {
       colId: "children",

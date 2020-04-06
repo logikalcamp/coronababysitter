@@ -139,6 +139,7 @@ const GridHeaderComp = styled.div`
 //#endregion
 
  const VolunteerHomepage = (props) => {
+   const id = props.auth.user._id
   return (
     <VolunteerDashboardComp>
       <Wrapper>
@@ -161,14 +162,14 @@ const GridHeaderComp = styled.div`
             <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
             ההתנדבויות הבאות שלי
           </GridHeaderComp>
-          <UpcomingSessionsGrid />
+          <UpcomingSessionsGrid id={id}/>
         </GridWrapper>
         <GridWrapper>
           <GridHeaderComp>
             <img src={window.location.origin + '/images/icons8_today_96px_1.png'} />
             התנדבויות שעוד לא אושרו
           </GridHeaderComp>
-          <NotYetApprovedSessionsGrid />
+          <NotYetApprovedSessionsGrid id={id} />
         </GridWrapper>
       </DashboardComp>
       </Wrapper>

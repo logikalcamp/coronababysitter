@@ -25,7 +25,7 @@ import {HamalPendingUsers} from '../components/hamal/HamalPendingUsers'
 // import ManageUsers from '../components/hamal/ManageUsers'
 import ErrorPage from '../components/ErrorPage'
 import {connect} from 'react-redux'
-
+import ManageSessions from '../components/hamal/ViewSessions'
 
 const AppRouter = (props) =>{
   const [type,setType] = useState('none')
@@ -77,6 +77,7 @@ const AppRouter = (props) =>{
         <PrivateRoute exact path="/cnc/newrequests" component={HamalNewRequests}/>
         <PrivateRoute exact path="/cnc/volunteers" component={HamalVolunteersPage}/>
         <PrivateRoute exact path="/cnc/doctors" component={HamalDoctorsPage}/>
+        <PrivateRoute ecaxt path="/cnc/sessions" component={ManageSessions}/>
         <PrivateRoute exact path="/cnc" component={HamalHome}/>
         
         <Route path="/" component={ErrorPage} />
