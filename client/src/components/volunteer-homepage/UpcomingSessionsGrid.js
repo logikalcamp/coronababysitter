@@ -6,16 +6,15 @@ import _ from 'lodash'
 import GridComp from '../Grid';
 
 const UpcomingSessionsGridCommands = (props) => {
-  const prefix = window.location.origin
-  console.log(props)
-  let phone = props.data.contact.phone.slice(1,10)
+  const prefix = window.location.origin;
+  const phone = props.data.contact.phone.slice(1,10);
 
   return (
     <span className="grid-command">
-      {/* <img
+      <img
         src={prefix + '/images/icons8_event_declined_96px.png'}
-        onClick={props.onClick(props.data._id)} 
-      /> */}
+        onClick={() => props.onClick(props.data._id)} 
+      />
       <a href={`tel:+972${phone}`}>
         <img 
           src={prefix + '/images/icons8_phone_96px_1.png'}
@@ -27,9 +26,12 @@ const UpcomingSessionsGridCommands = (props) => {
 
 export const UpcomingSessionsGrid = (props) => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
-  const deleteSession = (id) =>{ 
-    // let arr = _.filter(upcomingSessions,)
-  }
+  const deleteSession = (id) => { 
+    Axios.post(BASE_URL + '/session/volunteerWithraw', {
+      session_id: id
+    });
+  };
+
   const [columnDefs] = useState([
     { 
       headerName: "תאריך",
