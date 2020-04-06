@@ -6,12 +6,19 @@ export const Collapsable = styled.div`
     align-items:center;
     background-color:white;
     border-radius: 8px;
-    box-shadow: 5px 5px 5px gray;
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.2);
     height: auto;
     clear:both;
     padding: 20px 10px 20px 10px;
     margin-bottom: 20px;
     flex-direction:column;
+`
+export const ButtonsContainer = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
+    width: 100%;
 `
 
 export const CollapsableHeader = styled.div`

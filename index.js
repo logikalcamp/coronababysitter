@@ -85,10 +85,45 @@ if(env === 'production') {
     });
 }
 
+const backupCheck = async () => {
+    var title = 'DB Backup ' + new Date().toUTCString()
+
+    try {
+        const backupData = await dataBase.getBackupData();
+
+        if(backupData) {
+            const emailService = new EmailService();
+
+            await emailService.sendEmail("appsitterseeker@gmail.com", {
+                title: title,
+                body: "File attached",
+                attachments:[{
+                    filename:title + ".txt",
+                    content: backupData
+                }]
+            });
+
+            dataBase.finishBackup(new Date());
+        }
+    } 
+    catch (error) {
+        await emailService.sendEmail("appsitterseeker@gmail.com", {
+            title: "FAILED " + title,
+            body: "Backup FAILED\nError : \n" +error
+        });
+    }
+
+    setTimeout(backupCheck, 12 * 60 * 60 * 1000);
+}
 
 // Initialize the Swagger middleware
 var server = http.listen(serverPort, function () {
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
+
+    //if(env === 'production') {
+        // Backup Code
+        backupCheck();
+    //}
 });
 
 global.session = {};

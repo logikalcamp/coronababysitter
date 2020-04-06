@@ -89,7 +89,7 @@ const pendingUsersGridCommands = (props) => {
         <span>
             <VerifiedUserIcon onClick={approveClicked} className="grid-command-green"></VerifiedUserIcon>
             <BlockIcon onClick={blockClicked} className="grid-command-red"></BlockIcon>
-            <InfoIcon onClick={infoClicked} className="grid-command-theme"></InfoIcon>
+            {props.data.user.role == 'volunteer' && <InfoIcon onClick={infoClicked} className="grid-command-theme"></InfoIcon>}
         </span>
     )
   }
@@ -278,6 +278,7 @@ export const HamalPendingUsers = (props) => {
     }
 
     return (
+        <div style={{height:"100%",width:"100%",overflowY:"auto"}}>
         <Container>
             <ModalBackdrop open={modalData.open}>
                 <Modal open={modalData.open}>
@@ -391,6 +392,7 @@ export const HamalPendingUsers = (props) => {
                 </SelectedUserContent>}
             </ContainerContent>
         </Container>
+        </div>
     );
 };
 
@@ -413,6 +415,8 @@ const SelectedUserTitle = styled.div`
 
 const Container = styled.div`
     height: 100%;
+    max-width:1366px;
+    margin:auto;
     padding: 15px 50px 50px 50px;
     display:flex;
     flex-direction:column;
@@ -424,6 +428,8 @@ const ContainerHeader = styled.div`
     justify-content:flex-start;
     font-size: 34px;
     height: 15%;
+    margin: auto;
+    width: 70%;
 `
 
 const ContainerContent = styled.div`
@@ -437,6 +443,7 @@ const UsersContent = styled.div`
     display:flex;
     flex-direction:column;
     width: 70%;
+    margin:auto;
 `
 
 const SelectedUserContent = styled.div`
@@ -444,7 +451,7 @@ const SelectedUserContent = styled.div`
     border-radius: 8px;
     background-color:white;
     height:auto;
-    box-shadow: 5px 5px 5px gray;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
     margin-right: 15px;
     padding: 10px;
     display:flex;
@@ -470,7 +477,7 @@ const UserDetails = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-bottom: ;10px;
+    margin-bottom: 10px;
 `
 
 const IconText = styled.div`

@@ -3,6 +3,7 @@
 
 const MongoDB = require("../database/DataBase")
 const {EmailService} = require("./EmailService")
+const {HamalService} = require("./HamalService");
 
 const { getPagingDbData } = require('../utils/paging');
 
@@ -44,10 +45,34 @@ class VolunteerService {
    *
    * returns List
    **/
-  getApprovedVolunteers(page) {
+  getApprovedVolunteers(page, options) {
     var{from, to} = getPagingDbData(page, "volunteers");
 
-    return MongoDB.findMany(COLLECTION_NAME,{isApproved: true}, this.MongoClient,from,to);
+    const applyOptions = options.search || options.orderBy;
+
+    var query = {}
+    var filter = {
+      isApproved: true
+    };
+
+    if(applyOptions) {
+      query.$query = filter;
+    }
+    else {
+      query = filter;
+    }
+      
+
+      if(options.search) {
+        query.$query.$or = [{firstName : {$regex:`.*${options.search}.*`}},{lastName : {$regex:`.*${options.search}.*`}},{address : {$regex:`.*${options.search}.*`}}];
+      }
+
+      if(options.orderBy) {
+        query.$orderBy = {}
+        query.$orderBy[options.orderBy.column] = options.orderBy.desc ? -1 : 1;
+      }
+
+      return MongoDB.findMany(COLLECTION_NAME,query, this.MongoClient,from,to);
   }
 
   /**
@@ -88,6 +113,7 @@ class VolunteerService {
           reject("Volunteer already exists");
         else {
           if ((body.secretCode) && (body.secretCode.toLowerCase() == "fightcorona2020")) {
+            delete body.secretCode;
             MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then((response, error) => {
               if (error) reject(error);
               var hamalService = new HamalService(this.MongoClient);

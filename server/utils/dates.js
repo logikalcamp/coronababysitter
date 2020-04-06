@@ -1,6 +1,8 @@
-const getTimeInIsrael = (dateString) => {
-    var newDate = new Date(new Date(dateString).toLocaleString("he-IL", {timeZone: "Asia/Jerusalem"}));
-    return newDate;
-}
+const wasInLast24Hours = (date) => {
+    var timeStamp = Math.round(new Date().getTime() / 1000);
+    var timeStampTomorrow = timeStamp - (24 * 3600);
+    var wasIn24Hours = date > new Date(timeStampTomorrow*1000).getTime();
+    return wasIn24Hours;
+  }
 
-module.exports.getTimeInIsrael = getTimeInIsrael;
+module.exports.wasInLast24Hours = wasInLast24Hours;

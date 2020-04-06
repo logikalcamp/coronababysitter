@@ -41,8 +41,11 @@ export const UpcomingSessionsGrid = (props) => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [load,setload] = useState(true)
   const DeleteSession = (val) =>{
-    let a = _.filter(upcomingSessions,function(o){return o._id != val})
-    setUpcomingSessions(a)
+    let text = "האם את.ה בטוח.ה שברצונך לבטל את הפגישה?"
+    if(window.confirm(text)){
+      let a = _.filter(upcomingSessions,function(o){return o._id != val})
+      setUpcomingSessions(a)
+    }
   }
   const [columnDefs] = useState([
     { 
@@ -53,11 +56,12 @@ export const UpcomingSessionsGrid = (props) => {
         return startTime.format("DD-MM-YY");
       }
     },
+    
     { 
-      headerName: "הורה",
+      headerName: "איש קשר זמין",
       field: "contact",
       valueGetter: (params) => {
-        const contact = params.data.doctor_o[0].firstName;
+        const contact = params.data.contact.name;
         return contact;
       }
     },
@@ -67,26 +71,27 @@ export const UpcomingSessionsGrid = (props) => {
       valueGetter: (params) => {
         let {startTime, endTime} = params.data;
 
-        startTime = moment(new Date(startTime).toLocaleString("he", {timeZone: "UTC"}));
-        endTime = moment(new Date(endTime).toLocaleString("he", {timeZone: "UTC"}));
-        
+        startTime = moment(startTime);
+        endTime = moment(endTime);
+        console.log(startTime)
         return endTime.format("H:mm") + ' - ' + startTime.format("H:mm");
       }
     },
-    { 
-      headerName: "איש קשר זמין",
-      field: "contact",
-      valueGetter: (params) => {
-        const contact = params.data.contact.name;
-        return contact;
-      }
-    },
+    
     { 
       headerName: "מתנדב",
       field: "volunteer",
       valueGetter: (params) => {
         const {firstName,lastName} = params.data.chosen_volunteer_o[0];
         return firstName + ' ' +lastName;
+      }
+    },
+    { 
+      headerName: "פלאפון מתנדב",
+      field: "contact",
+      valueGetter: (params) => {
+        const contact = params.data.chosen_volunteer_o[0].phone;
+        return contact;
       }
     },
     

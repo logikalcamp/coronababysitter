@@ -1,7 +1,9 @@
 const {MongoClient, ObjectId} = require('mongodb');
 const uri = "mongodb://server:coronababy2020@ds159546.mlab.com:59546/corona-babies";
+const {wasInLast24Hours} = require('../utils/dates');
 
 var exports = {}
+var backupConnectionData = undefined;
 
 var MongoDB;
 
@@ -158,6 +160,54 @@ exports.deleteOne = (collection, query, db) => {
             resolve(result);
         })
     });
+}
+
+function saveCollectionToCsv(name) {
+
+}
+
+exports.getBackupData = async () => {
+    const result = await exports.getConnection();
+
+    backupConnectionData = {
+        client: result,
+        DB : result.db()
+    }
+    const sysData = await exports.findOne("SysData", {data:'server'}, backupConnectionData.DB);
+
+    if(sysData.lastBackup && wasInLast24Hours(sysData.lastBackup)) return undefined;
+    if(sysData.isBackingUp) return undefined;
+
+    await exports.findOneAndUpdate("SysData",{data:'server'},{isBackingUp:true}, backupConnectionData.DB);
+
+    const volunteers = await exports.findMany("Volunteers", {},backupConnectionData.DB);
+    const docotrs = await exports.findMany("Doctors", {},backupConnectionData.DB);
+    const sessions = await exports.findMany("Sessions", {},backupConnectionData.DB);
+    const hamalUsers = await exports.findMany("HamalUsers", {},backupConnectionData.DB);
+
+    const backupText = `<Volunteers>
+                            ${JSON.stringify(volunteers)}
+                        </Volunteers>
+                        <Doctor>
+                            ${JSON.stringify(docotrs)}
+                        </Doctors>
+                        <Sessions>
+                            ${JSON.stringify(sessions)}
+                        </Sessions>
+                        <HamalUsers>
+                            ${JSON.stringify(hamalUsers)}
+                        </HamalUsers>`;
+
+    return backupText;
+}
+
+exports.finishBackup = (date) => {
+    return new Promise((resolve,reject) => {
+        exports.findOneAndUpdate("SysData",{data:'server'},{lastBackup:date,isBackingUp:false}, backupConnectionData.DB).then(result => {
+            backupConnectionData.client.close();
+            resolve();
+        })
+    })
 }
 
 module.exports = exports;

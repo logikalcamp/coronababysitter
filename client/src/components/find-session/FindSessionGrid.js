@@ -133,15 +133,22 @@ export const FindSessionsGrid = (props) => {
       valueFormatter: (params) => {
         let startTime = _.get(params.data, 'startTime');
 
-        if (startTime) return startTime = moment(params.data.startTime).format("DD-MM-YY");
+        if (startTime) return startTime = moment(params.data.startTime).format("DD/MM/YY");
 
         return params.value;
       }
     },
     { 
       colId: "contact",
-      headerName: "איש קשר",
-      field: "contact.name"
+      headerName: "הורה",
+      field: "firstName",
+      valueGetter: (params) => {
+        let name = _.get(params.data, 'doctor_o[0].firstName');
+
+        if (name) return name;
+
+        return params.value;
+      }
     },
     {
       colId: "children",

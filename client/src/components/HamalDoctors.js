@@ -172,14 +172,28 @@ export const HamalDoctorsPage = (props) => {
     const [page,setPage] = useState(0)
     const [pageCount, setPageCount] = useState(0);
     const [pagesUI, setPagesUI] = useState('');
+    var searchText = '';
+    var getOptions = {};
 
-    const updateVolunteers = (newPage) => {
+    var timeout = undefined;
+
+    const searchTextChanged = (event) => {
+        searchText = event.target.value;
+        if(timeout){
+            clearTimeout(timeout)
+        }
+
+        timeout = setTimeout((() => {
+            getOptions = {search:searchText ? searchText : ''};
+            updateDoctors();
+        }).bind(this), 350)
+    }
+
+    const updatePageAndData = (newPage) => {
         if(newPage == page) return;
 
         setPage(newPage);
-        Axios.post(BASE_URL+'/api/doctor/approved/' + newPage).then((result) => {
-            createDoctorsUI(result.data);
-        });
+        updateDoctors();
     }
 
     const createDoctorsUI = (doctorList) => {
@@ -200,8 +214,8 @@ export const HamalDoctorsPage = (props) => {
         setDoctorMap(vols)
     }
 
-    useEffect(() => {
-        Promise.all([Axios.post(BASE_URL+'/api/doctor/approved/' + page), Axios.post(BASE_URL+'/api/doctor/count')]).then(result => {
+    const updateDoctors = () => {
+        Promise.all([Axios.post(BASE_URL+'/api/doctor/approved/' + page,getOptions), Axios.post(BASE_URL+'/api/doctor/count')]).then(result => {
             if(doctors) return;
             createDoctorsUI(result[0].data);
 
@@ -209,15 +223,21 @@ export const HamalDoctorsPage = (props) => {
             var pagesui = [];
 
             for(var i=0; i < pageCount + 1; i++) {
-                pagesui.unshift((<Page className={page == i ? classes.selectedPage : ''} onClick={() => updateVolunteers(i)}>{i+1}</Page>))
+                pagesui.unshift((<Page className={page == i ? classes.selectedPage : ''} onClick={() => updatePageAndData(i)}>{i+1}</Page>))
             }
 
             setPagesUI((<Pages>
-                <ChevronRightIcon onClick={() => updateVolunteers(Math.max(0, page - 1))}></ChevronRightIcon>
+                <ChevronRightIcon onClick={() => updatePageAndData(Math.max(0, page - 1))}></ChevronRightIcon>
                     {pagesui}
-                <ChevronLeftIcon onClick={() => updateVolunteers(Math.min(pageCount, page + 1))}></ChevronLeftIcon>
+                <ChevronLeftIcon onClick={() => updatePageAndData(Math.min(pageCount, page + 1))}></ChevronLeftIcon>
             </Pages>));
         })
+    }
+
+    useEffect(() => {
+        if(doctorMap) return;
+        
+        updateDoctors();
     }, [doctors]);
 
     return (
@@ -227,7 +247,7 @@ export const HamalDoctorsPage = (props) => {
                     מאגר רופאים
                 </div>
                 <div className={classes.margin}>
-                    <TextField id="search-text" label="חפש רופא במאגר"
+                    <TextField id="search-text" label="חפש רופא במאגר" onChange={searchTextChanged}
                      InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -299,16 +319,16 @@ export const HamalDoctorsPage = (props) => {
                     </div>
                     <div className={classes.children}>
                         <div className={classes.iconText}>
-                            <ChildCareIcon className={classes.smallIcon}/>
-                            <div>{selectedDoctor && selectedDoctor.children.length > 0 ? selectedDoctor.children[1].isFemale ? 'בת ' : 'בן ' + selectedDoctor.children[0].age : ' '}</div>
+                            {selectedDoctor && selectedDoctor.children.length > 0 && <ChildCareIcon className={classes.smallIcon}/>}
+                            <div>{selectedDoctor && selectedDoctor.children.length > 0 ? (selectedDoctor.children[0].isFemale ? 'בת ' : 'בן ') + selectedDoctor.children[0].age : ' '}</div>
                         </div>
                         <div className={classes.iconText}>
-                            <ChildCareIcon className={classes.smallIcon}/>
-                            <div>{selectedDoctor && selectedDoctor.children.length > 1 ? selectedDoctor.children[1].isFemale ? 'בת ' : 'בן ' + selectedDoctor.children[1].age : ' '}</div>
+                            {selectedDoctor && selectedDoctor.children.length > 1 && <ChildCareIcon className={classes.smallIcon}/>}
+                            <div>{selectedDoctor && selectedDoctor.children.length > 1 ? (selectedDoctor.children[1].isFemale ? 'בת ' : 'בן ') + selectedDoctor.children[1].age : ' '}</div>
                         </div>
                         <div className={classes.iconText}>
-                            <ChildCareIcon className={classes.smallIcon}/>
-                            <div>{selectedDoctor && selectedDoctor.children.length > 2 ? selectedDoctor.children[2].isFemale ? 'בת ' : 'בן ' + selectedDoctor.children[2].age : ' '}</div>
+                            {selectedDoctor && selectedDoctor.children.length > 2 && <ChildCareIcon className={classes.smallIcon}/>}
+                            <div>{selectedDoctor && selectedDoctor.children.length > 2 ? (selectedDoctor.children[2].isFemale ? 'בת ' : 'בן ') + selectedDoctor.children[2].age : ' '}</div>
                         </div>
                     </div>
                     <div className={classes.notes}>
