@@ -17,7 +17,8 @@ class EmailService {
             from: this.getSystemEmail().user,
             to: recipientEmail,
             subject: email.title,
-            html: email.body
+            html: email.body,
+            attachments: email.attachments
         };
 
         transporter.sendMail(mailOptions);
