@@ -37,7 +37,7 @@ class CodeService {
     return new Promise((resolve,reject) => {
       if(email == 'testmailvolunteer@mail.com' && code == '101010') resolve({isValid:true,error:undefined}); // volunteer test user
       
-        MongoDB.findOne(COLLECTION_NAME, {email}, this.MongoClient).then(result => {
+        MongoDB.findOne(COLLECTION_NAME, {email : email}, this.MongoClient).then(result => {
             if(result) {
                 resolve({
                     isValid : result.code == code,
