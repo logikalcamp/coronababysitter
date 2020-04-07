@@ -66,7 +66,7 @@ app.post('/api/uploadphoto', async (req,res,next) => {
     catch(error) {
         new EmailService().sendEmail('appsitterseeker@gmail.com', {
             title: "Error uploading image",
-            body: "Error uploading image"
+            body: "Error uploading image - " + JSON.stringify(error)
         });
     }
 });
