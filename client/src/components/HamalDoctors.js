@@ -90,6 +90,7 @@ const styles = makeStyles(theme => ({
     },
     userImage: {
         width: '45px',
+        height: '45px',
         borderRadius: '50%',
         marginRight: '20px'
     },
