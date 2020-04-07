@@ -29,6 +29,8 @@ export const UpcomingSessionsGrid = (props) => {
   const deleteSession = (id) => { 
     Axios.post(BASE_URL + '/api/session/volunteerWithraw', {
       session_id: id
+    }).then(() => {
+      updateUpcomingSessions();
     });
   };
 
@@ -70,11 +72,15 @@ export const UpcomingSessionsGrid = (props) => {
     }
   ]);
 
-  useEffect(() => {
+  const updateUpcomingSessions = () => {
     Axios.post(BASE_URL+`/api/session/getupcomingsessions/${props.id}`).then(result => {
       console.log(result)
       setUpcomingSessions(result.data);
     })
+  }
+
+  useEffect(() => {
+    updateUpcomingSessions();
   }, [])
 
   return (
