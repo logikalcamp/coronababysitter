@@ -13,7 +13,7 @@ const UpcomingSessionsGridCommands = (props) => {
     <span className="grid-command">
       <img
         src={prefix + '/images/icons8_event_declined_96px.png'}
-        onClick={() => props.onClick(props.data._id)} 
+        onClick={() => props.onClick(props.data._id,props.data.doctor_o[0]._id)} 
       />
       <a href={`tel:+972${phone}`}>
         <img 
@@ -26,10 +26,17 @@ const UpcomingSessionsGridCommands = (props) => {
 
 export const UpcomingSessionsGrid = (props) => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
-  const deleteSession = (id) => { 
-    Axios.post(BASE_URL + '/session/volunteerWithraw', {
-      session_id: id
-    });
+  const deleteSession = (id,did) => { 
+    let text = "האם את.ה בטוח.ה שאת.ה רוצה לבטל את הרשמתך להתנדבות הזו ? "
+    if(window.confirm(text)){
+      Axios.post(BASE_URL + '/session/volunteerWithraw', {
+        session_id: id,
+        doctor_id:did
+      }).then(res=>{
+        let arr = _.filter(upcomingSessions,(o)=>{return o._id != id})
+        setUpcomingSessions(arr)
+      })
+    }
   };
 
   const [columnDefs] = useState([
