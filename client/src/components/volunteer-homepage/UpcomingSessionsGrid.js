@@ -29,7 +29,7 @@ export const UpcomingSessionsGrid = (props) => {
   const deleteSession = (id,did) => { 
     let text = "האם את.ה בטוח.ה שאת.ה רוצה לבטל את הרשמתך להתנדבות הזו ? "
     if(window.confirm(text)){
-      Axios.post(BASE_URL + '/session/volunteerWithraw', {
+      Axios.post(BASE_URL + '/api/session/volunteerWithraw', {
         session_id: id,
         doctor_id:did
       }).then(res=>{
@@ -77,11 +77,15 @@ export const UpcomingSessionsGrid = (props) => {
     }
   ]);
 
-  useEffect(() => {
+  const updateUpcomingSessions = () => {
     Axios.post(BASE_URL+`/api/session/getupcomingsessions/${props.id}`).then(result => {
       console.log(result)
       setUpcomingSessions(result.data);
     })
+  }
+
+  useEffect(() => {
+    updateUpcomingSessions();
   }, [])
 
   return (

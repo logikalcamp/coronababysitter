@@ -25,7 +25,8 @@ module.exports.getAllFilledSessions = function getAllFilledSessions (req, res) {
     });
 };
 
-module.exports.volunteerWithraw = function deletvolunteerWithraweSession (req, res, next,body) {
+module.exports.volunteerWithraw = function volunteerWithraw (req, res, next,body) {
+  console.log(body)
   req.SessionService.volunteerWithraw(body)
     .then(function (response) {
       utils.writeJson(req,res, response);
