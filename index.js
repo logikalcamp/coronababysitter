@@ -135,10 +135,12 @@ var server = http.listen(serverPort, function () {
 });
 
 process.on('uncaughtException', function(err) {
-    new EmailService().sendEmail('appsitterseeker@gmail.com', {
-        title: "Error",
-        body: "Error: " + JSON.stringify(err)
-    });
+    if(env === 'production') {
+        new EmailService().sendEmail('appsitterseeker@gmail.com', {
+            title: "Error",
+            body: "Error: " + JSON.stringify(err)
+        });
+    }
 });
 
 global.session = {};
