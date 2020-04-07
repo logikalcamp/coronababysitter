@@ -165,9 +165,11 @@ const HeaderSubCon = styled.div`
                 font-size:16px;
             }
         }
+        
     }
     img{
         width:2.5rem;
+        padding:10px 0;
         height:3rem;
         margin-left:1rem;
     }

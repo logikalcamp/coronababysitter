@@ -414,14 +414,14 @@ export const Signup = (props) => {
             setImg(window.location.origin + "/images/profilePlaceholder.png")
         }
         if(details.facebook!='' && details.facebook){
-            axios.post(BASE_URL+'/api/utils/facebookimage',{facebookURL:details.facebook})
-            .then(res=>{
-                setImg(res.data.pictureURL)
-                details.picture = res.data.pictureURL;
-                console.log(res)})
-                .catch(()=>{
+            // axios.post(BASE_URL+'/api/utils/facebookimage',{facebookURL:details.facebook})
+            // .then(res=>{
+            //     setImg(res.data.pictureURL)
+            //     details.picture = res.data.pictureURL;
+            //     console.log(res)})
+            //     .catch(()=>{
 
-                })
+            //     })
         }
     }, [details.facebook])
 

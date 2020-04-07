@@ -85,36 +85,36 @@ if(env === 'production') {
     });
 }
 
-const backupCheck = async () => {
-    var title = 'DB Backup ' + new Date().toUTCString()
+// const backupCheck = async () => {
+//     var title = 'DB Backup ' + new Date().toUTCString()
 
-    try {
-        const backupData = await dataBase.getBackupData();
+//     try {
+//         const backupData = await dataBase.getBackupData();
 
-        if(backupData) {
-            const emailService = new EmailService();
+//         if(backupData) {
+//             const emailService = new EmailService();
 
-            await emailService.sendEmail("appsitterseeker@gmail.com", {
-                title: title,
-                body: "File attached",
-                attachments:[{
-                    filename:title + ".txt",
-                    content: backupData
-                }]
-            });
+//             await emailService.sendEmail("appsitterseeker@gmail.com", {
+//                 title: title,
+//                 body: "File attached",
+//                 attachments:[{
+//                     filename:title + ".txt",
+//                     content: backupData
+//                 }]
+//             });
 
-            dataBase.finishBackup(new Date());
-        }
-    } 
-    catch (error) {
-        await emailService.sendEmail("appsitterseeker@gmail.com", {
-            title: "FAILED " + title,
-            body: "Backup FAILED\nError : \n" +error
-        });
-    }
+//             dataBase.finishBackup(new Date());
+//         }
+//     } 
+//     catch (error) {
+//         await emailService.sendEmail("appsitterseeker@gmail.com", {
+//             title: "FAILED " + title,
+//             body: "Backup FAILED\nError : \n" +error
+//         });
+//     }
 
-    setTimeout(backupCheck, 12 * 60 * 60 * 1000);
-}
+//     setTimeout(backupCheck, 12 * 60 * 60 * 1000);
+// }
 
 // Initialize the Swagger middleware
 var server = http.listen(serverPort, function () {
@@ -122,7 +122,7 @@ var server = http.listen(serverPort, function () {
 
     //if(env === 'production') {
         // Backup Code
-        backupCheck();
+        // backupCheck();
     //}
 });
 
