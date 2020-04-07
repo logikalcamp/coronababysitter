@@ -242,15 +242,14 @@ class SessionService {
   async approveSession(sessionId, volunteerId) {
     try {
       // Check if the vilunteer is already occupied, if he is, his ID is supposed to be removed from the requests array of the current session
-
+      console.log("TEST",sessionId,volunteerId)
         var results = await Promise.all([MongoDB.findOne(COLLECTION_NAME, {_id: MongoDB.getMongoObjectId(sessionId), 
                                                                            requests: MongoDB.getMongoObjectId(volunteerId)}, this.MongoClient),
                                          MongoDB.findByMongoId(VOL_COLLECTION_NAME,volunteerId, this.MongoClient)]);
-
-        if(!requests[1]) { // Volunteer not found
+        if(!results[1]) { // Volunteer not found
           reject("E-1");
         }
-        else if (!requests[0]) { // Volunteer not available
+        else if (!results[0]) { // Volunteer not available
           reject("E-2")
         }
         else {
