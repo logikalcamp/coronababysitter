@@ -284,7 +284,6 @@ export const HamalDoctorsPage = (props) => {
                     <div className={classes.volunteerHeader}>
                         <img className={classes.volunteerImage} src={selectedDoctor ? selectedDoctor.picture ? selectedDoctor.picture : window.location.origin + "/images/profilePlaceholder.png" : ''}></img>
                         <div className={classes.modalTitle}>{selectedDoctor ? selectedDoctor.firstName + ' ' + selectedDoctor.lastName : ''}</div>
-                        <div>גיל {DateUtils.calculateAge(selectedDoctor ? new Date(selectedDoctor.birthday) : new Date())}</div>
                     </div>
                     <div className={classes.doctorDetails}>
                       <div className={classes.detailsHeader}>
@@ -319,16 +318,16 @@ export const HamalDoctorsPage = (props) => {
                     </div>
                     <div className={classes.children}>
                         <div className={classes.iconText}>
-                            {selectedDoctor && selectedDoctor.children.length > 0 && <ChildCareIcon className={classes.smallIcon}/>}
-                            <div>{selectedDoctor && selectedDoctor.children.length > 0 ? (selectedDoctor.children[0].isFemale ? 'בת ' : 'בן ') + selectedDoctor.children[0].age : ' '}</div>
+                            {selectedDoctor && selectedDoctor.children && selectedDoctor.children.length > 0 && <ChildCareIcon className={classes.smallIcon}/>}
+                            <div>{selectedDoctor && selectedDoctor.children && selectedDoctor.children.length > 0 ? (selectedDoctor.children[0].isFemale ? 'בת ' : 'בן ') + selectedDoctor.children[0].age : ' '}</div>
                         </div>
                         <div className={classes.iconText}>
-                            {selectedDoctor && selectedDoctor.children.length > 1 && <ChildCareIcon className={classes.smallIcon}/>}
-                            <div>{selectedDoctor && selectedDoctor.children.length > 1 ? (selectedDoctor.children[1].isFemale ? 'בת ' : 'בן ') + selectedDoctor.children[1].age : ' '}</div>
+                            {selectedDoctor && selectedDoctor.children && selectedDoctor.children.length > 1 && <ChildCareIcon className={classes.smallIcon}/>}
+                            <div>{selectedDoctor && selectedDoctor.children && selectedDoctor.children.length > 1 ? (selectedDoctor.children[1].isFemale ? 'בת ' : 'בן ') + selectedDoctor.children[1].age : ' '}</div>
                         </div>
                         <div className={classes.iconText}>
-                            {selectedDoctor && selectedDoctor.children.length > 2 && <ChildCareIcon className={classes.smallIcon}/>}
-                            <div>{selectedDoctor && selectedDoctor.children.length > 2 ? (selectedDoctor.children[2].isFemale ? 'בת ' : 'בן ') + selectedDoctor.children[2].age : ' '}</div>
+                            {selectedDoctor && selectedDoctor.children && selectedDoctor.children.length > 2 && <ChildCareIcon className={classes.smallIcon}/>}
+                            <div>{selectedDoctor && selectedDoctor.children && selectedDoctor.children.length > 2 ? (selectedDoctor.children[2].isFemale ? 'בת ' : 'בן ') + selectedDoctor.children[2].age : ' '}</div>
                         </div>
                     </div>
                     <div className={classes.notes}>

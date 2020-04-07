@@ -48,7 +48,8 @@ class DoctorService {
 
     var query = {}
     var filter = {
-      isApproved: true
+      isApproved: true,
+      address : {$exists:true}
     };
 
     if(applyOptions) {
@@ -67,7 +68,7 @@ class DoctorService {
         query.$orderBy = {}
         query.$orderBy[options.orderBy.column] = options.orderBy.desc ? -1 : 1;
       }
-
+      console.log(query);
       return MongoDB.findMany(COLLECTION_NAME,query, this.MongoClient,from,to);
   }
 

@@ -9,6 +9,7 @@ const Header = (props) => {
     const [redirect,setRedirect] = useState(false)
     const [hasModal,setHasModal] = useState(false)
     const type ="medical"
+    const isCncConnected = JSON.parse(localStorage.getItem(CNC_CONNECTED));
     console.log(props)
     return(
         <HeaderCon>
