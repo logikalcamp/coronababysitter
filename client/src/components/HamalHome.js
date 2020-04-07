@@ -94,7 +94,6 @@ const HamalHome = (props) => {
 
             var pendingUsersUI = pendingUsers_temp.map(pendingUser => 
                     <Row>
-                        <RowPart>12.12.2020</RowPart>
                         <RowPart>{pendingUser.firstName + ' ' + pendingUser.lastName}</RowPart>
                         <RowPart>{pendingUser.type == 'med' ? 'רופא' : 'מתנדב'}</RowPart>
                     </Row>
@@ -197,7 +196,6 @@ const HamalHome = (props) => {
                     <UserTableContainer>
                         <UserTable>
                             <Row className={classes.userRowTitle}>
-                                <RowPart>תאריך הרשמה</RowPart>
                                 <RowPart>שם</RowPart>
                                 <RowPart>סוג</RowPart>
                             </Row>
