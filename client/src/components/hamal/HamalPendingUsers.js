@@ -278,7 +278,6 @@ export const HamalPendingUsers = (props) => {
     }
 
     return (
-        <div style={{height:"100%",width:"100%",overflowY:"auto"}}>
         <Container>
             <ModalBackdrop open={modalData.open}>
                 <Modal open={modalData.open}>
@@ -392,7 +391,6 @@ export const HamalPendingUsers = (props) => {
                 </SelectedUserContent>}
             </ContainerContent>
         </Container>
-        </div>
     );
 };
 
