@@ -294,6 +294,7 @@ class SessionService {
 
   async volunteerWithraw(body){
     var sessionObject;
+    console.log("TEST")
       await MongoDB.findOne(COLLECTION_NAME, {_id : MongoDB.getMongoObjectId(body.session_id)},
       this.MongoClient).then((result)=> {
         console.log ("result/n" +result);

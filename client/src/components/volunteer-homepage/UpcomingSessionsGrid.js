@@ -27,7 +27,7 @@ const UpcomingSessionsGridCommands = (props) => {
 export const UpcomingSessionsGrid = (props) => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const deleteSession = (id) => { 
-    Axios.post(BASE_URL + '/session/volunteerWithraw', {
+    Axios.post(BASE_URL + '/api/session/volunteerWithraw', {
       session_id: id
     });
   };

@@ -48,7 +48,7 @@ const HamalHome = (props) => {
     const [urgentRequests, setUrgentRequests] = useState(undefined);
     const [urgentRequestsUI, setUrgentRequestsUI] = useState([]);
     const [counts, setCounts] = useState({
-        pendingVolunteers: 0,
+        pendingUsersCount: 0,
         volunteers: 0,
         doctors: 0,
         urgentRequests: 0,
@@ -70,7 +70,7 @@ const HamalHome = (props) => {
             var urgentRequests_temp = Enumerable.from(results[5].data).where(request => DateUtils.isIn24Hours(new Date(request.startTime))).toArray();
 
             var counts = {
-                pendingVolunteers: results[2].data.count,
+                pendingUsersCount: results[2].data.count + results[1].data.length,
                 volunteers: results[3].data.count,
                 doctors: results[4].data.count,
                 urgentRequests: urgentRequests_temp.length,
@@ -140,7 +140,7 @@ const HamalHome = (props) => {
                     <CountBlockImageNumContainer>
                         <PersonIcon className={classes.icon}></PersonIcon>
                         <div>
-                            {counts.pendingVolunteers}
+                            {counts.pendingUsersCount}
                         </div>
                     </CountBlockImageNumContainer>
                     <CountBlockText>יוזרים ממתינים לאישור</CountBlockText>
