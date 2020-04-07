@@ -134,4 +134,11 @@ var server = http.listen(serverPort, function () {
     //}
 });
 
+process.on('uncaughtException', function(err) {
+    new EmailService().sendEmail('appsitterseeker@gmail.com', {
+        title: "Error uploading image",
+        body: "Error uploading image - " + JSON.stringify(err)
+    });
+});
+
 global.session = {};
