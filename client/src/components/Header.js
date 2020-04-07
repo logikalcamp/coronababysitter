@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import {Link,NavLink} from 'react-router-dom'
 import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
+import {CNC_CONNECTED} from '../constants'
 
 const Header = (props) => {
     const [auth,setAuth] = useState(false)
