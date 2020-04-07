@@ -14,7 +14,7 @@ var bodyParser=require('body-parser');
 var express = require('express')
 var oas3Tools = require('oas3-tools');
 var formidable = require('formidable');
-var serverPort = process.env.PORT || 3001;
+var serverPort = process.env.PORT || 3003;
 
 var env = process.env.NODE_ENV || 'dev'
 
