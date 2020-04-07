@@ -302,10 +302,6 @@ export const HamalDoctorsPage = (props) => {
                         <div>{selectedDoctor ? selectedDoctor.email : ''}</div>
                       </div>
                       <div className={classes.iconText}>
-                        <AssignmentIndIcon className={classes.marginLeft}/>
-                        <div>{selectedDoctor ? selectedDoctor.tz : ''}</div>
-                      </div>
-                      <div className={classes.iconText}>
                           <PhoneIcon className={classes.marginLeft}/>
                         <div>{selectedDoctor ? selectedDoctor.phone : ''}</div>
                       </div>
