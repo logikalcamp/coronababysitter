@@ -79,7 +79,7 @@ const AppRouter = (props) =>{
         <PrivateRoute exact path="/cnc/doctors" component={HamalDoctorsPage}/>
         <PrivateRoute ecaxt path="/cnc/sessions" component={ManageSessions}/>
         <PrivateRoute exact path="/cnc" component={HamalHome}/>
-        
+            
         <Route path="/" component={ErrorPage} />
       </Switch>
       <Footer/>

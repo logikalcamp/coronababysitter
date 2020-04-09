@@ -161,7 +161,7 @@ export const HamalPendingUsers = (props) => {
                     text: 'כן',
                     action: () => {
                         setIsModalLoading(true);
-                        modalData.title = 'מתבצעת אישור'
+                        modalData.title = 'מתבצע אישור'
                         modalData.secondaryTitle = 'אנא המתן'
                         setModalData(modalData)
                         approveOrRejectUser(user,true).then(result => {

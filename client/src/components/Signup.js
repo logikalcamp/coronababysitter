@@ -496,6 +496,7 @@ export const Signup = (props) => {
                         <InCon>
                             <label>כתובת מגורים</label>
                             <Searchi shay={handleChangeCenter}/>
+                            <label style={{color:"green"}}>אין צורך לחשוש - כתובתכם המדויקת לא תישמר</label>
                         </InCon>
 
                         <Text blur={onBlur} text={"לינק לפרופיל פייסבוק"} state={details} functio={setState} ke={"facebook"}/>

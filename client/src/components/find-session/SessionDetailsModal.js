@@ -333,7 +333,7 @@ const SessionDetails = (props) => {
         </div>
       </FormRow>
       <FormButtoms>
-        <Button onClick={props.handleApply} variant="contained" color="primary">אשר את ההתנדבות</Button>
+        <Button onClick={props.handleApply} variant="contained" color="primary">הצע.י עזרה</Button>
       </FormButtoms>
     </SessionDetailsComp>
   )

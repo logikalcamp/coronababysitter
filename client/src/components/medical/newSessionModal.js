@@ -365,8 +365,8 @@ const NewSession = ({setOpen,id}) =>{
                     {err!='' && <div>{err}</div>}
                     <div>
                         <Button
-                        disabled={details.sDate == '' || details.eHour == '' || details.sHour =='' || details.contact =='' || details.contactName == '' || moment()>moment(details.sDate)}
-                        dis={details.sDate == '' || details.eHour == '' || details.sHour =='' || details.contact =='' || details.contactName == '' || moment()>moment(details.sDate)}
+                        disabled={details.sDate == '' || details.eHour == '' || details.sHour =='' || details.contact =='' || details.contactName == '' || moment().format("DD/MM/YYYY")>moment(details.sDate).format("DD/MM/YYYY") || moment(details.sHour,"HH:mm") >= moment(details.eHour,"HH:mm")}
+                        dis={details.sDate == '' || details.eHour == '' || details.sHour =='' || details.contact =='' || details.contactName == '' || moment().format("DD/MM/YYYY")>moment(details.sDate).format("DD/MM/YYYY") || moment(details.sHour,"HH:mm") >= moment(details.eHour,"HH:mm")}
                         onClick={()=>{
                             let sDate = moment(details.sDate).format("MM/DD/YYYY") + moment(details.sHour,"HH:mm").format("HH:mm")
                             let eDate = moment(details.sDate).format("MM/DD/YYYY") + moment(details.eHour,"HH:mm").format("HH:mm")

@@ -16,6 +16,7 @@ const Header = (props) => {
         <HeaderCon>
             <SubCon>
                 <div style={{display:"flex"}}>
+                
                 {props.auth.isAuthenticated 
                 ?
                 (
@@ -36,7 +37,7 @@ const Header = (props) => {
                             </HeaderSubCon>
                         </Link>
                         :
-                        <Link to="/cac">
+                        <Link to="/cnc">
                             <HeaderSubCon>
                                 <img src={window.location.origin + "/images/newL.png"} alt="nel" />
                                 <label id="lb">Sitter Seeker</label>
@@ -45,12 +46,23 @@ const Header = (props) => {
                     )
                 )
                 :
-                <Link to="/">
-                    <HeaderSubCon>
-                        <img src={window.location.origin + "/images/newL.png"} alt="nel" />
-                        <label id="lb">Sitter Seeker</label>
-                    </HeaderSubCon>
-                </Link>
+                (
+                    isCncConnected ?
+                    <Link to="/cnc">
+                        <HeaderSubCon>
+                            <img src={window.location.origin + "/images/newL.png"} alt="nel" />
+                            <label id="lb">Sitter Seeker</label>
+                        </HeaderSubCon>
+                    </Link>
+                    :
+                    <Link to="/">
+                        <HeaderSubCon>
+                            <img src={window.location.origin + "/images/newL.png"} alt="nel" />
+                            <label id="lb">Sitter Seeker</label>
+                        </HeaderSubCon>
+                    </Link>
+                )
+                
                 }
                     {
                         props.auth.isAuthenticated && 

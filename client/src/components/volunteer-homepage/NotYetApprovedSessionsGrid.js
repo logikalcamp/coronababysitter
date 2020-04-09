@@ -26,6 +26,7 @@ export const NotYetApprovedSessionsGrid = (props) => {
       headerName: "תאריך ושעה",
       field: "startTime",
       valueGetter: (params) => {
+        console.log(params)
         let startTime = _.get(params.data, 'startTime');
       
         if (startTime ) {
@@ -39,7 +40,7 @@ export const NotYetApprovedSessionsGrid = (props) => {
       }
     },
     { 
-      headerName: "איש קשר",
+      headerName: "הורה",
       field: "contact.name"
       
     },

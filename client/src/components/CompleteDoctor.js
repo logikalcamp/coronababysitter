@@ -201,6 +201,7 @@ const CompleteDoctor = (props) => {
                             <InCon>
                                 <label>כתובת</label>
                                 <Searchi shay={handleChangeCenter}/>
+                                <label style={{color:"green"}}>אין צורך לחשוש - כתובתכם המדויקת לא תישמר</label>
                             </InCon>
                             <InCon>
                                 <label>כמות ילדים</label>
