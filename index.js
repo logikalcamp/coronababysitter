@@ -134,12 +134,25 @@ var server = http.listen(serverPort, function () {
     //}
 });
 
+process.on('unhandledRejection', (reason, p) => {
+    if(env === 'production') {
+        new EmailService().sendEmail('appsitterseeker@gmail.com', {
+            title: "Unhandled Rejection",
+            body: `Reason: ${JSON.stringify(reason)}\n
+                   Unhandled Rejection at Promise : ${JSON.stringify(p)}`
+        });
+        process.exit(1)
+    }
+});
+
 process.on('uncaughtException', function(err) {
     if(env === 'production') {
         new EmailService().sendEmail('appsitterseeker@gmail.com', {
-            title: "Error",
-            body: "Error: " + JSON.stringify(err)
+            title: "Uncaught Exception",
+            body: `Error: ${err.message}\n
+                   Stack: ${err.stack}`
         });
+        process.exit(1)
     }
 });
 

@@ -90,7 +90,7 @@ const Login = (props) => {
         var loginApi = isDoctorLogin ? 'doctor' : 'volunteer';
 
         try {
-            var response = await axios.post(BASE_URL + `/api/utils/login-user`, {email,code});
+            var response = await axios.post(BASE_URL + `/api/utils/login-user`, {email: email.toLowerCase(),code});
 
             if(response.data.valid) {
                 let data = response.data.user
