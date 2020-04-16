@@ -105,6 +105,7 @@ class DoctorService {
         if(result) 
           reject("Doctor already exists");
         else {
+          body.email = body.email.toLowerCase();
           if ((body.secretCode) && (body.secretCode.toLowerCase() == "fightcorona2020")) {
             delete body.secretCode;
             MongoDB.insertOne(COLLECTION_NAME,body, this.MongoClient).then((response, error) => {

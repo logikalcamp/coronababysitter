@@ -16,16 +16,16 @@ class CodeService {
       return Promise.resolve("101010");
     
     return new Promise((resolve,reject) => {
-      MongoDB.findOne(COLLECTION_NAME, {email: email},this.MongoClient).then(result => {
+      MongoDB.findOne(COLLECTION_NAME, {email: email.toLowerCase()},this.MongoClient).then(result => {
 
         if(result) {
           console.log(result)
-          MongoDB.findOneAndUpdate(COLLECTION_NAME, {email:email}, {code:loginCode}, this.MongoClient).then(result => {
+          MongoDB.findOneAndUpdate(COLLECTION_NAME, {email:email.toLowerCase()}, {code:loginCode}, this.MongoClient).then(result => {
             resolve(loginCode);
           }).catch(reject);
         }
         else {
-          MongoDB.insertOne(COLLECTION_NAME, {code: loginCode, email: email}, this.MongoClient).then(result => {
+          MongoDB.insertOne(COLLECTION_NAME, {code: loginCode, email: email.toLowerCase()}, this.MongoClient).then(result => {
             resolve(loginCode);
           }).catch(reject);
         }
@@ -37,7 +37,7 @@ class CodeService {
     return new Promise((resolve,reject) => {
       if(email == 'testmailvolunteer@mail.com' && code == '101010') resolve({isValid:true,error:undefined}); // volunteer test user
       
-        MongoDB.findOne(COLLECTION_NAME, {email : email}, this.MongoClient).then(result => {
+        MongoDB.findOne(COLLECTION_NAME, {email : email.toLowerCase()}, this.MongoClient).then(result => {
             if(result) {
                 resolve({
                     isValid : result.code == code,
@@ -57,7 +57,7 @@ class CodeService {
   }
 
   deleteCode(email) {
-    return MongoDB.deleteOne(COLLECTION_NAME, {email: email}, this.MongoClient);
+    return MongoDB.deleteOne(COLLECTION_NAME, {email: email.toLowerCase()}, this.MongoClient);
   }
 }
 
