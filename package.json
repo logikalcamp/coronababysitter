@@ -33,7 +33,7 @@
     "js-yaml": "^3.3.0",
     "linq": "^3.2.2",
     "mongodb": "^3.5.5",
-    "nodemailer": "^6.4.6",
+    "nodemailer": "^6.4.16",
     "nodemon": "^2.0.2",
     "oas3-tools": "^2.0.2",
     "path": "^0.12.7",
